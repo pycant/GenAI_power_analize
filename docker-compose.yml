@@ -1,0 +1,443 @@
+version: '3.8'
+
+services:
+  # =============================================================================
+  # 后端API服务
+  # =============================================================================
+  backend:
+    build:
+      context: .
+      dockerfile: docker/backend/Dockerfile
+    container_name: genai-power-backend
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      - ENVIRONMENT=development
+      - DEBUG=true
+      - DATABASE_URL=postgresql://genai_user:genai_pass@postgres:5432/genai_power_eval
+      - REDIS_URL=redis://redis:6379/0
+      - CELERY_BROKER_URL=redis://redis:6379/1
+      - CELERY_RESULT_BACKEND=redis://redis:6379/2
+    volumes:
+      - ./src:/app/src
+      - ./data:/app/data
+      - ./results:/app/results
+      - ./logs:/app/logs
+      - ./uploads:/app/uploads
+      - model_cache:/app/cache/models
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - genai-power-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  # =============================================================================
+  # 前端服务
+  # =============================================================================
+  frontend:
+    build:
+      context: .
+      dockerfile: docker/frontend/Dockerfile
+    container_name: genai-power-frontend
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+      - VITE_API_BASE_URL=http://backend:8000/api
+    volumes:
+      - ./frontend:/app
+      - ./frontend/node_modules:/app/node_modules
+      - /app/node_modules
+    depends_on:
+      - backend
+    networks:
+      - genai-power-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  # =============================================================================
+  # PostgreSQL数据库
+  # =============================================================================
+  postgres:
+    image: postgres:15-alpine
+    container_name: genai-power-postgres
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=genai_power_eval
+      - POSTGRES_USER=genai_user
+      - POSTGRES_PASSWORD=genai_pass
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./docker/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - genai-power-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U genai_user -d genai_power_eval"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  # =============================================================================
+  # Redis缓存和消息队列
+  # =============================================================================
+  redis:
+    image: redis:7-alpine
+    container_name: genai-power-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    command: redis-server --appendonly yes --maxmemory 2gb --maxmemory-policy allkeys-lru
+    volumes:
+      - redis_data:/data
+    networks:
+      - genai-power-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+      start_period: 30s
+
+  # =============================================================================
+  # Celery异步任务工作进程
+  # =============================================================================
+  celery-worker:
+    build:
+      context: .
+      dockerfile: docker/backend/Dockerfile
+    container_name: genai-power-celery-worker
+    restart: unless-stopped
+    command: celery -A src.backend.celery_app worker --loglevel=info --concurrency=4
+    environment:
+      - ENVIRONMENT=development
+      - DATABASE_URL=postgresql://genai_user:genai_pass@postgres:5432/genai_power_eval
+      - REDIS_URL=redis://redis:6379/0
+      - CELERY_BROKER_URL=redis://redis:6379/1
+      - CELERY_RESULT_BACKEND=redis://redis:6379/2
+    volumes:
+      - ./src:/app/src
+      - ./data:/app/data
+      - ./results:/app/results
+      - ./logs:/app/logs
+      - model_cache:/app/cache/models
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - genai-power-network
+    deploy:
+      resources:
+        limits:
+          memory: 4G
+        reservations:
+          memory: 2G
+
+  # =============================================================================
+  # Celery定时任务调度器
+  # =============================================================================
+  celery-beat:
+    build:
+      context: .
+      dockerfile: docker/backend/Dockerfile
+    container_name: genai-power-celery-beat
+    restart: unless-stopped
+    command: celery -A src.backend.celery_app beat --loglevel=info
+    environment:
+      - ENVIRONMENT=development
+      - DATABASE_URL=postgresql://genai_user:genai_pass@postgres:5432/genai_power_eval
+      - REDIS_URL=redis://redis:6379/0
+      - CELERY_BROKER_URL=redis://redis:6379/1
+      - CELERY_RESULT_BACKEND=redis://redis:6379/2
+    volumes:
+      - ./src:/app/src
+      - ./logs:/app/logs
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - genai-power-network
+
+  # =============================================================================
+  # Celery任务监控 (Flower)
+  # =============================================================================
+  flower:
+    build:
+      context: .
+      dockerfile: docker/backend/Dockerfile
+    container_name: genai-power-flower
+    restart: unless-stopped
+    command: celery -A src.backend.celery_app flower --port=5555
+    ports:
+      - "5555:5555"
+    environment:
+      - CELERY_BROKER_URL=redis://redis:6379/1
+      - CELERY_RESULT_BACKEND=redis://redis:6379/2
+    depends_on:
+      - redis
+    networks:
+      - genai-power-network
+
+  # =============================================================================
+  # MLflow实验跟踪
+  # =============================================================================
+  mlflow:
+    image: python:3.11-slim
+    container_name: genai-power-mlflow
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    command: >
+      bash -c "pip install mlflow[extras] psycopg2-binary && 
+               mlflow server 
+               --backend-store-uri postgresql://genai_user:genai_pass@postgres:5432/mlflow
+               --default-artifact-root s3://mlflow/artifacts
+               --host 0.0.0.0
+               --port 5000"
+    volumes:
+      - mlflow_data:/mlflow
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - genai-power-network
+
+  # =============================================================================
+  # Jupyter Notebook (开发环境)
+  # =============================================================================
+  jupyter:
+    build:
+      context: .
+      dockerfile: docker/jupyter/Dockerfile
+    container_name: genai-power-jupyter
+    restart: unless-stopped
+    ports:
+      - "8888:8888"
+    environment:
+      - JUPYTER_ENABLE_LAB=yes
+      - JUPYTER_TOKEN=genai-power-token
+    volumes:
+      - ./notebooks:/home/jovyan/notebooks
+      - ./data:/home/jovyan/data
+      - ./src:/home/jovyan/src
+      - model_cache:/home/jovyan/cache/models
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - genai-power-network
+
+  # =============================================================================
+  # Nginx反向代理 (生产环境)
+  # =============================================================================
+  nginx:
+    image: nginx:alpine
+    container_name: genai-power-nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./docker/nginx/conf.d:/etc/nginx/conf.d
+      - ./docker/nginx/ssl:/etc/nginx/ssl
+      - ./frontend/dist:/usr/share/nginx/html
+      - ./logs/nginx:/var/log/nginx
+    depends_on:
+      - backend
+      - frontend
+    networks:
+      - genai-power-network
+    profiles:
+      - production
+
+  # =============================================================================
+  # 监控和日志收集
+  # =============================================================================
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: genai-power-prometheus
+    restart: unless-stopped
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./docker/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./docker/prometheus/rules:/etc/prometheus/rules
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--storage.tsdb.retention.time=200h'
+      - '--web.enable-lifecycle'
+    networks:
+      - genai-power-network
+    profiles:
+      - monitoring
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: genai-power-grafana
+    restart: unless-stopped
+    ports:
+      - "3001:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin123
+      - GF_USERS_ALLOW_SIGN_UP=false
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./docker/grafana/provisioning:/etc/grafana/provisioning
+      - ./docker/grafana/dashboards:/var/lib/grafana/dashboards
+    depends_on:
+      - prometheus
+    networks:
+      - genai-power-network
+    profiles:
+      - monitoring
+
+  # =============================================================================
+  # 日志收集 (ELK Stack)
+  # =============================================================================
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.11.1
+    container_name: genai-power-elasticsearch
+    restart: unless-stopped
+    environment:
+      - discovery.type=single-node
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - xpack.security.enabled=false
+    volumes:
+      - elasticsearch_data:/usr/share/elasticsearch/data
+    ports:
+      - "9200:9200"
+    networks:
+      - genai-power-network
+    profiles:
+      - logging
+
+  logstash:
+    image: docker.elastic.co/logstash/logstash:8.11.1
+    container_name: genai-power-logstash
+    restart: unless-stopped
+    volumes:
+      - ./docker/logstash/pipeline:/usr/share/logstash/pipeline
+      - ./docker/logstash/config:/usr/share/logstash/config
+      - ./logs:/var/log/app
+    ports:
+      - "5044:5044"
+    depends_on:
+      - elasticsearch
+    networks:
+      - genai-power-network
+    profiles:
+      - logging
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.11.1
+    container_name: genai-power-kibana
+    restart: unless-stopped
+    ports:
+      - "5601:5601"
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+    depends_on:
+      - elasticsearch
+    networks:
+      - genai-power-network
+    profiles:
+      - logging
+
+# =============================================================================
+# 网络和卷定义
+# =============================================================================
+
+networks:
+  genai-power-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
+  mlflow_data:
+    driver: local
+  model_cache:
+    driver: local
+  prometheus_data:
+    driver: local
+  grafana_data:
+    driver: local
+  elasticsearch_data:
+    driver: local
+
+# =============================================================================
+# 服务配置说明
+# =============================================================================
+
+# 基础服务 (默认启动)
+# - backend: FastAPI后端服务
+# - frontend: React前端服务
+# - postgres: PostgreSQL数据库
+# - redis: Redis缓存和消息队列
+# - celery-worker: Celery异步任务工作进程
+# - celery-beat: Celery定时任务调度器
+# - flower: Celery任务监控
+# - mlflow: MLflow实验跟踪
+# - jupyter: Jupyter Notebook开发环境
+
+# 可选服务 (需要指定profiles启动)
+# - nginx: Nginx反向代理 (生产环境)
+#   docker-compose --profile production up
+
+# - monitoring: 监控服务 (Prometheus + Grafana)
+#   docker-compose --profile monitoring up
+
+# - logging: 日志服务 (ELK Stack)
+#   docker-compose --profile logging up
+
+# 启动命令:
+# 1. 开发环境 (基础服务):
+#    docker-compose up -d
+
+# 2. 生产环境 (包含Nginx):
+#    docker-compose --profile production up -d
+
+# 3. 完整环境 (所有服务):
+#    docker-compose --profile production --profile monitoring --profile logging up -d
+
+# 4. 查看服务状态:
+#    docker-compose ps
+
+# 5. 查看日志:
+#    docker-compose logs -f [service_name]
+
+# 6. 停止服务:
+#    docker-compose down
+
+# 7. 清理数据卷:
+#    docker-compose down -v

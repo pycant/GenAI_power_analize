@@ -1,0 +1,82 @@
+MIT License
+
+Copyright (c) 2024 GenAI模型能效评级体系项目组
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+---
+
+## 第三方组件许可证
+
+本项目使用了以下第三方组件，其许可证如下：
+
+### 后端依赖
+- **Python**: Python Software Foundation License
+- **PyTorch**: BSD-style license
+- **TensorFlow**: Apache License 2.0
+- **NumPy**: BSD License
+- **Pandas**: BSD License
+- **Scikit-learn**: BSD License
+- **FastAPI**: MIT License
+- **SQLAlchemy**: MIT License
+
+### 前端依赖
+- **React**: MIT License
+- **TypeScript**: Apache License 2.0
+- **Tailwind CSS**: MIT License
+- **Vite**: MIT License
+- **Chart.js**: MIT License
+
+### 数据库和服务
+- **PostgreSQL**: PostgreSQL License
+- **Supabase**: Apache License 2.0
+- **Redis**: BSD License
+
+### 开发工具
+- **Git**: GNU General Public License v2
+- **Docker**: Apache License 2.0
+- **Jest**: MIT License
+- **Pytest**: MIT License
+
+## 学术使用声明
+
+本项目为学术研究用途，任何商业使用需要获得额外授权。在使用本项目时，请引用以下论文：
+
+```
+@article{genai_power_evaluation2024,
+  title={GenAI模型能效评级体系构建：基于多维效质比的评估与市场价值分析},
+  author={张三 and 李四 and 王五},
+  journal={人工智能学报},
+  volume={XX},
+  number={X},
+  pages={XXX--XXX},
+  year={2024},
+  publisher={某某出版社}
+}
+```
+
+## 免责声明
+
+本软件按"现状"提供，不提供任何明示或暗示的保证，包括但不限于适销性、特定用途适用性和非侵权性的保证。在任何情况下，作者或版权所有者均不对因软件或使用软件而产生的任何索赔、损害或其他责任负责，无论是合同诉讼、侵权诉讼还是其他诉讼。
+
+## 联系方式
+
+如有许可证相关问题，请联系：
+- 邮箱：genai-power@university.edu
+- 项目主页：https://github.com/your-org/genai-power-evaluation
