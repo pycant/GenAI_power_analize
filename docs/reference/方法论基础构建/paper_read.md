@@ -1,0 +1,7 @@
+# 论文阅读
+
+## Position: AI Competitions Provide the Gold Standard for Empirical Rigor in GenAI Evaluation
+
+### 摘要
+Abstract
+In this position paper, we observe that empiricalevaluation in Generative AI is at a crisis pointsince traditional ML evaluation and benchmark-ing strategies are insufficient to meet the needsof evaluating modern GenAI models and systems.There are many reasons for this, including thefact that these models typically have nearly un-bounded input and output spaces, typically do nothave a well defined ground truth target, and typi-cally exhibit strong feedback loops and predictiondependence based on context of previous modeloutputs. On top of these critical issues, we arguethat the problems of leakage and contaminationare in fact the most important and difficult issuesto address for GenAI evaluations. Interestingly,the field of AI Competitions has developed effec-tive measures and practices to combat leakage forthe purpose of counteracting cheating by bad ac-tors within a competition setting. This makes AICompetitions an especially valuable (but under-utilized) resource. Now is time for the field toview AI Competitions as the gold standard for em-pirical rigor in GenAI evaluation, and to harnessand harvest their results with according value.
