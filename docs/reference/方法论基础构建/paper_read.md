@@ -1,7 +1,13 @@
-# 论文阅读
+# 文献概览
 
-## Position: AI Competitions Provide the Gold Standard for Empirical Rigor in GenAI Evaluation
+## GenAI 竞技场：生成式模型的开放评估平台
 
-### 摘要
-Abstract
-In this position paper, we observe that empiricalevaluation in Generative AI is at a crisis pointsince traditional ML evaluation and benchmark-ing strategies are insufficient to meet the needsof evaluating modern GenAI models and systems.There are many reasons for this, including thefact that these models typically have nearly un-bounded input and output spaces, typically do nothave a well defined ground truth target, and typi-cally exhibit strong feedback loops and predictiondependence based on context of previous modeloutputs. On top of these critical issues, we arguethat the problems of leakage and contaminationare in fact the most important and difficult issuesto address for GenAI evaluations. Interestingly,the field of AI Competitions has developed effec-tive measures and practices to combat leakage forthe purpose of counteracting cheating by bad ac-tors within a competition setting. This makes AICompetitions an especially valuable (but under-utilized) resource. Now is time for the field toview AI Competitions as the gold standard for em-pirical rigor in GenAI evaluation, and to harnessand harvest their results with according value.
+### 摘要（翻译）
+
+生成式 AI 在图像和视频生成等领域取得了显著进展，正在推动这些领域的革命。这些进步得益于创新的算法、架构和数据。然而，生成式模型的快速普及凸显了一个关键问题：缺乏可靠的评估指标。当前的自动评估方法，如 FID、CLIP、FVD 等，往往无法捕捉生成输出所具有的细微质量和用户满意度。本文提出一个开放平台 GAI-A，用于评估不同的图像和视频生成模型，用户可以积极参与这些模型的评估。通过利用集体用户反馈和投票，GAI-A 旨在提供一种更民主、更准确的模型性能衡量标准。它涵盖三个领域：文本到图像生成、文本到视频生成和图像编辑。目前，我们涵盖了 27 个开源生成模型。GAI-A 已运行四个月，从社区收集了超过 6000 票。我们介绍了我们的平台，分析了数据，并解释了用于对模型进行排名的统计方法。 为了进一步推动基于模型的评估指标研究，我们发布了三个任务（即 GenAI-Bench）的清理版偏好数据。我们提示现有的多模态模型如 Gemini、GPT-4o 模仿人类投票。我们计算模型投票与人类投票之间的相关性，以了解它们的评判能力。我们的结果显示，现有的多模态模型在评估生成视觉内容方面仍然存在差距，即使最好的模型 GPT-4o 在质量子分数上仅达到了 0.22 的皮尔逊相关性，在其他方面表现得像随机猜测。
+
+## AI竞赛为生成式AI评估中的实证严谨性提供重要标准
+
+### 摘要（翻译）
+
+在本立场文件中，我们观察到生成式AI的实证评估正处于危机点，因为传统的机器学习评估和基准测试策略不足以满足评估现代生成式AI模型和系统的需求。这背后有许多原因，包括这些模型通常具有近乎无限的输入和输出空间，通常没有明确定义的ground truth目标，并且通常表现出基于先前模型输出上下文的强反馈循环和预测依赖性。除了这些关键问题之外，我们认为泄漏和污染问题实际上是生成式AI评估中最重要和最难解决的问题。有趣的是，AI竞赛领域已经发展出有效的措施和实践来对抗泄漏，目的是对抗竞赛环境中不良行为者的作弊行为。这使得AI竞赛成为一项特别有价值（但未被充分利用）的资源。现在是时候让该领域将AI竞赛视为生成式AI评估中实证严谨性的黄金标准，并利用和挖掘其成果的价值了。
