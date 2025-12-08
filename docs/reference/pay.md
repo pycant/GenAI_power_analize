@@ -6,4 +6,5 @@
 
 ## Trlx: A Framework for Large Scale Open Source RLHF [https://aclanthology.org/2023.nlposs-1.27/]
 
+## A Systematic Review on Data Scarcity Problem in Deep Learning: Solution and Applications[https://doi.org/10.1145/3502287]
 
