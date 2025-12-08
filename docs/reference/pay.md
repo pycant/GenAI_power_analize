@@ -8,3 +8,5 @@
 
 ## A Systematic Review on Data Scarcity Problem in Deep Learning: Solution and Applications[https://doi.org/10.1145/3502287]
 
+## Knowledge Transfer With Mixture Model in Dynamic Multiobjective Optimization[https://ieeexplore.ieee.org/document/10982147]
+
