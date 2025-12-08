@@ -6,4 +6,5 @@
 
 ## Trlx: A Framework for Large Scale Open Source RLHF [https://aclanthology.org/2023.nlposs-1.27/]
 
+## A continual learning survey: Defying forgetting in classification tasks [https://ieeexplore.ieee.org/document/9349197]
 
