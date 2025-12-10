@@ -1,0 +1,58 @@
+以下是根据要求编写的 `fibonacci(n)` 函数，使用 **动态规划（迭代）** 实现，并处理了 `n <= 0` 的异常情况：
+
+---
+
+### ✅ 函数说明
+
+- **功能**：返回斐波那契数列的第 `n` 项。
+- **定义**：斐波那契数列通常定义为 `F(1) = 0`, `F(2) = 1`, `F(n) = F(n-1) + F(n-2)`。
+- **参数**：`n` 是一个正整数。
+- **异常处理**：若 `n <= 0`，则抛出 `ValueError` 异常。
+
+---
+
+### 📌 实现代码
+
+```python
+def fibonacci(n):
+    if n <= 0:
+        raise ValueError("n must be a positive integer.")
+    elif n == 1:
+        return 0
+    elif n == 2:
+        return 1
+
+    a, b = 0, 1
+    for _ in range(3, n + 1):
+        a, b = b, a + b
+
+    return b
+```
+
+---
+
+### 📌 示例用法
+
+```python
+print(fibonacci(1))  # 输出: 0
+print(fibonacci(2))  # 输出: 1
+print(fibonacci(5))  # 输出: 3
+print(fibonacci(10)) # 输出: 34
+```
+
+---
+
+### ⚠️ 异常示例
+
+```python
+fibonacci(0)       # 抛出 ValueError: n must be a positive integer.
+fibonacci(-5)      # 抛出 ValueError: n must be a positive integer.
+```
+
+---
+
+### 📌 总结
+
+- 使用 **动态规划（迭代）** 方法，时间复杂度为 `O(n)`，空间复杂度为 `O(1)`。
+- 对 `n <= 0` 的输入进行严格校验，确保函数行为符合预期。
+- 适用于正整数输入的斐波那契数列计算，适用于大多数实际应用。
