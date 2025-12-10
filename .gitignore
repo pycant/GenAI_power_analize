@@ -479,3 +479,15 @@ Network Trash Folder
 Temporary Items
 .apdisk
 tools/thesis_reproduction/BARTScore
+
+# Allow tracking of experiments_1 data for collaboration
+!data/experiments_1/summary/**
+!data/experiments_1/raw/**
+!data/experiments_1/texts/**
+!data/experiments_1/config.py
+!data/experiments_1/config.json
+!data/experiments_1/test_cases.json
+
+# But still ignore caches and compiled files inside experiments_1
+data/experiments_1/__pycache__/**
+data/experiments_1/**/*.pyc
