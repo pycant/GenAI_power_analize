@@ -1,0 +1,32 @@
+[
+  {
+    "model": ["deepseek-r1:8b", "gemma3:4b"],
+    "prompt": "请解释牛顿第一定律。",
+    "task_type": "knowledge_qa",
+    "reference_text": "牛顿第一定律，也称为惯性定律，指出：一个物体如果不受外力作用，或者所受合外力为零，那么静止的物体会保持静止状态，运动的物体会保持匀速直线运动状态。",
+    "max_tokens": 200,
+    "temperature": 0.7
+  },
+  {
+    "model": "gemma3:4b",
+    "prompt": "请解释牛顿第一定律。",
+    "task_type": "knowledge_qa",
+    "reference_text": "牛顿第一定律，也称为惯性定律，指出：一个物体如果不受外力作用，或者所受合外力为零，那么静止的物体会保持静止状态，运动的物体会保持匀速直线运动状态。",
+    "max_tokens": 200,
+    "temperature": 0.7
+  },
+  {
+    "model": "qwen3:8b",
+    "prompt": "写一篇关于人工智能对未来社会影响的短文。",
+    "task_type": "creative_writing",
+    "max_tokens": 300,
+    "temperature": 0.8
+  },
+  {
+    "model": "all",
+    "prompt": "总结以下内容的主要观点：人工智能在医疗领域的应用越来越广泛，从辅助诊断到个性化治疗，AI技术正在改变医疗服务的方式。",
+    "task_type": "text_summarization",
+    "max_tokens": 150,
+    "temperature": 0.5
+  }
+]

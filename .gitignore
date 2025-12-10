@@ -345,6 +345,19 @@ data/external/*
 !data/processed/.gitkeep
 !data/external/.gitkeep
 
+# Experiments: ignore generated artifacts under data/experiments_*
+data/experiments_*/raw/**
+data/experiments_*/texts/**
+data/experiments_*/summary/**
+# Keep experiment configs
+!data/experiments_*/config.py
+!data/experiments_*/test_cases.json
+
+# General data outputs (top-level convenience)
+data/raw/**
+data/texts/**
+data/summary/**
+
 # Model files
 models/*.pth
 models/*.pt

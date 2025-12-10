@@ -1,0 +1,33 @@
+[
+  {
+    "model": "all",
+    "prompt": "请解释量子纠缠的基本原理，并举例说明其在通信领域的潜在应用。",
+    "task_type": "knowledge_qa",
+    "reference_text": "量子纠缠是量子力学中的一种现象，描述了两个或多个粒子之间即使相距遥远，其状态也相互关联。当测量其中一个粒子的状态时，另一个粒子的状态会瞬间确定。在通信领域，量子纠缠可用于量子密钥分发（QKD），实现理论上无条件安全的通信。",
+    "max_tokens": 512,
+    "temperature": 0.7
+  },
+  {
+    "model": "all",
+    "prompt": "请将以下新闻段落总结为100字以内的摘要：\n最近，科学家们在深海探测中发现了一种新型微生物，这种微生物能够在极端高温和高压的环境下生存。研究表明，它们具有独特的代谢机制，不依赖光合作用，而是利用海底热液喷口释放的化学物质获取能量。这一发现不仅扩展了我们对生命极限的认知，也为寻找地外生命提供了新的线索。特别是在木卫二和土卫二等拥有冰下海洋的天体上，可能存在类似的生命形式。",
+    "task_type": "text_summarization",
+    "reference_text": "科学家在深海发现一种新型微生物，能在高温高压下生存，利用化学物质获取能量。这一发现扩展了对生命极限的认知，并为寻找地外生命提供了线索。",
+    "max_tokens": 200,
+    "temperature": 0.5
+  },
+  {
+    "model": "all",
+    "prompt": "请用Python编写一个函数 `fibonacci(n)`，该函数返回斐波那契数列的第n项。要求使用递归或动态规划实现，并处理n小于等于0的异常情况。",
+    "task_type": "code_generation",
+    "reference_text": "def fibonacci(n):\n    if n <= 0:\n        return 0\n    elif n == 1:\n        return 1\n    else:\n        a, b = 0, 1\n        for _ in range(2, n + 1):\n            a, b = b, a + b\n        return b",
+    "max_tokens": 512,
+    "temperature": 0.2
+  },
+  {
+    "model": "all",
+    "prompt": "以“雨后的城市”为题，写一篇约300字的散文，描写街道的景象和行人的心情。",
+    "task_type": "creative_writing",
+    "max_tokens": 512,
+    "temperature": 0.9
+  }
+]
