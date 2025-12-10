@@ -354,9 +354,16 @@ data/experiments_*/summary/**
 !data/experiments_*/test_cases.json
 
 # General data outputs (top-level convenience)
+# General data outputs (top-level convenience)
 data/raw/**
 data/texts/**
 data/summary/**
+
+# BARTScore reproduction assets (do not track heavy benchmark files)
+tools/thesis_reproduction/BARTScore/**
+!tools/thesis_reproduction/BARTScore/README.md
+!tools/thesis_reproduction/BARTScore/**/*.md
+!tools/thesis_reproduction/BARTScore/**/*.py
 
 # Model files
 models/*.pth
