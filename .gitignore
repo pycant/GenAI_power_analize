@@ -345,6 +345,26 @@ data/external/*
 !data/processed/.gitkeep
 !data/external/.gitkeep
 
+# Experiments: ignore generated artifacts under data/experiments_*
+data/experiments_*/raw/**
+data/experiments_*/texts/**
+data/experiments_*/summary/**
+# Keep experiment configs
+!data/experiments_*/config.py
+!data/experiments_*/test_cases.json
+
+# General data outputs (top-level convenience)
+# General data outputs (top-level convenience)
+data/raw/**
+data/texts/**
+data/summary/**
+
+# BARTScore reproduction assets (do not track heavy benchmark files)
+tools/thesis_reproduction/BARTScore/**
+!tools/thesis_reproduction/BARTScore/README.md
+!tools/thesis_reproduction/BARTScore/**/*.md
+!tools/thesis_reproduction/BARTScore/**/*.py
+
 # Model files
 models/*.pth
 models/*.pt
@@ -458,3 +478,16 @@ Icon
 Network Trash Folder
 Temporary Items
 .apdisk
+tools/thesis_reproduction/BARTScore
+
+# Allow tracking of experiments_1 data for collaboration
+!data/experiments_1/summary/**
+!data/experiments_1/raw/**
+!data/experiments_1/texts/**
+!data/experiments_1/config.py
+!data/experiments_1/config.json
+!data/experiments_1/test_cases.json
+
+# But still ignore caches and compiled files inside experiments_1
+data/experiments_1/__pycache__/**
+data/experiments_1/**/*.pyc

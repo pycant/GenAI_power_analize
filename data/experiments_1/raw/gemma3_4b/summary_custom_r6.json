@@ -1,0 +1,2658 @@
+{
+  "model": "gemma3:4b",
+  "prompt": "请将以下新闻段落总结为100字以内的摘要：\n最近，科学家们在深海探测中发现了一种新型微生物，这种微生物能够在极端高温和高压的环境下生存。研究表明，它们具有独特的代谢机制，不依赖光合作用，而是利用海底热液喷口释放的化学物质获取能量。这一发现不仅扩展了我们对生命极限的认知，也为寻找地外生命提供了新的线索。特别是在木卫二和土卫二等拥有冰下海洋的天体上，可能存在类似的生命形式。",
+  "generated_text": "科学家在深海探测中发现了一种新型微生物，它们能在极端高温高压环境下生存，且不依赖光合作用，而是利用海底热液喷口释放的化学物质获取能量。这一发现极大地拓展了我们对生命极限的认知，也为寻找地外生命提供了新的突破口。特别是木卫二和土卫二等拥有冰下海洋的天体，可能存在与此微生物类似的生命形式，为探索地外生命的可能性增添了新的希望。",
+  "latency_seconds": 4.3308587074279785,
+  "throughput_tokens_per_sec": 83.02313177600746,
+  "first_token_seconds": 0.0,
+  "api_metrics": {
+    "eval_count": 103,
+    "eval_duration_ns": 1240618100,
+    "total_duration_ns": 4302179100,
+    "load_duration_ns": 2944682900,
+    "prompt_eval_duration_ns": 39385000
+  },
+  "system_metrics_summary": {
+    "cpu_percent_avg": 19.485000000000003,
+    "cpu_percent_peak": 43.7,
+    "mem_used_peak_mb": 11960.76953125,
+    "gpu_util_avg": 37.1,
+    "gpu_util_peak": 91,
+    "gpu_mem_peak_mb": 7894.90625,
+    "gpu_power_avg_w": 42.922650000000004,
+    "gpu_energy_j": 166.93141131377217,
+    "gpu_temp_peak_c": 60,
+    "cpu_energy_j_approx": 55.17861273288727
+  },
+  "system_metrics_full": {
+    "timestamps": [
+      1765349920.450083,
+      1765349920.6674273,
+      1765349920.8847895,
+      1765349921.100507,
+      1765349921.3179827,
+      1765349921.5379827,
+      1765349921.754753,
+      1765349921.974504,
+      1765349922.19116,
+      1765349922.404068,
+      1765349922.6327147,
+      1765349922.8588939,
+      1765349923.071748,
+      1765349923.2866158,
+      1765349923.5010877,
+      1765349923.715618,
+      1765349923.9298222,
+      1765349924.146044,
+      1765349924.3626912,
+      1765349924.5795124
+    ],
+    "cpu_percent": [
+      0.0,
+      19.1,
+      14.5,
+      21.1,
+      16.1,
+      14.1,
+      11.9,
+      20.4,
+      23.7,
+      43.7,
+      32.9,
+      35.4,
+      25.8,
+      10.1,
+      14.1,
+      22.2,
+      15.7,
+      16.0,
+      16.0,
+      16.9
+    ],
+    "cpu_proc_percent": [
+      7.3,
+      135.6,
+      71.7,
+      57.1,
+      128.4,
+      99.9,
+      100.3,
+      142.7,
+      221.2,
+      363.9,
+      401.4,
+      413.8,
+      121.3,
+      71.3,
+      43.0,
+      153.9,
+      92.8,
+      99.9,
+      149.8,
+      146.20000000000002
+    ],
+    "mem_used_mb": [
+      11802.05078125,
+      10742.60546875,
+      10942.8515625,
+      10770.03515625,
+      11078.1484375,
+      11060.19921875,
+      11276.34375,
+      11427.78515625,
+      11451.9609375,
+      11506.70703125,
+      11572.02734375,
+      11622.45703125,
+      11807.984375,
+      11960.76953125,
+      11880.1328125,
+      11878.1953125,
+      11885.7890625,
+      11877.37109375,
+      11876.46484375,
+      11875.5859375
+    ],
+    "disk_read_bytes": [
+      0,
+      0,
+      800768,
+      0,
+      0,
+      8192,
+      0,
+      98304,
+      0,
+      0,
+      32768,
+      36864,
+      806912,
+      512,
+      167936,
+      0,
+      65536,
+      0,
+      0,
+      0
+    ],
+    "disk_write_bytes": [
+      0,
+      53248,
+      94208,
+      135168,
+      57344,
+      53248,
+      61440,
+      0,
+      0,
+      0,
+      111104,
+      0,
+      0,
+      0,
+      0,
+      0,
+      487424,
+      20480,
+      0,
+      0
+    ],
+    "gpu_util": [
+      91,
+      15,
+      0,
+      3,
+      0,
+      6,
+      1,
+      4,
+      31,
+      26,
+      41,
+      43,
+      24,
+      13,
+      2,
+      80,
+      91,
+      90,
+      90,
+      91
+    ],
+    "gpu_mem_mb": [
+      7854.90625,
+      3116.2890625,
+      3116.2890625,
+      3116.2890625,
+      3116.90625,
+      3116.2890625,
+      3220.90625,
+      6396.90625,
+      7882.90625,
+      7884.90625,
+      7884.90625,
+      7884.90625,
+      7884.90625,
+      7884.90625,
+      7894.90625,
+      7894.78125,
+      7894.78125,
+      7894.90625,
+      7894.90625,
+      7894.90625
+    ],
+    "gpu_power_w": [
+      87.805,
+      23.38,
+      22.733,
+      23.828,
+      24.298,
+      25.838,
+      22.931,
+      22.719,
+      27.075,
+      20.246,
+      20.644,
+      21.606,
+      22.179,
+      21.319,
+      20.617,
+      87.612,
+      90.441,
+      90.702,
+      91.15,
+      91.33
+    ],
+    "gpu_temp_c": [
+      60,
+      60,
+      52,
+      52,
+      52,
+      52,
+      52,
+      51,
+      51,
+      51,
+      51,
+      51,
+      51,
+      51,
+      51,
+      51,
+      60,
+      60,
+      60,
+      60
+    ],
+    "gpu_processes": [
+      [
+        {
+          "pid": 47460,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 23984,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 45832,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 37088,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 14512,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 36320,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 57692,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 41192,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 34212,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 55184,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 12364,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 58088,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 27372,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 11068,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 12084,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 49776,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 50220,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 45648,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 5996,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 57108,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 20304,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 11776,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 55452,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 38660,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 56948,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 20792,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 33044,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 14768,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 30148,
+          "used_gpu_memory_mb": 0
+        }
+      ],
+      [
+        {
+          "pid": 47460,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 23984,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 45832,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 37088,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 14512,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 36320,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 57692,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 41192,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 34212,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 55184,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 12364,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 58088,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 27372,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 11068,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 12084,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 49776,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 50220,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 45648,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 5996,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 57108,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 20304,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 11776,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 55452,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 38660,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 56948,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 20792,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 33044,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 14768,
+          "used_gpu_memory_mb": 0
+        }
+      ],
+      [
+        {
+          "pid": 47460,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 23984,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 45832,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 37088,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 14512,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 36320,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 57692,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 41192,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 34212,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 55184,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 12364,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 58088,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 27372,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 11068,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 12084,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 49776,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 50220,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 45648,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 5996,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 57108,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 20304,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 11776,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 55452,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 38660,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 56948,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 20792,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 33044,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 14768,
+          "used_gpu_memory_mb": 0
+        }
+      ],
+      [
+        {
+          "pid": 47460,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 23984,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 45832,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 37088,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 14512,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 36320,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 57692,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 41192,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 34212,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 55184,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 12364,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 58088,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 27372,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 11068,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 12084,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 49776,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 50220,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 45648,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 5996,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 57108,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 20304,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 11776,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 55452,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 38660,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 56948,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 20792,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 33044,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 14768,
+          "used_gpu_memory_mb": 0
+        }
+      ],
+      [
+        {
+          "pid": 47460,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 23984,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 45832,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 37088,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 14512,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 36320,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 57692,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 41192,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 34212,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 55184,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 12364,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 58088,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 27372,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 11068,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 12084,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 49776,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 50220,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 45648,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 5996,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 57108,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 20304,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 11776,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 55452,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 38660,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 56948,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 20792,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 33044,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 14768,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 7208,
+          "used_gpu_memory_mb": 0
+        }
+      ],
+      [
+        {
+          "pid": 47460,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 23984,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 45832,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 37088,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 14512,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 36320,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 57692,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 41192,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 34212,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 55184,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 12364,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 58088,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 27372,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 11068,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 12084,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 49776,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 50220,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 45648,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 5996,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 57108,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 20304,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 11776,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 55452,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 38660,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 56948,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 20792,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 33044,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 14768,
+          "used_gpu_memory_mb": 0
+        }
+      ],
+      [
+        {
+          "pid": 47460,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 23984,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 45832,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 37088,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 14512,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 36320,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 57692,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 41192,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 34212,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 55184,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 12364,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 58088,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 27372,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 11068,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 12084,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 49776,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 50220,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 45648,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 5996,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 57108,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 20304,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 11776,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 55452,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 38660,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 56948,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 20792,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 33044,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 14768,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 32024,
+          "used_gpu_memory_mb": 0
+        }
+      ],
+      [
+        {
+          "pid": 47460,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 23984,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 45832,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 37088,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 14512,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 36320,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 57692,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 41192,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 34212,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 55184,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 12364,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 58088,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 27372,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 11068,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 12084,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 49776,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 50220,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 45648,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 5996,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 57108,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 20304,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 11776,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 55452,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 38660,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 56948,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 20792,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 33044,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 14768,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 32024,
+          "used_gpu_memory_mb": 0
+        }
+      ],
+      [
+        {
+          "pid": 47460,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 23984,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 45832,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 37088,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 14512,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 36320,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 57692,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 41192,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 34212,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 55184,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 12364,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 58088,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 27372,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 11068,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 12084,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 49776,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 50220,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 45648,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 5996,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 57108,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 20304,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 11776,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 55452,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 38660,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 56948,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 20792,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 33044,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 14768,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 32024,
+          "used_gpu_memory_mb": 0
+        }
+      ],
+      [
+        {
+          "pid": 47460,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 23984,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 45832,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 37088,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 14512,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 36320,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 57692,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 41192,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 34212,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 55184,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 12364,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 58088,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 27372,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 11068,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 12084,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 49776,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 50220,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 45648,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 5996,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 57108,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 20304,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 11776,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 55452,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 38660,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 56948,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 20792,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 33044,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 14768,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 32024,
+          "used_gpu_memory_mb": 0
+        }
+      ],
+      [
+        {
+          "pid": 47460,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 23984,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 45832,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 37088,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 14512,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 36320,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 57692,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 41192,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 34212,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 55184,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 12364,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 58088,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 27372,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 11068,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 12084,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 49776,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 50220,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 45648,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 5996,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 57108,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 20304,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 11776,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 55452,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 38660,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 56948,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 20792,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 33044,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 14768,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 32024,
+          "used_gpu_memory_mb": 0
+        }
+      ],
+      [
+        {
+          "pid": 47460,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 23984,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 45832,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 37088,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 14512,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 36320,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 57692,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 41192,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 34212,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 55184,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 12364,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 58088,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 27372,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 11068,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 12084,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 49776,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 50220,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 45648,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 5996,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 57108,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 20304,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 11776,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 55452,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 38660,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 56948,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 20792,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 33044,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 14768,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 32024,
+          "used_gpu_memory_mb": 0
+        }
+      ],
+      [
+        {
+          "pid": 47460,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 23984,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 45832,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 37088,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 14512,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 36320,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 57692,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 41192,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 34212,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 55184,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 12364,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 58088,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 27372,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 11068,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 12084,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 49776,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 50220,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 45648,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 5996,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 57108,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 20304,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 11776,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 55452,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 38660,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 56948,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 20792,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 33044,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 14768,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 32024,
+          "used_gpu_memory_mb": 0
+        }
+      ],
+      [
+        {
+          "pid": 47460,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 23984,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 45832,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 37088,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 14512,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 36320,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 57692,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 41192,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 34212,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 55184,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 12364,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 58088,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 27372,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 11068,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 12084,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 49776,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 50220,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 45648,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 5996,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 57108,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 20304,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 11776,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 55452,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 38660,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 56948,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 20792,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 33044,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 14768,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 32024,
+          "used_gpu_memory_mb": 0
+        }
+      ],
+      [
+        {
+          "pid": 47460,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 23984,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 45832,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 37088,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 14512,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 36320,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 57692,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 41192,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 34212,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 55184,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 12364,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 58088,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 27372,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 11068,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 12084,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 49776,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 50220,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 45648,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 5996,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 57108,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 20304,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 11776,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 55452,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 38660,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 56948,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 20792,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 33044,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 14768,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 32024,
+          "used_gpu_memory_mb": 0
+        }
+      ],
+      [
+        {
+          "pid": 47460,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 23984,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 45832,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 37088,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 14512,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 36320,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 57692,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 41192,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 34212,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 55184,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 12364,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 58088,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 27372,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 11068,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 12084,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 49776,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 50220,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 45648,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 5996,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 57108,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 20304,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 11776,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 55452,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 38660,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 56948,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 20792,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 33044,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 14768,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 32024,
+          "used_gpu_memory_mb": 0
+        }
+      ],
+      [
+        {
+          "pid": 47460,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 23984,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 45832,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 37088,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 14512,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 36320,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 57692,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 41192,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 34212,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 55184,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 12364,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 58088,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 27372,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 11068,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 12084,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 49776,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 50220,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 45648,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 5996,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 57108,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 20304,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 11776,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 55452,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 38660,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 56948,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 20792,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 33044,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 14768,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 32024,
+          "used_gpu_memory_mb": 0
+        }
+      ],
+      [
+        {
+          "pid": 47460,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 23984,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 45832,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 37088,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 14512,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 36320,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 57692,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 41192,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 34212,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 55184,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 12364,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 58088,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 27372,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 11068,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 12084,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 49776,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 50220,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 45648,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 5996,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 57108,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 20304,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 11776,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 55452,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 38660,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 56948,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 20792,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 33044,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 14768,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 32024,
+          "used_gpu_memory_mb": 0
+        }
+      ],
+      [
+        {
+          "pid": 47460,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 23984,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 45832,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 37088,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 14512,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 36320,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 57692,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 41192,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 34212,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 55184,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 12364,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 58088,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 27372,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 11068,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 12084,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 49776,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 50220,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 45648,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 5996,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 57108,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 20304,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 11776,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 55452,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 38660,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 56948,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 20792,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 33044,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 14768,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 32024,
+          "used_gpu_memory_mb": 0
+        }
+      ],
+      [
+        {
+          "pid": 47460,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 23984,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 45832,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 37088,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 14512,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 36320,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 57692,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 41192,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 34212,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 55184,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 12364,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 58088,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 27372,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 11068,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 12084,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 49776,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 50220,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 45648,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 5996,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 57108,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 20304,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 11776,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 55452,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 38660,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 56948,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 20792,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 33044,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 14768,
+          "used_gpu_memory_mb": 0
+        },
+        {
+          "pid": 32024,
+          "used_gpu_memory_mb": 0
+        }
+      ]
+    ],
+    "gpu_energy_j": 166.93141131377217,
+    "cpu_power_w_approx": [
+      12.415000000000001,
+      9.424999999999999,
+      13.715000000000002,
+      10.465,
+      9.165,
+      7.735,
+      13.26,
+      15.405,
+      28.405000000000005,
+      21.384999999999998,
+      23.009999999999998,
+      16.77,
+      6.5649999999999995,
+      9.165,
+      14.43,
+      10.205,
+      10.4,
+      10.4,
+      10.985
+    ],
+    "cpu_energy_j_approx": 55.17861273288727,
+    "summary": {
+      "cpu_percent_avg": 19.485000000000003,
+      "cpu_percent_peak": 43.7,
+      "mem_used_peak_mb": 11960.76953125,
+      "gpu_util_avg": 37.1,
+      "gpu_util_peak": 91,
+      "gpu_mem_peak_mb": 7894.90625,
+      "gpu_power_avg_w": 42.922650000000004,
+      "gpu_energy_j": 166.93141131377217,
+      "gpu_temp_peak_c": 60,
+      "cpu_energy_j_approx": 55.17861273288727
+    }
+  },
+  "quality": {
+    "bartscore": -3.440948247909546,
+    "code": null,
+    "creative": null
+  },
+  "metadata": {
+    "options": {
+      "temperature": 0.7,
+      "top_p": 0.9,
+      "num_ctx": 4096,
+      "max_tokens": 200,
+      "seed": 42
+    },
+    "timestamp": 1765349928.965458,
+    "model_info": {
+      "raw": "  Model\n    architecture        gemma3    \n    parameters          4.3B      \n    context length      131072    \n    embedding length    2560      \n    quantization        Q4_K_M    \n\n  Capabilities\n    completion    \n    vision        \n\n  Parameters\n    top_p          0.95               \n    stop           \"<end_of_turn>\"    \n    temperature    1                  \n    top_k          64                 \n\n  License\n    Gemma Terms of Use                  \n    Last modified: February 21, 2024    \n    ...                                 \n\n"
+    },
+    "model_details": {
+      "digest": "a2af6cc3eb7fa8be8504abaf9b04e88f17a119ec3f04a3addf55f92841195f5a",
+      "parameter_size": "4.3B",
+      "quantization_level": "Q4_K_M",
+      "family": "gemma3",
+      "families": [
+        "gemma3"
+      ]
+    },
+    "warm_run": true
+  }
+}

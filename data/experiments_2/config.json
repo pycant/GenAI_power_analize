@@ -1,0 +1,20 @@
+{
+  "timestamp": "20251210_134740",
+  "args": {
+    "models": [
+      "llama3.2:3b",
+      "llama3.2:11b",
+      "gemma2:9b"
+    ],
+    "runs": 1,
+    "temperature": 0.7,
+    "top_p": 0.9,
+    "num_ctx": 4096,
+    "max_tokens": 512,
+    "seed": 1234,
+    "warmup": true,
+    "keepalive": "0s"
+  },
+  "exp_config_path": "data\\experiments_2\\config.py",
+  "cases_file": "data\\experiments_2\\test_cases.json"
+}

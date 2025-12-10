@@ -1,0 +1,97 @@
+```python
+def fibonacci(n):
+  """
+  计算斐波那契数列的第n项。
+
+  Args:
+    n: 斐波那契数列的项数（正整数）。
+
+  Returns:
+    斐波那契数列的第n项。
+
+  Raises:
+    TypeError: 如果n不是整数。
+    ValueError: 如果n小于等于0。
+  """
+
+  if not isinstance(n, int):
+    raise TypeError("n must be an integer")
+  if n <= 0:
+    raise ValueError("n must be a positive integer")
+  elif n == 1 or n == 2:
+    return 1
+  else:
+    return fibonacci(n - 1) + fibonacci(n - 2)
+
+
+# 示例用法
+try:
+  print(fibonacci(10))  # 输出 55
+  print(fibonacci(5))   # 输出 5
+  print(fibonacci(1))   # 输出 1
+  print(fibonacci(2))   # 输出 1
+  #print(fibonacci(0))  # 会抛出 ValueError: n must be a positive integer
+  #print(fibonacci(3.14)) # 会抛出 TypeError: n must be an integer
+except ValueError as e:
+  print(f"Error: {e}")
+except TypeError as e:
+  print(f"Error: {e}")
+```
+
+**代码解释:**
+
+1. **异常处理:**
+   - `isinstance(n, int)`: 检查输入 `n` 是否为整数。如果不是，则抛出 `TypeError` 异常。
+   - `n <= 0`: 检查输入 `n` 是否小于等于0。 如果是，则抛出 `ValueError` 异常。  这确保了函数只处理正整数。
+
+2. **基本情况 (Base Cases):**
+   - `elif n == 1 or n == 2:`:  斐波那契数列的第1项和第2项都为1。  这些是递归终止条件。
+
+3. **递归步骤 (Recursive Step):**
+   - `else: return fibonacci(n - 1) + fibonacci(n - 2)`:  这是斐波那契数列的递归定义。  第n项等于前两项的和。  函数会调用自身来计算前两项。
+
+**动态规划（可选，但更高效）**
+
+虽然上面的代码使用递归，但递归实现效率较低，因为会多次计算相同的斐波那契数。  可以使用动态规划（也称为记忆化）来优化性能。  动态规划通过存储已经计算过的结果，避免重复计算。
+
+```python
+def fibonacci_dp(n):
+  """
+  使用动态规划计算斐波那契数列的第n项。
+
+  Args:
+    n: 斐波那契数列的项数（正整数）。
+
+  Returns:
+    斐波那契数列的第n项。
+
+  Raises:
+    TypeError: 如果n不是整数。
+    ValueError: 如果n小于等于0。
+  """
+  if not isinstance(n, int):
+    raise TypeError("n must be an integer")
+  if n <= 0:
+    raise ValueError("n must be a positive integer")
+  if n == 1 or n == 2:
+    return 1
+
+  # 创建一个表来存储已计算的斐波那契数
+  fib_table = [0] * (n + 1)
+  fib_table[1] = 1
+  fib_table[2] = 1
+
+  for i in range(3, n + 1):
+    fib_table[i] = fib_table[i - 1] + fib_table[i - 2]
+
+  return fib_table[n]
+```
+
+**动态规划代码解释:**
+
+1. **初始化:** 创建一个列表 `fib_table` 来存储斐波那契数，大小为 `n + 1`。
+2. **基本情况:** `fib_table[1] = 1` 和 `fib_table[2] = 1` 初始化第一和第二项。
+3. **迭代计算:**  从第3项开始，使用循环迭代计算斐波那契数，并将结果存储在 `fib_table` 中。
+4. **返回值:**  返回 `fib_table[n]`，即第n项的斐波那契数。
+
+动态规划版本通常比递归版本更高效，特别是对于较大的 `n` 值。  因为避免了重复计算。  它使用一个表来存储已经计算过的结果，避免了递归调用的开销。
