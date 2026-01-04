@@ -79,34 +79,52 @@ def _ollama_generate_stream(model, prompt, options=None, keep_alive="0s"):
         body["options"] = options
     if keep_alive is not None:
         body["keep_alive"] = keep_alive
-    r = requests.post(url, json=body, stream=True, timeout=600)
-    r.raise_for_status()
-    t0 = _time.time()
-    t_first = None
-    text_parts = []
-    final = {}
-    for line in r.iter_lines():
-        if not line:
-            continue
-        d = _json.loads(line.decode("utf-8", errors="ignore"))
-        resp = d.get("response")
-        if resp:
-            if t_first is None:
-                t_first = _time.time()
-            text_parts.append(resp)
-        if d.get("done"):
-            final = d
-            break
-    full_text = "".join(text_parts)
-    return {
-        "response": full_text,
-        "first_token_seconds": (t_first - t0) if t_first else None,
-        "eval_count": final.get("eval_count"),
-        "eval_duration": final.get("eval_duration"),
-        "total_duration": final.get("total_duration"),
-        "load_duration": final.get("load_duration"),
-        "prompt_eval_duration": final.get("prompt_eval_duration")
-    }
+    try:
+        r = requests.post(url, json=body, stream=True, timeout=600)
+        r.raise_for_status()
+        t0 = _time.time()
+        t_first = None
+        text_parts = []
+        final = {}
+        for line in r.iter_lines():
+            if not line:
+                continue
+            d = _json.loads(line.decode("utf-8", errors="ignore"))
+            resp = d.get("response")
+            if resp:
+                if t_first is None:
+                    t_first = _time.time()
+                text_parts.append(resp)
+            if d.get("done"):
+                final = d
+                break
+        full_text = "".join(text_parts)
+        return {
+            "response": full_text,
+            "first_token_seconds": (t_first - t0) if t_first else None,
+            "eval_count": final.get("eval_count"),
+            "eval_duration": final.get("eval_duration"),
+            "total_duration": final.get("total_duration"),
+            "load_duration": final.get("load_duration"),
+            "prompt_eval_duration": final.get("prompt_eval_duration")
+        }
+    except Exception:
+        import subprocess
+        import time as _time2
+        t0 = _time2.time()
+        cmd = f'ollama run {model} "{prompt}"'
+        p = subprocess.run(cmd, shell=True, capture_output=True, text=True, timeout=600)
+        txt = p.stdout.strip() if p.returncode == 0 else ""
+        t1 = _time2.time()
+        return {
+            "response": txt,
+            "first_token_seconds": None,
+            "eval_count": None,
+            "eval_duration": None,
+            "total_duration": int((t1 - t0) * 1e9),
+            "load_duration": None,
+            "prompt_eval_duration": None
+        }
 
 def _model_info(model):
     import subprocess

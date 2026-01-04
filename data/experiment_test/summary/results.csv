@@ -1,0 +1,2 @@
+timestamp,model,task,load,run,latency_s,toks_per_s,gpu_mem_peak_mb,gpu_util_avg,gpu_energy_j,bartscore
+20260104_160900,llama3.2:3b,qa,custom,1,7.464976787567139,105.8992086235431,4122.71875,37.285714285714285,282.5925453948975,-3.908263921737671

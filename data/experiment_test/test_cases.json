@@ -1,0 +1,12 @@
+[
+  {
+    "model": "llama3.2:3b",
+    "prompt": "请解释牛顿第一定律。",
+    "task_type": "knowledge_qa",
+    "reference_text": "牛顿第一定律，也称为惯性定律，指出：一个物体如果不受外力作用，或者所受合外力为零，那么静止的物体会保持静止状态，运动的物体会保持匀速直线运动状态。",
+    "max_tokens": 200,
+    "temperature": 0.7,
+    "language": "zh",
+    "style": "technical"
+  }
+]

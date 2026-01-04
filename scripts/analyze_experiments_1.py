@@ -190,6 +190,89 @@ def calculate_composite_metrics(df):
     
     return df
 
+def _fair_utils():
+    import numpy as np
+    import math
+    def gini(values):
+        arr = np.array(values, dtype=float)
+        if arr.size == 0:
+            return 0.0
+        arr = arr + max(1e-6, -arr.min() + 1e-6)
+        arr.sort()
+        n = arr.size
+        cum = 0.0
+        for i, v in enumerate(arr, start=1):
+            cum += (2 * i - n - 1) * v
+        mu = arr.mean()
+        if mu == 0:
+            return 0.0
+        return abs(cum) / (n * n * mu)
+    def theil(values):
+        arr = np.array(values, dtype=float)
+        if arr.size == 0:
+            return 0.0
+        arr = arr + max(1e-6, -arr.min() + 1e-6)
+        mu = arr.mean()
+        if mu == 0:
+            return 0.0
+        r = arr / mu
+        return float(np.mean(r * np.log(r + 1e-12)))
+    def fairness_gap(group_means, global_mean):
+        return float(max(abs(m - global_mean) for m in group_means.values())) if group_means else 0.0
+    def nsw(group_means, eps=1e-6):
+        return float(sum(math.log(eps + m) for m in group_means.values()))
+    return gini, theil, fairness_gap, nsw
+
+def _load_cases_labels():
+    """读取用例的 language/style 标签（若存在），按 run 顺序对齐"""
+    path = os.path.join(DATA_DIR, "test_cases.json")
+    if not os.path.exists(path):
+        return None
+    try:
+        with open(path, "r", encoding="utf-8") as f:
+            cases = json.load(f)
+        rows = []
+        for i, c in enumerate(cases, start=1):
+            rows.append({
+                "run": str(i),
+                "language": c.get("language"),
+                "style": c.get("style"),
+                "task_type": c.get("task_type")
+            })
+        return pd.DataFrame(rows)
+    except Exception:
+        return None
+
+def compute_fairness_reports(df, lambdas=(0.1, 0.2, 0.3)):
+    """按 task/language/style 三个维度生成公平性汇总表"""
+    gini, theil, fairness_gap, nsw = _fair_utils()
+    df_work = df.copy()
+    cases_labels = _load_cases_labels()
+    if cases_labels is not None:
+        df_work["run"] = df_work["run"].astype(str)
+        df_work = pd.merge(df_work, cases_labels[["run","language","style"]], on="run", how="left")
+    tables = {}
+    def summarize(group_by, lam):
+        rows = []
+        for m in sorted(df_work["model"].unique()):
+            sub = df_work[df_work["model"] == m]
+            gm = float(sub["norm_quality"].mean()) if len(sub) else 0.0
+            col = group_by if group_by in sub.columns else "task"
+            grp_means = {g: float(sub[sub[col] == g]["norm_quality"].mean()) for g in sub[col].dropna().unique()}
+            fg = fairness_gap(grp_means, gm)
+            g = gini(list(sub["norm_quality"].values))
+            t = theil(list(sub["norm_quality"].values))
+            w = nsw(grp_means)
+            fair = gm * (1.0 - lam * fg)
+            rows.append({"model": m, "global_mean": gm, "fairness_gap": fg, "gini": g, "theil": t, "nsw": w, "fair_quality_score": fair, "lam": lam})
+        return pd.DataFrame(rows).sort_values("fair_quality_score", ascending=False)
+    for gb in ["task","language","style"]:
+        parts = []
+        for lam in lambdas:
+            parts.append(summarize(gb, lam))
+        tables[gb] = pd.concat(parts, ignore_index=True)
+    return tables
+
 def plot_charts(df):
     """生成可视化图表"""
     sns.set_style("whitegrid")
@@ -312,6 +395,24 @@ def generate_report(df, df_stats):
 - 排名如下：
 {df.groupby('model')['qe_ratio'].mean().sort_values(ascending=False).to_markdown()}
 
+## 3.4 公平性（TRF视角）
+- 指标：Fairness Gap (FG)、Gini、Theil、Nash Social Welfare (NSW)
+- 公平化综合分：fair_quality_score = global_mean × (1 − λ·FG)
+- λ 敏感性：分别展示 λ ∈ {{0.1, 0.2, 0.3}} 的结果
+
+### 3.4.1 按任务分组（task）
+{compute_fairness_reports(df, (0.1,0.2,0.3))['task'].to_markdown(index=False)}
+
+### 3.4.2 按语言分组（language，若存在）
+{compute_fairness_reports(df, (0.1,0.2,0.3))['language'].to_markdown(index=False)}
+
+### 3.4.3 按风格分组（style，若存在）
+{compute_fairness_reports(df, (0.1,0.2,0.3))['style'].to_markdown(index=False)}
+
+### 3.4.4 附：独立测试集两套评分（F1与BARTScore）的公平性
+> 来源：tools/thesis_reproduction/tests 生成的测试汇总（如存在）
+{pd.read_csv(os.path.join(BASE_DIR, "tools", "thesis_reproduction", "tests", "fairness_report.csv")).to_markdown(index=False)}
+
 ## 4. 可视化图表
 ### 4.1 吞吐量 vs 延迟
 ![Throughput vs Latency](figures/throughput_vs_latency.png)
@@ -356,6 +457,18 @@ def main():
     
     # 保存中间数据
     df_analysis.to_csv(os.path.join(RESULTS_DIR, "analysis_data.csv"), index=False)
+    # 生成公平性报告CSV
+    fair_tables = compute_fairness_reports(df_analysis, (0.1,0.2,0.3))
+    try:
+        fair_out = os.path.join(RESULTS_DIR, "fairness_report.csv")
+        pd.concat([
+            fair_tables["task"].assign(group_by="task"),
+            fair_tables["language"].assign(group_by="language"),
+            fair_tables["style"].assign(group_by="style"),
+        ], ignore_index=True).to_csv(fair_out, index=False, encoding="utf-8")
+        print("公平性报告写入:", fair_out)
+    except Exception as e:
+        print("公平性报告写入失败:", str(e))
     
     print("生成图表...")
     try:
