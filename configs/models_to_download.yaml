@@ -1,0 +1,143 @@
+# Hugging Face模型下载配置
+# 用于批量下载模型
+
+# 推荐的小型模型（适合本地测试和实验）
+small_models:
+  - name: "Qwen/Qwen2.5-3B-Instruct"
+    description: "Qwen2.5 3B指令微调模型"
+    size_estimate: "6-7 GB"
+    quantize: "4bit"  # 可选: null, "4bit", "8bit"
+    priority: high
+    
+  - name: "microsoft/phi-3-mini-4k-instruct"
+    description: "Microsoft Phi-3 Mini 3.8B模型"
+    size_estimate: "7-8 GB"
+    quantize: "4bit"
+    priority: high
+    
+  - name: "google/gemma-2b-it"
+    description: "Google Gemma 2B指令模型"
+    size_estimate: "4-5 GB"
+    quantize: null
+    priority: medium
+
+# 中型模型（平衡性能和资源）
+medium_models:
+  - name: "Qwen/Qwen2.5-7B-Instruct"
+    description: "Qwen2.5 7B指令微调模型"
+    size_estimate: "14-15 GB"
+    quantize: "4bit"
+    priority: high
+    
+  - name: "meta-llama/Llama-3.2-7B-Instruct"
+    description: "Meta Llama 3.2 7B指令模型"
+    size_estimate: "14-15 GB"
+    quantize: "4bit"
+    priority: medium
+    requires_auth: true  # 需要Hugging Face授权
+    
+  - name: "mistralai/Mistral-7B-Instruct-v0.3"
+    description: "Mistral 7B指令模型 v0.3"
+    size_estimate: "14-15 GB"
+    quantize: "4bit"
+    priority: medium
+
+# 大型模型（高性能，需要更多资源）
+large_models:
+  - name: "Qwen/Qwen2.5-14B-Instruct"
+    description: "Qwen2.5 14B指令微调模型"
+    size_estimate: "28-30 GB"
+    quantize: "4bit"
+    priority: low
+    
+  - name: "meta-llama/Llama-3.1-13B-Instruct"
+    description: "Meta Llama 3.1 13B指令模型"
+    size_estimate: "26-28 GB"
+    quantize: "4bit"
+    priority: low
+    requires_auth: true
+
+# 专用模型（特定任务优化）
+specialized_models:
+  - name: "Qwen/Qwen2.5-Coder-7B-Instruct"
+    description: "Qwen2.5 代码生成专用模型"
+    size_estimate: "14-15 GB"
+    quantize: "4bit"
+    priority: medium
+    tasks: ["code_generation", "code_completion"]
+    
+  - name: "deepseek-ai/deepseek-coder-6.7b-instruct"
+    description: "DeepSeek Coder 代码生成模型"
+    size_estimate: "13-14 GB"
+    quantize: "4bit"
+    priority: medium
+    tasks: ["code_generation"]
+
+# 多语言模型
+multilingual_models:
+  - name: "Qwen/Qwen2.5-7B"
+    description: "Qwen2.5 7B基础模型（多语言）"
+    size_estimate: "14-15 GB"
+    quantize: "4bit"
+    priority: low
+    languages: ["zh", "en", "ja", "ko", "fr", "es", "de"]
+
+# 下载配置
+download_config:
+  # 输出目录
+  output_dir: "models/huggingface"
+  
+  # 并发下载数（建议1-2，避免网络拥堵）
+  max_concurrent: 1
+  
+  # 是否在下载后验证模型
+  verify_after_download: true
+  
+  # 是否自动清理下载缓存
+  cleanup_cache: false
+  
+  # 重试次数
+  max_retries: 3
+  
+  # 超时时间（秒）
+  timeout: 3600
+
+# 使用说明
+usage_notes: |
+  1. 根据优先级下载模型:
+     python scripts/batch_download_models.py --priority high
+  
+  2. 下载特定类别:
+     python scripts/batch_download_models.py --category small_models
+  
+  3. 下载单个模型:
+     python scripts/download_hf_model.py --model-name Qwen/Qwen2.5-3B-Instruct --quantize 4bit
+  
+  4. 需要授权的模型:
+     - 访问 https://huggingface.co/settings/tokens 获取token
+     - 设置环境变量: export HF_TOKEN="your_token"
+     - 或使用参数: --token your_token
+
+# 硬件要求参考
+hardware_requirements:
+  small_models:
+    ram: "8 GB"
+    vram: "4-6 GB (with 4bit quantization)"
+    disk: "10 GB per model"
+    
+  medium_models:
+    ram: "16 GB"
+    vram: "6-8 GB (with 4bit quantization)"
+    disk: "20 GB per model"
+    
+  large_models:
+    ram: "32 GB"
+    vram: "12-16 GB (with 4bit quantization)"
+    disk: "40 GB per model"
+
+# 推荐下载顺序（基于本项目需求）
+recommended_order:
+  1: "Qwen/Qwen2.5-3B-Instruct"  # 快速测试
+  2: "Qwen/Qwen2.5-7B-Instruct"  # 主要评估模型
+  3: "microsoft/phi-3-mini-4k-instruct"  # 对比基准
+  4: "Qwen/Qwen2.5-Coder-7B-Instruct"  # 代码任务专用

@@ -365,7 +365,7 @@ tools/thesis_reproduction/BARTScore/**
 !tools/thesis_reproduction/BARTScore/**/*.md
 !tools/thesis_reproduction/BARTScore/**/*.py
 
-# Model files
+# Model files - exclude all model weights and large files
 models/*.pth
 models/*.pt
 models/*.h5
@@ -373,6 +373,40 @@ models/*.pb
 models/*.onnx
 models/*.pkl
 models/*.joblib
+
+# Hugging Face models - exclude downloaded models but keep registry
+models/huggingface/*
+!models/huggingface/.gitkeep
+models/model_registry.json
+
+# ONNX models
+models/onnx/*
+!models/onnx/.gitkeep
+
+# Quantized models
+models/quantized/*
+!models/quantized/.gitkeep
+
+# Model cache
+models/cache/
+models/**/cache/
+
+# Hugging Face cache
+.cache/huggingface/
+transformers_cache/
+
+# Large model files by extension
+*.bin
+*.safetensors
+*.msgpack
+*.h5
+*.ot
+*.ckpt
+
+# But allow README and documentation
+!models/README.md
+!models/**/README.md
+!models/**/*.md
 
 # Results
 results/*.csv
