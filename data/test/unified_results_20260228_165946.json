@@ -1,0 +1,46 @@
+[
+  {
+    "model_spec": "hf:models/huggingface/Qwen--Qwen2.5-7B-Instruct:4bit",
+    "model_info": {
+      "type": "huggingface",
+      "path": "F:/all_proj/GenAI_power_analize/models/huggingface/Qwen--Qwen2.5-7B-Instruct",
+      "quantize": "4bit",
+      "display_name": "HF:Qwen--Qwen2.5-7B-Instruct:4bit"
+    },
+    "prompt": "请总结以下文本的主要内容：人工智能技术正在快速发展，深度学习、自然语言处理和计算机视觉等领域取得了重大突破。这些技术正在改变我们的生活方式，从智能助手到自动驾驶汽车，AI的应用无处不在。",
+    "task_type": "summary",
+    "generated_text": "同时，随着数据量的增加和计算能力的提升，AI的应用场景也在不断扩大。然而，AI也带来了一些挑战，例如隐私保护和安全问题。为了应对这些挑战，我们需要加强技术研发和法律法规建设。\n文本主要讲述了人工智能技术的快速发展及其应用，并指出了其带来的挑战。其中提到了深度学习、自然语言处理和计算机视觉等领域的突破，以及AI在智能助手和自动驾驶汽车等方面的应用。同时，文中还强调了数据量增加和计算能力提升对应用场景扩大的影响，并指出了隐私保护和安全问题等挑战。最后，提出需要加强技术研发和法律法规建设来应对这些挑战。主要内容可以概括为：AI技术进步与应用扩大及面临的挑战。#人工智能 #",
+    "performance": {
+      "total_time_seconds": 51.63569927215576,
+      "token_count": 150,
+      "throughput_tokens_per_sec": 2.9049669533745734,
+      "latency_per_token_ms": 344.2379951477051
+    },
+    "resources": {
+      "cpu_percent_avg": 30.24483870967743,
+      "cpu_percent_peak": 77.6,
+      "mem_used_peak_mb": 14357.015625,
+      "gpu_util_avg": 60.70967741935484,
+      "gpu_util_peak": 93,
+      "gpu_mem_peak_mb": 8155.23828125,
+      "gpu_power_avg_w": 31.8590935483871,
+      "gpu_energy_j": 2155.784683359146,
+      "gpu_temp_peak_c": 66,
+      "cpu_energy_j_approx": 1333.7804781210416
+    },
+    "quality": {
+      "bartscore": -3.9773991107940674,
+      "has_reference": true
+    },
+    "metadata": {
+      "timestamp": "2026-02-28T17:00:54.361172",
+      "max_tokens": 150,
+      "temperature": 0.5,
+      "top_p": 0.9,
+      "response_metadata": {
+        "model_path": "F:/all_proj/GenAI_power_analize/models/huggingface/Qwen--Qwen2.5-7B-Instruct",
+        "quantize": "4bit"
+      }
+    }
+  }
+]

@@ -1,79 +1,47 @@
 # 实验框架更新说明
 
-本文档说明对 `experiments/` 目录的更新，以支持 Hugging Face 模型和量化参数。
+本文档说明对 `experiments/` 目录的更新，现已将 Hugging Face 模型支持整合到主运行器中。
 
 ## 📋 更新概述
 
 实验框架现已支持：
+
 - ✅ Ollama 和 Hugging Face 模型的统一调用
 - ✅ 4bit/8bit 量化支持
 - ✅ 灵活的模型规格配置
 - ✅ 向后兼容原有 Ollama 实验
 - ✅ 完整的资源监控和质量评估
 
-## 🗂️ 新增和修改的文件
+## 🔄 重要变更
 
-### 新增文件
+### 合并统一运行器
+
+`unified_runner.py` 的功能已完全整合到 `experiment_runner.py` 中：
+
+- ✅ 单一入口点，简化使用
+- ✅ 保持所有功能不变
+- ✅ 向后兼容原有配置
+- ✅ 删除了冗余文件
+
+### 已删除的文件
 
 ```
 experiments/
-├── unified_runner.py              # 新增：统一实验运行器
-├── test_cases_mixed.json          # 新增：混合模型测试用例示例
-├── UNIFIED_RUNNER_GUIDE.md        # 新增：使用指南
-└── config.py                      # 修改：增加HF模型配置
+├── unified_runner.py              # 已删除：功能已合并
+├── test_cases_mixed.json          # 已删除：使用 data/test/test_cases.json
+├── UNIFIED_RUNNER_GUIDE.md        # 已删除：内容已整合到其他文档
+└── test_unified_system.py         # 已删除：使用统一的测试脚本
 ```
 
-### 文件说明
+## 🗂️ 当前文件结构
 
-#### 1. `unified_runner.py` - 统一实验运行器
-
-**功能**:
-- 统一接口调用 Ollama 和 HF 模型
-- 自动解析模型规格字符串
-- 支持量化参数配置
-- 完整的资源监控
-- BARTScore 质量评估
-- 模型缓存管理
-
-**核心类**:
-```python
-class UnifiedExperimentRunner:
-    def parse_model_spec(self, model_spec)  # 解析模型规格
-    def call_ollama_generate(...)           # 调用Ollama模型
-    def call_hf_generate(...)               # 调用HF模型
-    def run_single_experiment(...)          # 运行单次实验
-    def run_experiment_suite(...)           # 运行实验套件
 ```
-
-#### 2. `test_cases_mixed.json` - 混合模型测试用例
-
-包含 Ollama 和 HF 模型的对比测试用例：
-- QA 任务对比
-- 代码生成对比
-- 创意写作对比
-- 文本摘要对比
-
-#### 3. `config.py` - 增强配置文件
-
-新增内容:
-```python
-# Ollama模型列表
-OLLAMA_MODELS = [...]
-
-# HF模型配置
-HF_MODELS = [
-    {
-        "name": "Qwen2.5-3B-4bit",
-        "path": "models/huggingface/Qwen--Qwen2.5-3B-Instruct",
-        "quantize": "4bit"
-    },
-    ...
-]
-
-# 辅助函数
-def get_all_model_specs()
-def get_hf_model_by_name(name)
-def get_model_display_name(model_spec)
+experiments/
+├── experiment_runner.py           # 统一实验运行器（支持 Ollama + HF）
+├── config.py                      # 实验配置（包含 HF 模型配置）
+├── monitor.py                     # 资源监控
+├── quality.py                     # 质量评估（BARTScore）
+└── experiment_runner.py.backup    # 原版本备份
 ```
 
 ## 🎯 模型规格格式
@@ -114,18 +82,21 @@ def get_model_display_name(model_spec)
 # 激活环境
 conda activate bartscore
 
-# 运行示例（包含Ollama和HF模型）
-python experiments/unified_runner.py --sample
+# 运行 Ollama 模型示例
+python experiments/experiment_runner.py --config data/test/test_cases_ollama.json --output-dir data/test
+
+# 运行混合模型示例
+python experiments/experiment_runner.py --config data/test/test_cases.json --output-dir data/test
 ```
 
 ### 方法2: 使用配置文件
 
 ```bash
-# 使用混合模型配置
-python experiments/unified_runner.py --config experiments/test_cases_mixed.json
+# 使用自定义配置
+python experiments/experiment_runner.py --config your_config.json
 
 # 指定输出目录
-python experiments/unified_runner.py --config experiments/test_cases_mixed.json --output-dir results/exp_2
+python experiments/experiment_runner.py --config your_config.json --output-dir results/exp_2
 ```
 
 ### 方法3: 创建自定义配置
@@ -152,8 +123,9 @@ python experiments/unified_runner.py --config experiments/test_cases_mixed.json 
 ```
 
 运行:
+
 ```bash
-python experiments/unified_runner.py --config my_experiment.json
+python experiments/experiment_runner.py --config my_experiment.json
 ```
 
 ## 📊 实验结果格式
@@ -192,33 +164,31 @@ python experiments/unified_runner.py --config my_experiment.json
 
 ### 原有 Ollama 实验
 
-原有的 `experiment_runner.py` 仍然可用：
+原有的配置文件完全兼容，无需修改：
 
 ```bash
-# 继续使用原有脚本
+# 继续使用原有配置
 python experiments/experiment_runner.py --config test_cases.json
 ```
 
-### 迁移到统一运行器
+### 迁移说明
 
-只需修改模型名称格式：
+如果你之前使用过 `unified_runner.py`，现在只需：
 
-**原配置**:
-```json
-{
-  "model": "qwen3:4b",
-  "prompt": "...",
-  ...
-}
+1. 将所有 `unified_runner.py` 替换为 `experiment_runner.py`
+2. 配置文件格式保持不变
+3. 所有功能保持一致
+
+**原命令**:
+
+```bash
+python experiments/unified_runner.py --config test_cases.json
 ```
 
-**新配置**（兼容）:
-```json
-{
-  "model": "qwen3:4b",  # 或 "ollama:qwen3:4b"
-  "prompt": "...",
-  ...
-}
+**新命令**:
+
+```bash
+python experiments/experiment_runner.py --config test_cases.json
 ```
 
 ## 💡 使用场景
@@ -331,10 +301,12 @@ python scripts/convert_results.py --input results/unified_results_*.json --outpu
 
 ## 📚 相关文档
 
-- [统一运行器使用指南](experiments/UNIFIED_RUNNER_GUIDE.md)
+- [快速开始指南](QUICK_START_GUIDE.md)
+- [迁移指南](MIGRATION_GUIDE.md)
 - [HF模型使用指南](docs/experiment/hf_models_guide.md)
 - [HF模型快速开始](HUGGINGFACE_SETUP.md)
 - [模型下载配置](configs/models_to_download.yaml)
+- [故障排除](TROUBLESHOOTING.md)
 
 ## ⚠️ 注意事项
 
@@ -382,8 +354,9 @@ python scripts/manage_models.py --list
 
 ## 📞 获取帮助
 
-- 查看详细指南: `experiments/UNIFIED_RUNNER_GUIDE.md`
+- 快速开始: `QUICK_START_GUIDE.md`
+- 迁移说明: `MIGRATION_GUIDE.md`
 - 检查模型状态: `python scripts/manage_models.py --list`
-- 验证环境: `python experiments/unified_runner.py --sample`
+- 验证环境: `python scripts/test_ollama_runner.py`
 
 祝实验顺利！🚀

@@ -1,0 +1,39 @@
+[
+  {
+    "model": "qwen3:4b",
+    "prompts": [
+      "请解释牛顿第一定律。",
+      "请举出一个牛顿第一定律的实际应用例子。"
+    ],
+    "task_type": "qa",
+    "keep_context": true,
+    "reference_text": "牛顿第一定律指出物体保持静止或匀速直线运动状态，除非受到外力作用。实际应用如安全带在急刹车时保护乘客。",
+    "max_tokens": 200,
+    "temperature": 0.7,
+    "top_p": 0.9
+  },
+  {
+    "model": "gemma3:4b",
+    "prompts": [
+      "什么是Python？",
+      "它有哪些主要特点？",
+      "请给我一个简单的代码示例。"
+    ],
+    "task_type": "code",
+    "keep_context": true,
+    "max_tokens": 250,
+    "temperature": 0.5,
+    "top_p": 0.9
+  },
+  {
+    "model": "deepseek-r1:8b",
+    "prompts": [
+      "请解释什么是机器学习。"
+    ],
+    "task_type": "qa",
+    "keep_context": false,
+    "max_tokens": 300,
+    "temperature": 0.7,
+    "top_p": 0.9
+  }
+]

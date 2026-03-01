@@ -50,22 +50,40 @@ class HuggingFaceModelLoader:
         Returns:
             (model, tokenizer) 元组
         """
-        model_path = Path(model_path)
+        # 规范化路径
+        if isinstance(model_path, str):
+            model_path = Path(model_path)
+        
+        # 如果是相对路径，转换为绝对路径
+        if not model_path.is_absolute():
+            # 尝试相对于当前工作目录
+            if not model_path.exists():
+                # 尝试相对于项目根目录
+                project_root = Path(__file__).parent.parent.parent
+                model_path = project_root / model_path
+        
+        # 确保路径存在
+        if not model_path.exists():
+            raise FileNotFoundError(f"模型路径不存在: {model_path}")
+        
+        # 转换为字符串（Transformers库需要字符串路径）
+        model_path_str = str(model_path.resolve())
         
         # 检查缓存
-        cache_key = f"{model_path}_{quantize}_{device}"
+        cache_key = f"{model_path_str}_{quantize}_{device}"
         if cache_key in self.loaded_models:
             print(f"✓ 从缓存加载模型: {model_path.name}")
             return self.loaded_models[cache_key]
         
         print(f"\n{'='*60}")
         print(f"加载模型: {model_path.name}")
+        print(f"路径: {model_path_str}")
         print(f"{'='*60}\n")
         
         # 加载分词器
         print("📝 加载分词器...")
         tokenizer = AutoTokenizer.from_pretrained(
-            model_path,
+            model_path_str,
             trust_remote_code=trust_remote_code
         )
         
@@ -78,27 +96,41 @@ class HuggingFaceModelLoader:
         # 配置量化
         quantization_config = None
         if quantize == "4bit":
-            print("⚙️  配置4bit量化...")
+            print("⚙️  配置4bit量化（启用 CPU offload）...")
             quantization_config = BitsAndBytesConfig(
                 load_in_4bit=True,
                 bnb_4bit_compute_dtype=torch.float16,
                 bnb_4bit_use_double_quant=True,
-                bnb_4bit_quant_type="nf4"
+                bnb_4bit_quant_type="nf4",
+                llm_int8_enable_fp32_cpu_offload=True,  # 启用 CPU offload
+                bnb_4bit_quant_storage=torch.float16  # 使用 float16 存储量化权重
             )
         elif quantize == "8bit":
-            print("⚙️  配置8bit量化...")
+            print("⚙️  配置8bit量化（启用 CPU offload）...")
             quantization_config = BitsAndBytesConfig(
-                load_in_8bit=True
+                load_in_8bit=True,
+                llm_int8_enable_fp32_cpu_offload=True,  # 启用 CPU offload
+                llm_int8_threshold=6.0
             )
+        
+        # 配置 device_map
+        # 对于量化模型，使用 "auto" 让 transformers 自动分配
+        # 这会在 GPU 显存不足时自动使用 CPU
+        if quantize:
+            device_map_config = "auto"
+            print(f"   使用自动设备映射（GPU + CPU offload）")
+        else:
+            device_map_config = device
         
         # 加载模型
         print("🤖 加载模型...")
         model = AutoModelForCausalLM.from_pretrained(
-            model_path,
+            model_path_str,
             quantization_config=quantization_config,
-            device_map=device,
+            device_map=device_map_config,
             trust_remote_code=trust_remote_code,
             torch_dtype=torch.float16 if quantize is None else None,
+            low_cpu_mem_usage=True,  # 减少 CPU 内存使用
             **kwargs
         )
         
@@ -106,9 +138,6 @@ class HuggingFaceModelLoader:
         
         # 显示模型信息
         self._print_model_info(model, quantize)
-        
-        # 更新最后使用时间
-        self._update_last_used(model_path)
         
         # 缓存模型
         self.loaded_models[cache_key] = (model, tokenizer)
@@ -148,22 +177,46 @@ class HuggingFaceModelLoader:
         """
         # 编码输入
         inputs = tokenizer(prompt, return_tensors="pt")
-        inputs = {k: v.to(model.device) for k, v in inputs.items()}
+        
+        # 将输入移动到正确的设备
+        # 对于量化模型，需要特别处理
+        if hasattr(model, 'device'):
+            device = model.device
+        elif hasattr(model, 'hf_device_map'):
+            # 对于使用 device_map 的模型，使用第一个设备
+            device = next(iter(model.hf_device_map.values()))
+            if isinstance(device, str):
+                device = torch.device(device)
+        else:
+            device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+        
+        # 移动输入到设备
+        inputs = {k: v.to(device) for k, v in inputs.items()}
+        
+        # 生成配置
+        generation_config = {
+            "max_new_tokens": max_new_tokens,
+            "do_sample": do_sample,
+            "pad_token_id": tokenizer.pad_token_id,
+            "eos_token_id": tokenizer.eos_token_id,
+        }
+        
+        # 只在采样时添加 temperature 和 top_p
+        if do_sample:
+            generation_config["temperature"] = temperature
+            generation_config["top_p"] = top_p
+        
+        # 合并额外参数
+        generation_config.update(kwargs)
         
         # 生成
         with torch.no_grad():
             outputs = model.generate(
                 **inputs,
-                max_new_tokens=max_new_tokens,
-                temperature=temperature,
-                top_p=top_p,
-                do_sample=do_sample,
-                pad_token_id=tokenizer.pad_token_id,
-                eos_token_id=tokenizer.eos_token_id,
-                **kwargs
+                **generation_config
             )
         
-        # 解码输出
+        # 解码输出（只解码新生成的部分）
         generated_text = tokenizer.decode(
             outputs[0][inputs['input_ids'].shape[1]:],
             skip_special_tokens=True

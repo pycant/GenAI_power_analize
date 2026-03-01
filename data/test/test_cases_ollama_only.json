@@ -1,0 +1,36 @@
+[
+  {
+    "model": "qwen3:4b",
+    "prompt": "请总结以下文本的主要内容：人工智能技术正在快速发展，深度学习、自然语言处理和计算机视觉等领域取得了重大突破。这些技术正在改变我们的生活方式，从智能助手到自动驾驶汽车，AI的应用无处不在。",
+    "task_type": "summary",
+    "reference_text": "人工智能技术快速发展，深度学习等领域取得突破，正在改变生活方式，应用广泛。",
+    "max_tokens": 150,
+    "temperature": 0.5,
+    "top_p": 0.9
+  },
+  {
+    "model": "gemma3:4b",
+    "prompt": "写一个Python函数来计算斐波那契数列的第n项。",
+    "task_type": "code",
+    "max_tokens": 200,
+    "temperature": 0.3,
+    "top_p": 0.9
+  },
+  {
+    "model": "deepseek-r1:8b",
+    "prompt": "请解释什么是机器学习中的过拟合现象，以及如何避免它？",
+    "task_type": "qa",
+    "reference_text": "过拟合是指模型在训练数据上表现很好，但在新数据上表现较差的现象。可以通过正则化、交叉验证、增加训练数据等方法来避免。",
+    "max_tokens": 250,
+    "temperature": 0.7,
+    "top_p": 0.9
+  },
+  {
+    "model": "qwen3:8b",
+    "prompt": "创作一首关于春天的短诗。",
+    "task_type": "creative",
+    "max_tokens": 150,
+    "temperature": 0.9,
+    "top_p": 0.95
+  }
+]
