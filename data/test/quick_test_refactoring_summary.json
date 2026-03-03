@@ -1,0 +1,181 @@
+[
+  {
+    "experiment_id": "exp_20260302_194904_2560180452848",
+    "config_ref": {
+      "model": "Ollama:qwen3:4b",
+      "task_type": "qa",
+      "prompts_count": 1,
+      "keep_context": false,
+      "per_turn_monitoring": false
+    },
+    "baseline_summary": {
+      "duration_seconds": 0,
+      "gpu_power_avg_w": 0.0,
+      "gpu_power_peak_w": 0.0,
+      "gpu_power_std_w": 0.0,
+      "gpu_energy_j": 0.0,
+      "cpu_percent_avg": 31.18823529411765,
+      "cpu_percent_peak": 41.5,
+      "gpu_util_avg": 0.0,
+      "gpu_util_peak": 0,
+      "gpu_mem_avg_mb": 0.0,
+      "gpu_mem_peak_mb": 0.0,
+      "gpu_temp_avg_c": 0.0,
+      "gpu_temp_peak_c": 0
+    },
+    "performance": {
+      "total_time_seconds": 5.890915632247925,
+      "token_count": 50,
+      "output_tokens": 50,
+      "throughput_tokens_per_sec": 8.487644896201036,
+      "latency_per_token_ms": 117.8183126449585,
+      "turns": 1,
+      "avg_time_per_turn": 5.890915632247925,
+      "ttft_seconds": null
+    },
+    "resources": {
+      "cpu_percent_avg": 50.00714285714287,
+      "cpu_percent_peak": 93.1,
+      "cpu_percent_std": 18.20247095807577,
+      "mem_used_avg_mb": 13702.79478236607,
+      "mem_used_peak_mb": 13969.578125,
+      "gpu_util_avg": 0.0,
+      "gpu_util_peak": 0,
+      "gpu_util_std": 0.0,
+      "gpu_mem_avg_mb": 0.0,
+      "gpu_mem_peak_mb": 0.0,
+      "gpu_power_avg_w": 0.0,
+      "gpu_power_peak_w": 0.0,
+      "gpu_power_std_w": 0.0,
+      "gpu_energy_j": 0.0,
+      "gpu_temp_avg_c": 0.0,
+      "gpu_temp_peak_c": 0,
+      "cpu_energy_j_approx": 136.86459251761434
+    },
+    "derived_metrics": {
+      "P_idle": 0.0,
+      "P_inc": 0,
+      "E_inc": 0
+    },
+    "quality": {
+      "bartscore": null,
+      "generated_text_length": 97,
+      "has_reference": false,
+      "avg_response_length": 97.0
+    },
+    "conversation_summary": [
+      {
+        "turn": 1,
+        "prompt_preview": "什么是Python？请用一句话回答。",
+        "response_preview": "嗯，用户问“什么是Python？请用一句话回答。”，需要简洁准确的一句话。首先得确定Python的核心定义：它是一种高级编程语言，强调可读性，广泛用于Web开发、数据分析、人工智能等领域。要避免",
+        "response_length": 97,
+        "duration_seconds": 5.55365777015686,
+        "tokens": 50,
+        "throughput": 9.00307546292824
+      }
+    ],
+    "metadata": {
+      "timestamp": "2026-03-02T19:49:14.217776",
+      "analysis_version": "1.0",
+      "max_tokens": 50,
+      "temperature": 0.7,
+      "top_p": 0.9
+    }
+  },
+  {
+    "experiment_id": "exp_20260302_194916_2560180452848",
+    "config_ref": {
+      "model": "Ollama:qwen3:4b",
+      "task_type": "qa",
+      "prompts_count": 2,
+      "keep_context": true,
+      "per_turn_monitoring": true
+    },
+    "baseline_summary": {
+      "duration_seconds": 0,
+      "gpu_power_avg_w": 0.0,
+      "gpu_power_peak_w": 0.0,
+      "gpu_power_std_w": 0.0,
+      "gpu_energy_j": 0.0,
+      "cpu_percent_avg": 31.641176470588242,
+      "cpu_percent_peak": 43.8,
+      "gpu_util_avg": 0.0,
+      "gpu_util_peak": 0,
+      "gpu_mem_avg_mb": 0.0,
+      "gpu_mem_peak_mb": 0.0,
+      "gpu_temp_avg_c": 0.0,
+      "gpu_temp_peak_c": 0
+    },
+    "performance": {
+      "total_time_seconds": 3.884436845779419,
+      "token_count": 100,
+      "output_tokens": 100,
+      "throughput_tokens_per_sec": 25.743757453195208,
+      "latency_per_token_ms": 38.84436845779419,
+      "turns": 2,
+      "avg_time_per_turn": 1.9422184228897095,
+      "ttft_seconds": null
+    },
+    "resources": {
+      "cpu_percent_avg": 31.55263157894737,
+      "cpu_percent_peak": 43.0,
+      "cpu_percent_std": 8.775466304662444,
+      "mem_used_avg_mb": 13903.600534539473,
+      "mem_used_peak_mb": 13926.86328125,
+      "gpu_util_avg": 0.0,
+      "gpu_util_peak": 0,
+      "gpu_util_std": 0.0,
+      "gpu_mem_avg_mb": 0.0,
+      "gpu_mem_peak_mb": 0.0,
+      "gpu_power_avg_w": 0.0,
+      "gpu_power_peak_w": 0.0,
+      "gpu_power_std_w": 0.0,
+      "gpu_energy_j": 0.0,
+      "gpu_temp_avg_c": 0.0,
+      "gpu_temp_peak_c": 0,
+      "cpu_energy_j_approx": 56.58202118039131
+    },
+    "derived_metrics": {
+      "P_idle": 0.0,
+      "P_inc": 0,
+      "E_inc": 0
+    },
+    "quality": {
+      "bartscore": null,
+      "generated_text_length": 83,
+      "has_reference": false,
+      "avg_response_length": 88.0
+    },
+    "conversation_summary": [
+      {
+        "turn": 1,
+        "prompt_preview": "什么是机器学习？",
+        "response_preview": "嗯，用户问“什么是机器学习？”，这是一个基础但非常重要的问题。用户可能是刚接触AI领域的学生、对技术感兴趣的普通人，或者只是想快速了解概念的非专业人士。需要避免用太多数学公式，但又要保证",
+        "response_length": 93,
+        "duration_seconds": 1.3820545673370361,
+        "gpu_power_avg_w": 0.0,
+        "gpu_energy_j": 0.0,
+        "tokens": 50,
+        "throughput": 36.17802160759887
+      },
+      {
+        "turn": 2,
+        "prompt_preview": "它有哪些应用？",
+        "response_preview": "嗯，用户之前问了“什么是机器学习？”，现在又接着问“它有哪些应用？”。看来用户对机器学习有基本兴趣，想进一步了解实际用途。可能是个学生做作业，或者职场人想学习新技术，",
+        "response_length": 83,
+        "duration_seconds": 1.344247817993164,
+        "gpu_power_avg_w": 0.0,
+        "gpu_energy_j": 0.0,
+        "tokens": 50,
+        "throughput": 37.19552252994936
+      }
+    ],
+    "metadata": {
+      "timestamp": "2026-03-02T19:49:23.991575",
+      "analysis_version": "1.0",
+      "max_tokens": 50,
+      "temperature": 0.7,
+      "top_p": 0.9
+    }
+  }
+]

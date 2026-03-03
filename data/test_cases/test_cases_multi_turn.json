@@ -1,0 +1,192 @@
+{
+  "metadata": {
+    "task_type": "multi_turn",
+    "count": 6,
+    "created_date": "2026-03-02"
+  },
+  "tasks": [
+    {
+      "id": "multi_turn_001",
+      "task_type": "multi_turn",
+      "difficulty": "medium",
+      "language": "zh",
+      "conversation": [
+        {
+          "turn": 1,
+          "user": "我想去北京旅游，有什么推荐的景点吗？",
+          "expected_topics": [
+            "故宫",
+            "长城",
+            "天安门",
+            "颐和园"
+          ]
+        },
+        {
+          "turn": 2,
+          "user": "你刚才提到的第一个景点，门票多少钱？",
+          "context_check": "需要记住第一轮提到的第一个景点"
+        },
+        {
+          "turn": 3,
+          "user": "那个景点附近有什么好吃的？",
+          "context_check": "需要记住前两轮讨论的景点"
+        }
+      ],
+      "temperature": 0.7,
+      "max_tokens": 200,
+      "repeat": 3,
+      "source": "manual"
+    },
+    {
+      "id": "multi_turn_002",
+      "task_type": "multi_turn",
+      "difficulty": "medium",
+      "language": "zh",
+      "conversation": [
+        {
+          "turn": 1,
+          "user": "我现在要告诉你三个人的信息。张三：35岁，工程师，喜欢篮球。李四：28岁，教师，喜欢阅读。王五：42岁，医生，喜欢旅游。"
+        },
+        {
+          "turn": 2,
+          "user": "请问李四的职业是什么？",
+          "expected_answer": "教师"
+        },
+        {
+          "turn": 3,
+          "user": "谁的年龄最大？",
+          "expected_answer": "王五"
+        },
+        {
+          "turn": 4,
+          "user": "喜欢篮球的人是做什么工作的？",
+          "expected_answer": "工程师"
+        }
+      ],
+      "temperature": 0.2,
+      "max_tokens": 100,
+      "repeat": 3,
+      "source": "manual"
+    },
+    {
+      "id": "multi_turn_003",
+      "task_type": "multi_turn",
+      "difficulty": "easy",
+      "language": "zh",
+      "conversation": [
+        {
+          "turn": 1,
+          "user": "什么是机器学习？",
+          "expected_topics": [
+            "算法",
+            "数据",
+            "模型",
+            "训练"
+          ]
+        },
+        {
+          "turn": 2,
+          "user": "它和深度学习有什么区别？",
+          "context_check": "需要记住第一轮讨论的机器学习概念"
+        },
+        {
+          "turn": 3,
+          "user": "能举个实际应用的例子吗？",
+          "context_check": "需要结合前两轮的讨论内容"
+        }
+      ],
+      "temperature": 0.7,
+      "max_tokens": 200,
+      "repeat": 3,
+      "source": "manual"
+    },
+    {
+      "id": "multi_turn_004",
+      "task_type": "multi_turn",
+      "difficulty": "hard",
+      "language": "zh",
+      "conversation": [
+        {
+          "turn": 1,
+          "user": "我有一个Python列表 [3, 1, 4, 1, 5, 9, 2, 6]，请帮我排序。"
+        },
+        {
+          "turn": 2,
+          "user": "现在请找出排序后列表中的中位数。",
+          "context_check": "需要记住排序后的列表"
+        },
+        {
+          "turn": 3,
+          "user": "如果我在原列表末尾添加数字7，中位数会变成多少？",
+          "context_check": "需要基于之前的列表进行计算"
+        }
+      ],
+      "temperature": 0.2,
+      "max_tokens": 150,
+      "repeat": 3,
+      "source": "manual"
+    },
+    {
+      "id": "multi_turn_005",
+      "task_type": "multi_turn",
+      "difficulty": "medium",
+      "language": "zh",
+      "conversation": [
+        {
+          "turn": 1,
+          "user": "请推荐三本关于人工智能的入门书籍。",
+          "expected_topics": [
+            "机器学习",
+            "深度学习",
+            "AI"
+          ]
+        },
+        {
+          "turn": 2,
+          "user": "第二本书的作者是谁？",
+          "context_check": "需要记住第一轮推荐的第二本书"
+        },
+        {
+          "turn": 3,
+          "user": "这位作者还写过其他什么书吗？",
+          "context_check": "需要记住第二轮提到的作者"
+        }
+      ],
+      "temperature": 0.7,
+      "max_tokens": 200,
+      "repeat": 3,
+      "source": "manual"
+    },
+    {
+      "id": "multi_turn_006",
+      "task_type": "multi_turn",
+      "difficulty": "easy",
+      "language": "zh",
+      "conversation": [
+        {
+          "turn": 1,
+          "user": "今天天气怎么样？",
+          "expected_topics": [
+            "天气",
+            "温度",
+            "状况"
+          ]
+        },
+        {
+          "turn": 2,
+          "user": "适合户外运动吗？",
+          "context_check": "需要基于第一轮的天气信息判断"
+        },
+        {
+          "turn": 3,
+          "user": "那我应该穿什么衣服？",
+          "context_check": "需要结合前两轮的天气和活动信息"
+        }
+      ],
+      "temperature": 0.7,
+      "max_tokens": 150,
+      "repeat": 3,
+      "source": "manual"
+    }
+  ]
+}

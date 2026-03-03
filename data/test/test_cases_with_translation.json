@@ -1,0 +1,217 @@
+[
+  {
+    "id": "qa_001",
+    "task_type": "qa",
+    "difficulty": "easy",
+    "domain": "science",
+    "language": "zh",
+    "prompts": ["光合作用的主要产物是什么？"],
+    "expected_answer": "葡萄糖和氧气",
+    "keywords": ["葡萄糖", "氧气", "糖", "O2"],
+    "config": {
+      "model": "Ollama:qwen3:4b",
+      "temperature": 0.0,
+      "max_tokens": 100,
+      "keep_context": false,
+      "per_turn_monitoring": false
+    }
+  },
+  {
+    "id": "math_001",
+    "task_type": "math",
+    "difficulty": "medium",
+    "domain": "arithmetic",
+    "language": "zh",
+    "prompts": ["一个长方形的长是 12 米，宽是 8 米，求其面积和周长。请展示计算步骤。"],
+    "expected_answer": {
+      "area": 96,
+      "perimeter": 40
+    },
+    "expected_steps": [
+      "面积 = 长 × 宽 = 12 × 8 = 96",
+      "周长 = 2 × (长 + 宽) = 2 × 20 = 40"
+    ],
+    "config": {
+      "model": "Ollama:qwen3:4b",
+      "temperature": 0.0,
+      "max_tokens": 300,
+      "keep_context": false,
+      "per_turn_monitoring": false
+    }
+  },
+  {
+    "id": "code_001",
+    "task_type": "code",
+    "difficulty": "medium",
+    "domain": "programming",
+    "language": "zh",
+    "prompts": ["编写一个 Python 函数，判断一个字符串是否为回文（忽略大小写和空格）。函数签名：def is_palindrome(s: str) -> bool"],
+    "test_cases": [
+      {"input": "racecar", "expected": true},
+      {"input": "hello", "expected": false},
+      {"input": "A man a plan a canal Panama", "expected": true}
+    ],
+    "config": {
+      "model": "Ollama:qwen3:4b",
+      "temperature": 0.1,
+      "max_tokens": 500,
+      "keep_context": false,
+      "per_turn_monitoring": false
+    }
+  },
+  {
+    "id": "trans_en_zh_001",
+    "task_type": "translation",
+    "direction": "en_to_zh",
+    "difficulty": "easy",
+    "domain": "general",
+    "language": "en",
+    "prompts": ["请将以下英文翻译成中文：\n\nArtificial intelligence is transforming the way we live and work."],
+    "source_text": "Artificial intelligence is transforming the way we live and work.",
+    "reference_translation": "人工智能正在改变我们的生活和工作方式。",
+    "config": {
+      "model": "Ollama:qwen3:4b",
+      "temperature": 0.2,
+      "max_tokens": 200,
+      "keep_context": false,
+      "per_turn_monitoring": false
+    }
+  },
+  {
+    "id": "trans_en_zh_002",
+    "task_type": "translation",
+    "direction": "en_to_zh",
+    "difficulty": "medium",
+    "domain": "technology",
+    "language": "en",
+    "prompts": ["请将以下英文翻译成中文：\n\nMachine learning algorithms can automatically improve through experience and by the use of data."],
+    "source_text": "Machine learning algorithms can automatically improve through experience and by the use of data.",
+    "reference_translation": "机器学习算法可以通过经验和使用数据自动改进。",
+    "config": {
+      "model": "Ollama:qwen3:4b",
+      "temperature": 0.2,
+      "max_tokens": 200,
+      "keep_context": false,
+      "per_turn_monitoring": false
+    }
+  }
+]
+,
+  {
+    "id": "trans_zh_en_001",
+    "task_type": "translation",
+    "direction": "zh_to_en",
+    "difficulty": "easy",
+    "domain": "general",
+    "language": "zh",
+    "prompts": ["请将以下中文翻译成英文：\n\n今天天气很好，适合出去散步。"],
+    "source_text": "今天天气很好，适合出去散步。",
+    "reference_translation": "The weather is nice today, perfect for going out for a walk.",
+    "config": {
+      "model": "Ollama:qwen3:4b",
+      "temperature": 0.2,
+      "max_tokens": 200,
+      "keep_context": false,
+      "per_turn_monitoring": false
+    }
+  },
+  {
+    "id": "trans_zh_en_002",
+    "task_type": "translation",
+    "direction": "zh_to_en",
+    "difficulty": "medium",
+    "domain": "technology",
+    "language": "zh",
+    "prompts": ["请将以下中文翻译成英文：\n\n深度学习模型在图像识别领域取得了突破性进展。"],
+    "source_text": "深度学习模型在图像识别领域取得了突破性进展。",
+    "reference_translation": "Deep learning models have made breakthrough progress in the field of image recognition.",
+    "config": {
+      "model": "Ollama:qwen3:4b",
+      "temperature": 0.2,
+      "max_tokens": 200,
+      "keep_context": false,
+      "per_turn_monitoring": false
+    }
+  },
+  {
+    "id": "trans_en_zh_tech_001",
+    "task_type": "translation",
+    "direction": "en_to_zh",
+    "difficulty": "hard",
+    "domain": "technical",
+    "language": "en",
+    "prompts": ["请将以下技术文本翻译成中文，注意专业术语的准确性：\n\nThe convolutional neural network architecture consists of multiple layers including convolution, pooling, and fully connected layers."],
+    "source_text": "The convolutional neural network architecture consists of multiple layers including convolution, pooling, and fully connected layers.",
+    "reference_translation": "卷积神经网络架构由多个层组成，包括卷积层、池化层和全连接层。",
+    "terminology": {
+      "convolutional neural network": "卷积神经网络",
+      "convolution": "卷积",
+      "pooling": "池化",
+      "fully connected": "全连接"
+    },
+    "config": {
+      "model": "Ollama:qwen3:4b",
+      "temperature": 0.1,
+      "max_tokens": 300,
+      "keep_context": false,
+      "per_turn_monitoring": false
+    }
+  },
+  {
+    "id": "summary_001",
+    "task_type": "summary",
+    "difficulty": "medium",
+    "domain": "news",
+    "language": "zh",
+    "prompts": ["请将以下新闻总结为 50-100 字的摘要，保留关键信息：\n\n近日，某科技公司发布了最新的人工智能芯片，该芯片采用了先进的 5 纳米工艺，性能相比上一代提升了 40%，同时功耗降低了 30%。这款芯片专为深度学习和机器学习任务优化，能够显著提升 AI 模型的训练和推理速度。业内专家认为，这一突破将推动人工智能技术在更多领域的应用，特别是在自动驾驶、医疗诊断和智能制造等方面。"],
+    "source_text": "近日，某科技公司发布了最新的人工智能芯片，该芯片采用了先进的 5 纳米工艺，性能相比上一代提升了 40%，同时功耗降低了 30%。这款芯片专为深度学习和机器学习任务优化，能够显著提升 AI 模型的训练和推理速度。业内专家认为，这一突破将推动人工智能技术在更多领域的应用，特别是在自动驾驶、医疗诊断和智能制造等方面。",
+    "reference_summary": "某科技公司发布新一代 AI 芯片，采用 5 纳米工艺，性能提升 40%，功耗降低 30%。该芯片优化深度学习任务，将推动 AI 在自动驾驶、医疗等领域应用。",
+    "config": {
+      "model": "Ollama:qwen3:4b",
+      "temperature": 0.7,
+      "max_tokens": 200,
+      "keep_context": false,
+      "per_turn_monitoring": false
+    }
+  },
+  {
+    "id": "creative_001",
+    "task_type": "creative",
+    "difficulty": "medium",
+    "domain": "story",
+    "language": "zh",
+    "prompts": ["请续写以下故事（100-200字）：\n\n夜幕降临，小镇的街道上空无一人。突然，一道刺眼的光芒从天而降..."],
+    "prompt_text": "夜幕降临，小镇的街道上空无一人。突然，一道刺眼的光芒从天而降...",
+    "config": {
+      "model": "Ollama:qwen3:4b",
+      "temperature": 0.8,
+      "max_tokens": 300,
+      "keep_context": false,
+      "per_turn_monitoring": false
+    }
+  },
+  {
+    "id": "multi_turn_001",
+    "task_type": "multi_turn",
+    "difficulty": "medium",
+    "domain": "conversation",
+    "language": "zh",
+    "prompts": [
+      "什么是机器学习？",
+      "它和深度学习有什么区别？",
+      "深度学习在哪些领域应用最广泛？"
+    ],
+    "expected_topics": [
+      ["算法", "数据", "模型", "预测"],
+      ["神经网络", "层次", "特征", "自动"],
+      ["图像识别", "自然语言", "语音", "推荐系统"]
+    ],
+    "config": {
+      "model": "Ollama:qwen3:4b",
+      "temperature": 0.7,
+      "max_tokens": 200,
+      "keep_context": true,
+      "per_turn_monitoring": true
+    }
+  }
+]

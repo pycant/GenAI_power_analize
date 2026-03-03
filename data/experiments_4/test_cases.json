@@ -10,6 +10,7 @@
     "keep_context":true,
     "max_tokens": 150,
     "temperature": 0.5,
-    "top_p": 0.9
+    "top_p": 0.9,
+    "idle_measurement_duration": 10
   }
 ]

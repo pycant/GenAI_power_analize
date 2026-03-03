@@ -112,6 +112,14 @@ npm run dev
 - **[部署指南](docs/deployment/README.md)** - 系统部署和环境配置
 - **[开发规范](docs/development/README.md)** - 编码规范和最佳实践
 
+### 🧪 实验执行文档
+- **[Experiment Runner 使用指南](docs/EXPERIMENT_RUNNER_GUIDE.md)** - 实验执行脚本完整使用说明
+- **[配置文件参数参考](docs/CONFIG_PARAMETERS_REFERENCE.md)** - 测试用例配置参数详解
+- **[空闲基线测量功能](docs/IDLE_BASELINE_MEASUREMENT.md)** - 空闲功耗测量和增量指标计算
+- **[空闲基线快速参考](docs/IDLE_BASELINE_QUICK_REFERENCE.md)** - 空闲基线功能快速上手
+- **[多轮对话指南](docs/MULTI_TURN_CONVERSATION_GUIDE.md)** - 多轮对话实验配置
+- **[数据采集缺口分析](docs/README_GAP_ANALYSIS.md)** - 数据采集完整性分析和改进计划
+
 ### 📊 使用指南
 - **[用户手册](docs/user_manual/README.md)** - 系统功能使用说明
 - **[管理员指南](docs/admin_guide/README.md)** - 系统管理和维护

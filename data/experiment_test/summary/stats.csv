@@ -1,2 +1,0 @@
-model,task,load,count,latency_mean,latency_std,tps_mean,tps_std,gmem_peak_mean,gutil_mean,energy_j_mean,bartscore_mean
-llama3.2:3b,qa,custom,1,7.464976787567139,0.0,105.8992086235431,0.0,4122.71875,37.285714285714285,282.5925453948975,-3.908263921737671

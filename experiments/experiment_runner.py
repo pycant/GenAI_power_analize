@@ -34,17 +34,451 @@ HF_AVAILABLE = False
 BARTSCORE_AVAILABLE = False
 
 
+class ExperimentResult:
+    """
+    实验结果数据结构
+    分离原始数据(raw)和汇总数据(summary)
+    """
+    
+    def __init__(self, experiment_id):
+        """
+        初始化实验结果
+        
+        Args:
+            experiment_id (str): 实验唯一标识符
+        """
+        self.experiment_id = experiment_id
+        
+        # 原始数据结构
+        self.raw_data = {
+            "experiment_id": experiment_id,
+            "config": {},
+            "baseline_raw": None,
+            "conversation": [],
+            "monitoring_data": {
+                "start_timestamp": None,
+                "end_timestamp": None,
+                "measurements": {},
+                "events": []
+            },
+            "metadata": {}
+        }
+        
+        # 汇总数据结构
+        self.summary_data = {
+            "experiment_id": experiment_id,
+            "config_ref": {},
+            "baseline_summary": None,
+            "performance": {},
+            "resources": {},
+            "derived_metrics": {},
+            "quality": {},
+            "conversation_summary": [],
+            "metadata": {}
+        }
+    
+    def set_config(self, model, model_info, prompts, task_type, **kwargs):
+        """设置配置信息"""
+        self.raw_data["config"] = {
+            "model": model,
+            "model_info": model_info,
+            "prompts": prompts,
+            "task_type": task_type,
+            "keep_context": kwargs.get("keep_context", False),
+            "per_turn_monitoring": kwargs.get("per_turn_monitoring", False),
+            "max_tokens": kwargs.get("max_tokens"),
+            "temperature": kwargs.get("temperature"),
+            "top_p": kwargs.get("top_p"),
+            "reference_text": kwargs.get("reference_text")
+        }
+        
+        self.summary_data["config_ref"] = {
+            "model": model,
+            "task_type": task_type,
+            "prompts_count": len(prompts) if isinstance(prompts, list) else 1,
+            "keep_context": kwargs.get("keep_context", False),
+            "per_turn_monitoring": kwargs.get("per_turn_monitoring", False)
+        }
+    
+    def set_baseline_raw(self, baseline_monitor):
+        """
+        设置原始基线数据
+        
+        Args:
+            baseline_monitor: ResourceMonitor实例
+        """
+        if not baseline_monitor:
+            return
+        
+        full_data = baseline_monitor.to_dict()
+        
+        self.raw_data["baseline_raw"] = {
+            "duration_seconds": full_data.get("duration_seconds", 0),
+            "start_timestamp": full_data["timestamps"][0] if full_data.get("timestamps") else None,
+            "end_timestamp": full_data["timestamps"][-1] if full_data.get("timestamps") else None,
+            "measurements": {
+                "timestamps": full_data.get("timestamps", []),
+                "cpu_percent": full_data.get("cpu_percent", []),
+                "mem_used_mb": full_data.get("mem_used_mb", []),
+                "gpu_util": full_data.get("gpu_util", []),
+                "gpu_mem_mb": full_data.get("gpu_mem_mb", []),
+                "gpu_power_w": full_data.get("gpu_power_w", []),
+                "gpu_temp_c": full_data.get("gpu_temp_c", [])
+            }
+        }
+    
+    def set_monitoring_data(self, monitor):
+        """
+        设置监控数据
+        
+        Args:
+            monitor: ResourceMonitor实例
+        """
+        if not monitor:
+            return
+        
+        full_data = monitor.to_dict()
+        
+        self.raw_data["monitoring_data"] = {
+            "start_timestamp": full_data["timestamps"][0] if full_data.get("timestamps") else None,
+            "end_timestamp": full_data["timestamps"][-1] if full_data.get("timestamps") else None,
+            "measurements": {
+                "timestamps": full_data.get("timestamps", []),
+                "cpu_percent": full_data.get("cpu_percent", []),
+                "mem_used_mb": full_data.get("mem_used_mb", []),
+                "gpu_util": full_data.get("gpu_util", []),
+                "gpu_mem_mb": full_data.get("gpu_mem_mb", []),
+                "gpu_power_w": full_data.get("gpu_power_w", []),
+                "gpu_temp_c": full_data.get("gpu_temp_c", [])
+            },
+            "events": full_data.get("events", [])
+        }
+    
+    def add_conversation_turn(self, turn, prompt, response, start_time, end_time, turn_monitor=None):
+        """
+        添加对话轮次
+        
+        Args:
+            turn (int): 轮次编号
+            prompt (str): 输入提示
+            response (str): 模型回答
+            start_time (float): 开始时间戳
+            end_time (float): 结束时间戳
+            turn_monitor: 该轮的ResourceMonitor实例（如果启用per_turn_monitoring）
+        """
+        turn_data = {
+            "turn": turn,
+            "prompt": prompt,
+            "response": response,
+            "start_timestamp": start_time,
+            "end_timestamp": end_time
+        }
+        
+        # 如果有分轮监控数据，添加到该轮
+        if turn_monitor:
+            turn_full_data = turn_monitor.to_dict()
+            turn_data["monitoring_data"] = {
+                "measurements": {
+                    "timestamps": turn_full_data.get("timestamps", []),
+                    "cpu_percent": turn_full_data.get("cpu_percent", []),
+                    "mem_used_mb": turn_full_data.get("mem_used_mb", []),
+                    "gpu_util": turn_full_data.get("gpu_util", []),
+                    "gpu_mem_mb": turn_full_data.get("gpu_mem_mb", []),
+                    "gpu_power_w": turn_full_data.get("gpu_power_w", []),
+                    "gpu_temp_c": turn_full_data.get("gpu_temp_c", [])
+                },
+                "events": turn_full_data.get("events", [])
+            }
+        
+        self.raw_data["conversation"].append(turn_data)
+    
+    def calculate_summary(self, bart_scorer=None):
+        """从原始数据计算汇总指标"""
+        import numpy as np
+        
+        # 计算基线汇总
+        if self.raw_data["baseline_raw"]:
+            self._calculate_baseline_summary()
+        
+        # 计算性能指标
+        self._calculate_performance_metrics()
+        
+        # 计算资源指标
+        self._calculate_resource_metrics()
+        
+        # 计算派生指标
+        self._calculate_derived_metrics()
+        
+        # 计算质量指标
+        self._calculate_quality_metrics(bart_scorer)
+        
+        # 生成对话摘要
+        self._generate_conversation_summary()
+    
+    def _calculate_baseline_summary(self):
+        """计算基线汇总统计"""
+        import numpy as np
+        
+        baseline_raw = self.raw_data["baseline_raw"]
+        measurements = baseline_raw["measurements"]
+        
+        if not measurements.get("gpu_power_w"):
+            return
+        
+        # 计算能耗（梯形积分）
+        energy = self._calculate_energy(
+            measurements["timestamps"],
+            measurements["gpu_power_w"]
+        )
+        
+        self.summary_data["baseline_summary"] = {
+            "duration_seconds": baseline_raw["duration_seconds"],
+            "gpu_power_avg_w": float(np.mean(measurements["gpu_power_w"])),
+            "gpu_power_peak_w": float(np.max(measurements["gpu_power_w"])),
+            "gpu_power_std_w": float(np.std(measurements["gpu_power_w"])),
+            "gpu_energy_j": energy,
+            "cpu_percent_avg": float(np.mean(measurements["cpu_percent"])),
+            "cpu_percent_peak": float(np.max(measurements["cpu_percent"])),
+            "gpu_util_avg": float(np.mean(measurements["gpu_util"])),
+            "gpu_util_peak": int(np.max(measurements["gpu_util"])),
+            "gpu_mem_avg_mb": float(np.mean(measurements["gpu_mem_mb"])),
+            "gpu_mem_peak_mb": float(np.max(measurements["gpu_mem_mb"])),
+            "gpu_temp_avg_c": float(np.mean(measurements["gpu_temp_c"])),
+            "gpu_temp_peak_c": int(np.max(measurements["gpu_temp_c"]))
+        }
+    
+    def _calculate_performance_metrics(self):
+        """计算性能指标"""
+        monitoring = self.raw_data["monitoring_data"]
+        conversation = self.raw_data["conversation"]
+        
+        if not monitoring.get("start_timestamp") or not monitoring.get("end_timestamp"):
+            return
+        
+        # 计算总时间
+        total_time = monitoring["end_timestamp"] - monitoring["start_timestamp"]
+        
+        # 计算token数（从events中提取）
+        total_tokens = sum(
+            event["metadata"].get("tokens", 0)
+            for event in monitoring.get("events", [])
+            if event.get("event") == "inference_end"
+        )
+        
+        # 计算TTFT（首个token时间）
+        first_token_event = next(
+            (e for e in monitoring.get("events", []) if e.get("event") == "first_token"),
+            None
+        )
+        ttft = (first_token_event["timestamp"] - monitoring["start_timestamp"]) if first_token_event else None
+        
+        self.summary_data["performance"] = {
+            "total_time_seconds": total_time,
+            "token_count": total_tokens,
+            "output_tokens": total_tokens,
+            "throughput_tokens_per_sec": total_tokens / total_time if total_time > 0 else 0,
+            "latency_per_token_ms": (total_time * 1000) / total_tokens if total_tokens > 0 else 0,
+            "turns": len(conversation),
+            "avg_time_per_turn": total_time / len(conversation) if conversation else 0,
+            "ttft_seconds": ttft
+        }
+    
+    def _calculate_resource_metrics(self):
+        """计算资源指标"""
+        import numpy as np
+        
+        measurements = self.raw_data["monitoring_data"]["measurements"]
+        
+        if not measurements.get("gpu_power_w"):
+            return
+        
+        # 计算GPU能耗
+        gpu_energy = self._calculate_energy(
+            measurements["timestamps"],
+            measurements["gpu_power_w"]
+        )
+        
+        # 估算CPU能耗（基于CPU使用率和TDP）
+        cpu_tdp = 45  # 假设TDP为45W
+        cpu_energy = self._calculate_energy(
+            measurements["timestamps"],
+            [cpu_tdp * (p / 100) for p in measurements.get("cpu_percent", [])]
+        )
+        
+        self.summary_data["resources"] = {
+            "cpu_percent_avg": float(np.mean(measurements.get("cpu_percent", [0]))),
+            "cpu_percent_peak": float(np.max(measurements.get("cpu_percent", [0]))),
+            "cpu_percent_std": float(np.std(measurements.get("cpu_percent", [0]))),
+            "mem_used_avg_mb": float(np.mean(measurements.get("mem_used_mb", [0]))),
+            "mem_used_peak_mb": float(np.max(measurements.get("mem_used_mb", [0]))),
+            "gpu_util_avg": float(np.mean(measurements.get("gpu_util", [0]))),
+            "gpu_util_peak": int(np.max(measurements.get("gpu_util", [0]))),
+            "gpu_util_std": float(np.std(measurements.get("gpu_util", [0]))),
+            "gpu_mem_avg_mb": float(np.mean(measurements.get("gpu_mem_mb", [0]))),
+            "gpu_mem_peak_mb": float(np.max(measurements.get("gpu_mem_mb", [0]))),
+            "gpu_power_avg_w": float(np.mean(measurements.get("gpu_power_w", [0]))),
+            "gpu_power_peak_w": float(np.max(measurements.get("gpu_power_w", [0]))),
+            "gpu_power_std_w": float(np.std(measurements.get("gpu_power_w", [0]))),
+            "gpu_energy_j": gpu_energy,
+            "gpu_temp_avg_c": float(np.mean(measurements.get("gpu_temp_c", [0]))),
+            "gpu_temp_peak_c": int(np.max(measurements.get("gpu_temp_c", [0]))),
+            "cpu_energy_j_approx": cpu_energy
+        }
+    
+    def _calculate_derived_metrics(self):
+        """计算派生指标（增量和能效指标）"""
+        baseline = self.summary_data.get("baseline_summary")
+        resources = self.summary_data.get("resources", {})
+        performance = self.summary_data.get("performance", {})
+        
+        derived = {}
+        
+        if baseline and resources:
+            # 增量功耗和能耗
+            P_idle = baseline["gpu_power_avg_w"]
+            P_avg = resources.get("gpu_power_avg_w", 0)
+            E_total = resources.get("gpu_energy_j", 0)
+            total_time = performance.get("total_time_seconds", 0)
+            
+            derived["P_idle"] = P_idle
+            derived["P_inc"] = max(0, P_avg - P_idle)
+            derived["E_inc"] = max(0, E_total - P_idle * total_time)
+            
+            # 每token能耗
+            output_tokens = performance.get("output_tokens", 0)
+            if output_tokens > 0 and derived["E_inc"] > 0:
+                derived["E_token"] = derived["E_inc"] / output_tokens
+            
+            # 能效指标
+            throughput = performance.get("throughput_tokens_per_sec", 0)
+            if P_avg > 0:
+                derived["PPW"] = throughput / P_avg
+            if E_total > 0:
+                derived["TPJ"] = output_tokens / E_total
+        
+        self.summary_data["derived_metrics"] = derived
+    
+    def _calculate_quality_metrics(self, bart_scorer=None):
+        """计算质量指标"""
+        conversation = self.raw_data["conversation"]
+        reference_text = self.raw_data["config"].get("reference_text")
+        
+        if not conversation:
+            return
+        
+        # 获取最后一轮的回答
+        final_response = conversation[-1]["response"] if conversation else ""
+        
+        quality = {
+            "bartscore": None,
+            "generated_text_length": len(final_response),
+            "has_reference": reference_text is not None
+        }
+        
+        # 如果有参考文本且BARTScore可用，计算评分
+        if reference_text and bart_scorer:
+            try:
+                scores = bart_scorer.score([reference_text], [final_response])
+                quality["bartscore"] = float(scores[0])
+            except Exception as e:
+                print(f"  [WARNING] BARTScore计算失败: {e}")
+        
+        # 计算平均回答长度
+        if conversation:
+            quality["avg_response_length"] = sum(len(turn["response"]) for turn in conversation) / len(conversation)
+        
+        self.summary_data["quality"] = quality
+    
+    def _generate_conversation_summary(self):
+        """生成对话摘要"""
+        conversation = self.raw_data["conversation"]
+        per_turn_monitoring = self.raw_data["config"].get("per_turn_monitoring", False)
+        
+        summary = []
+        for turn_data in conversation:
+            turn_summary = {
+                "turn": turn_data["turn"],
+                "prompt_preview": turn_data["prompt"][:50] + "..." if len(turn_data["prompt"]) > 50 else turn_data["prompt"],
+                "response_preview": turn_data["response"][:100] + "..." if len(turn_data["response"]) > 100 else turn_data["response"],
+                "response_length": len(turn_data["response"]),
+                "duration_seconds": turn_data["end_timestamp"] - turn_data["start_timestamp"]
+            }
+            
+            # 如果启用了分轮监控，计算该轮的资源指标
+            if per_turn_monitoring and "monitoring_data" in turn_data:
+                turn_measurements = turn_data["monitoring_data"]["measurements"]
+                if turn_measurements.get("gpu_power_w"):
+                    import numpy as np
+                    turn_summary["gpu_power_avg_w"] = float(np.mean(turn_measurements["gpu_power_w"]))
+                    turn_summary["gpu_energy_j"] = self._calculate_energy(
+                        turn_measurements["timestamps"],
+                        turn_measurements["gpu_power_w"]
+                    )
+            
+            # 从events中提取该轮的token数
+            turn_events = [
+                e for e in self.raw_data["monitoring_data"].get("events", [])
+                if e.get("metadata", {}).get("turn") == turn_data["turn"]
+                and e.get("event") == "inference_end"
+            ]
+            if turn_events:
+                tokens = turn_events[0]["metadata"].get("tokens", 0)
+                turn_summary["tokens"] = tokens
+                if turn_summary["duration_seconds"] > 0:
+                    turn_summary["throughput"] = tokens / turn_summary["duration_seconds"]
+            
+            summary.append(turn_summary)
+        
+        self.summary_data["conversation_summary"] = summary
+    
+    def _calculate_energy(self, timestamps, power_values):
+        """计算能耗（梯形积分）"""
+        if len(timestamps) < 2 or len(power_values) < 2:
+            return 0
+        
+        energy = 0
+        for i in range(len(timestamps) - 1):
+            dt = timestamps[i+1] - timestamps[i]
+            avg_power = (power_values[i] + power_values[i+1]) / 2
+            energy += avg_power * dt
+        
+        return energy
+    
+    def set_metadata(self, **kwargs):
+        """设置元数据"""
+        self.raw_data["metadata"] = {
+            "timestamp": datetime.now().isoformat(),
+            "runner_version": "2.0",
+            **kwargs
+        }
+        self.summary_data["metadata"] = {
+            "timestamp": datetime.now().isoformat(),
+            "analysis_version": "1.0",
+            **kwargs
+        }
+    
+    def get_raw_data(self):
+        """获取原始数据"""
+        return self.raw_data
+    
+    def get_summary_data(self):
+        """获取汇总数据"""
+        return self.summary_data
+
+
 class ExperimentRunner:
     """实验运行器，支持Ollama和Hugging Face模型"""
     
-    def __init__(self, output_dir="./results"):
+    def __init__(self, output_dir="./results", skip_bartscore=False):
         """
         初始化实验运行器
         
         Args:
             output_dir (str): 结果输出目录
+            skip_bartscore (bool): 是否跳过 BARTScore 评估
         """
         self.output_dir = output_dir
+        self.skip_bartscore = skip_bartscore
         os.makedirs(self.output_dir, exist_ok=True)
         
         # 初始化HF模型加载器（延迟导入）
@@ -66,7 +500,11 @@ class ExperimentRunner:
         # 初始化BARTScore评估器（延迟导入）
         self.bart_scorer = None
         global BARTSCORE_AVAILABLE
-        if not BARTSCORE_AVAILABLE:
+        
+        if skip_bartscore:
+            print("[INFO] 跳过 BARTScore 评估器初始化（--skip-bartscore 已启用）")
+            BARTSCORE_AVAILABLE = False
+        elif not BARTSCORE_AVAILABLE:
             try:
                 from tools.thesis_reproduction.BARTScore.bart_score import BARTScorer
                 self.bart_scorer = BARTScorer(device='cuda:0', checkpoint='facebook/bart-large-cnn')
@@ -156,18 +594,20 @@ class ExperimentRunner:
             context (list, optional): 对话上下文（用于多轮对话）
             
         Returns:
-            dict: 生成结果和性能数据
+            dict: 生成结果和性能数据，包含 TTFT、token 统计等
         """
         print(f"  --> 调用Ollama模型: {model_name}")
         
         import requests
         
         start_time = time.time()
+        first_token_time = None
+        
         try:
             request_data = {
                 "model": model_name,
                 "prompt": prompt,
-                "stream": False,
+                "stream": True,  # 启用流式以捕获首token时间
                 "options": {
                     "temperature": temperature,
                     "top_p": top_p,
@@ -182,35 +622,81 @@ class ExperimentRunner:
             response = requests.post(
                 "http://localhost:11434/api/generate",
                 json=request_data,
+                stream=True,
                 timeout=300
             )
-            end_time = time.time()
             
             if response.status_code != 200:
                 raise Exception(f"Ollama API返回错误: {response.status_code} - {response.text}")
             
-            result = response.json()
+            # 流式接收响应
+            generated_text = ""
+            thinking_text = ""
+            context_data = None
+            final_result = {}
             
-            # 处理响应：某些模型（如qwen3、deepseek-r1）将回复放在thinking字段
-            generated_text = result.get("response", "")
-            thinking_text = result.get("thinking", "")
+            for line in response.iter_lines():
+                if line:
+                    chunk = json.loads(line)
+                    
+                    # 记录首token时间
+                    if chunk.get("response") and first_token_time is None:
+                        first_token_time = time.time()
+                    
+                    # 累积生成的文本
+                    if chunk.get("response"):
+                        generated_text += chunk["response"]
+                    
+                    # 保存thinking字段（某些模型使用）
+                    if chunk.get("thinking"):
+                        thinking_text += chunk["thinking"]
+                    
+                    # 保存上下文和最终结果
+                    if chunk.get("done"):
+                        context_data = chunk.get("context")
+                        final_result = chunk
+                        break
+            
+            end_time = time.time()
             
             # 如果response为空但thinking有内容，使用thinking
             if not generated_text and thinking_text:
                 generated_text = thinking_text
                 print(f"  [INFO]  注意: 该模型将回复放在thinking字段中")
             
-            # 计算token数（简单估算）
-            token_count = len(generated_text.split())
+            # 统计token数
+            # 方法1：使用API返回的精确值（如果有）
+            output_tokens = final_result.get("eval_count", 0)
+            prompt_tokens = final_result.get("prompt_eval_count", 0)
+            
+            # 方法2：如果API没有返回，使用简单估算
+            if output_tokens == 0:
+                output_tokens = len(generated_text.split())
+            if prompt_tokens == 0:
+                prompt_tokens = len(prompt.split())
+            
+            total_tokens = prompt_tokens + output_tokens
+            
+            # 计算TTFT和TPOT
+            ttft = (first_token_time - start_time) if first_token_time else None
+            total_time = end_time - start_time
+            decode_time = (end_time - first_token_time) if first_token_time else total_time
+            tpot = (decode_time / (output_tokens - 1)) if output_tokens > 1 else None
             
             return {
                 "response": generated_text,
-                "thinking": thinking_text,  # 保存thinking字段
-                "total_time": end_time - start_time,
-                "token_count": token_count,
+                "thinking": thinking_text,
+                "total_time": total_time,
+                "first_token_time": ttft,  # TTFT (Time To First Token)
+                "decode_time": decode_time,  # Decode阶段时间
+                "prompt_tokens": prompt_tokens,  # 输入token数
+                "output_tokens": output_tokens,  # 输出token数
+                "total_tokens": total_tokens,  # 总token数
+                "token_count": output_tokens,  # 保持向后兼容
+                "tpot": tpot,  # Time Per Output Token
                 "success": True,
-                "context": result.get("context"),  # 保存context用于下一轮
-                "metadata": result
+                "context": context_data,
+                "metadata": final_result
             }
         except requests.Timeout:
             end_time = time.time()
@@ -233,7 +719,7 @@ class ExperimentRunner:
             quantize (str): 量化选项 ("4bit", "8bit", None)
             
         Returns:
-            dict: 生成结果和性能数据
+            dict: 生成结果和性能数据，包含 TTFT、token 统计等
         """
         if not HF_AVAILABLE or self.hf_loader is None:
             raise Exception("Hugging Face模型加载器不可用")
@@ -256,27 +742,69 @@ class ExperimentRunner:
             print(f"  --> 从缓存加载模型")
             model, tokenizer = self.hf_models_cache[cache_key]
         
-        # 生成文本
+        # 统计输入token数
+        prompt_tokens = len(tokenizer.encode(prompt))
+        
+        # 生成文本（使用流式生成以捕获首token时间）
         start_time = time.time()
+        first_token_time = None
+        
         try:
-            generated_text = self.hf_loader.generate(
-                model,
-                tokenizer,
-                prompt,
-                max_new_tokens=max_tokens,
-                temperature=temperature,
-                top_p=top_p,
-                do_sample=True
-            )
+            # 使用 hf_loader 的流式生成方法
+            generated_text = ""
+            token_count = 0
+            
+            # 如果 hf_loader 支持流式生成
+            if hasattr(self.hf_loader, 'generate_stream'):
+                for token_text in self.hf_loader.generate_stream(
+                    model,
+                    tokenizer,
+                    prompt,
+                    max_new_tokens=max_tokens,
+                    temperature=temperature,
+                    top_p=top_p,
+                    do_sample=True
+                ):
+                    if first_token_time is None:
+                        first_token_time = time.time()
+                    generated_text += token_text
+                    token_count += 1
+            else:
+                # 回退到非流式生成
+                generated_text = self.hf_loader.generate(
+                    model,
+                    tokenizer,
+                    prompt,
+                    max_new_tokens=max_tokens,
+                    temperature=temperature,
+                    top_p=top_p,
+                    do_sample=True
+                )
+                # 无法获取首token时间
+                first_token_time = None
+            
             end_time = time.time()
             
-            # 计算token数
-            token_count = len(tokenizer.encode(generated_text))
+            # 精确统计输出token数
+            output_tokens = len(tokenizer.encode(generated_text))
+            total_tokens = prompt_tokens + output_tokens
+            
+            # 计算TTFT和TPOT
+            total_time = end_time - start_time
+            ttft = (first_token_time - start_time) if first_token_time else None
+            decode_time = (end_time - first_token_time) if first_token_time else total_time
+            tpot = (decode_time / (output_tokens - 1)) if output_tokens > 1 else None
             
             return {
                 "response": generated_text,
-                "total_time": end_time - start_time,
-                "token_count": token_count,
+                "total_time": total_time,
+                "first_token_time": ttft,  # TTFT (Time To First Token)
+                "decode_time": decode_time,  # Decode阶段时间
+                "prompt_tokens": prompt_tokens,  # 输入token数
+                "output_tokens": output_tokens,  # 输出token数
+                "total_tokens": total_tokens,  # 总token数
+                "token_count": output_tokens,  # 保持向后兼容
+                "tpot": tpot,  # Time Per Output Token
                 "success": True,
                 "metadata": {
                     "model_path": model_path,
@@ -501,12 +1029,13 @@ class ExperimentRunner:
         使用整体监控的方式运行实验（原有逻辑）
         
         Returns:
-            dict: 实验结果（包含整体监控数据）
+            dict: 实验结果（包含整体监控数据和事件标记）
         """
         # 启动资源监控
         if MONITOR_AVAILABLE:
             monitor = ResourceMonitor(interval=0.2)
             monitor.start()
+            monitor.mark_event("experiment_start", {"task_type": task_type})  # 标记实验开始
             use_advanced_monitor = True
         else:
             resource_data, monitor_thread = self.monitor_resources_basic(30)
@@ -526,6 +1055,10 @@ class ExperimentRunner:
                 
                 all_prompts.append(prompt)
                 
+                # 标记推理开始
+                if use_advanced_monitor:
+                    monitor.mark_event("inference_start", {"turn": turn_idx})
+                
                 if model_info["type"] == "ollama":
                     response = self.call_ollama_generate(
                         model_info["name"],
@@ -537,6 +1070,17 @@ class ExperimentRunner:
                     )
                     if keep_context and "context" in response:
                         context = response["context"]
+                    
+                    # 标记首token（如果有）
+                    if use_advanced_monitor and response.get("first_token_time"):
+                        # 计算首token的绝对时间
+                        inference_start_time = monitor.events[-1]["timestamp"]
+                        first_token_abs_time = inference_start_time + response["first_token_time"]
+                        monitor.events.append({
+                            "timestamp": first_token_abs_time,
+                            "event": "first_token",
+                            "metadata": {"turn": turn_idx}
+                        })
                     
                 elif model_info["type"] == "huggingface":
                     if keep_context and turn_idx > 1:
@@ -556,18 +1100,35 @@ class ExperimentRunner:
                         top_p,
                         model_info.get("quantize")
                     )
+                    
+                    # 标记首token（如果有）
+                    if use_advanced_monitor and response.get("first_token_time"):
+                        inference_start_time = monitor.events[-1]["timestamp"]
+                        first_token_abs_time = inference_start_time + response["first_token_time"]
+                        monitor.events.append({
+                            "timestamp": first_token_abs_time,
+                            "event": "first_token",
+                            "metadata": {"turn": turn_idx}
+                        })
                 else:
                     raise Exception(f"未知的模型类型: {model_info['type']}")
                 
+                # 标记推理结束
+                if use_advanced_monitor:
+                    monitor.mark_event("inference_end", {"turn": turn_idx})
+                
                 all_responses.append(response["response"])
                 total_time += response["total_time"]
-                total_tokens += response["token_count"]
+                total_tokens += response.get("output_tokens", response.get("token_count", 0))
                 
-                print(f"  [OK] 生成完成 (耗时: {response['total_time']:.2f}秒, Tokens: {response['token_count']})")
+                print(f"  [OK] 生成完成 (耗时: {response['total_time']:.2f}秒, Tokens: {response.get('output_tokens', response.get('token_count', 0))})")
+                if response.get("first_token_time"):
+                    print(f"    TTFT: {response['first_token_time']*1000:.1f}ms, TPOT: {response.get('tpot', 0)*1000:.1f}ms")
                 
         except Exception as e:
             print(f"  [ERROR] 生成文本失败: {e}")
             if use_advanced_monitor:
+                monitor.mark_event("experiment_error", {"error": str(e)})
                 monitor.stop()
             else:
                 monitor_thread.join(timeout=1)
@@ -576,10 +1137,30 @@ class ExperimentRunner:
         # 停止资源监控
         resource_full = None
         if use_advanced_monitor:
+            monitor.mark_event("experiment_end")  # 标记实验结束
             time.sleep(0.5)
             monitor.stop()
             resource_summary = monitor.summary()
             resource_full = monitor.to_dict()
+            
+            # 计算分阶段能耗（如果有事件标记）
+            phase_analysis = {}
+            if len(monitor.events) >= 2:
+                # 分析每轮的 prefill 和 decode 阶段
+                for turn_idx in range(1, len(prompts) + 1):
+                    prefill_data = monitor.get_phase_data(
+                        f"inference_start",
+                        f"first_token"
+                    )
+                    decode_data = monitor.get_phase_data(
+                        f"first_token",
+                        f"inference_end"
+                    )
+                    if prefill_data or decode_data:
+                        phase_analysis[f"turn_{turn_idx}"] = {
+                            "prefill": prefill_data,
+                            "decode": decode_data
+                        }
         else:
             monitor_thread.join(timeout=1)
             def safe_avg(lst):
@@ -605,8 +1186,11 @@ class ExperimentRunner:
                 "memory_percent": resource_data["memory_percent"],
                 "gpu_utilization": resource_data["gpu_utilization"],
                 "gpu_memory_used": resource_data["gpu_memory_used"],
-                "summary": resource_summary
+                "summary": resource_summary,
+                "events": [],  # 基础监控没有事件
+                "phase_analysis": {}  # 基础监控没有分阶段分析
             }
+            phase_analysis = {}
         
         # 评估质量
         print(f"  --> 评估生成质量...")
@@ -632,7 +1216,8 @@ class ExperimentRunner:
             "all_responses": all_responses,
             "performance": {
                 "total_time_seconds": total_time,
-                "token_count": total_tokens,
+                "token_count": total_tokens,  # 输出token数（向后兼容）
+                "output_tokens": total_tokens,  # 明确的输出token数
                 "throughput_tokens_per_sec": throughput,
                 "latency_per_token_ms": (total_time * 1000) / total_tokens if total_tokens > 0 else 0,
                 "turns": len(prompts),
@@ -652,6 +1237,7 @@ class ExperimentRunner:
             },
             "system_metrics_summary": resource_summary,
             "system_metrics_full": resource_full,
+            "phase_analysis": phase_analysis,  # 新增：分阶段能耗分析
             "quality": quality_scores,
             "metadata": {
                 "timestamp": datetime.now().isoformat(),
@@ -758,9 +1344,419 @@ class ExperimentRunner:
                 "has_reference": reference_text is not None
             }
     
+    def _run_with_overall_monitoring_v2(self, exp_result, model_info, prompts, 
+                                        task_type, max_tokens, temperature, 
+                                        top_p, keep_context):
+        """
+        整体监控模式：所有轮次使用同一个监控器（新版本，填充ExperimentResult对象）
+        
+        Args:
+            exp_result (ExperimentResult): 实验结果对象
+            model_info (dict): 模型信息
+            prompts (list): 提示词列表
+            task_type (str): 任务类型
+            max_tokens (int): 最大token数
+            temperature (float): 温度参数
+            top_p (float): Top-p采样
+            keep_context (bool): 是否保持上下文
+        """
+        # 启动整体监控
+        if not MONITOR_AVAILABLE:
+            print(f"  [WARNING] 高级监控不可用，使用基础监控")
+            # 基础监控模式下，无法提供完整的时间序列数据
+            # 这里简化处理，仅记录对话内容
+            context = None
+            for i, prompt in enumerate(prompts, 1):
+                print(f"\n  [轮次 {i}/{len(prompts)}]")
+                start_time = time.time()
+                
+                if model_info["type"] == "ollama":
+                    response = self.call_ollama_generate(
+                        model_info["name"], prompt, max_tokens,
+                        temperature, top_p, context=context if keep_context else None
+                    )
+                    if keep_context and "context" in response:
+                        context = response["context"]
+                elif model_info["type"] == "huggingface":
+                    response = self.call_hf_generate(
+                        model_info["path"], prompt, max_tokens,
+                        temperature, top_p, model_info.get("quantize")
+                    )
+                else:
+                    raise Exception(f"未知的模型类型: {model_info['type']}")
+                
+                end_time = time.time()
+                
+                # 添加对话轮次（无监控数据）
+                exp_result.add_conversation_turn(
+                    turn=i,
+                    prompt=prompt,
+                    response=response["response"],
+                    start_time=start_time,
+                    end_time=end_time,
+                    turn_monitor=None
+                )
+                
+                print(f"  [OK] 生成完成 (耗时: {response['total_time']:.2f}秒)")
+            
+            return
+        
+        # 高级监控模式
+        monitor = ResourceMonitor(interval=0.2)
+        monitor.start()
+        monitor.mark_event("experiment_start", {"task_type": task_type})
+        
+        # 执行所有轮次
+        context = None  # Ollama的对话上下文
+        
+        try:
+            for i, prompt in enumerate(prompts, 1):
+                print(f"\n  [轮次 {i}/{len(prompts)}]")
+                print(f"  提示: {prompt[:50]}..." if len(prompt) > 50 else f"  提示: {prompt}")
+                
+                monitor.mark_event("inference_start", {"turn": i})
+                start_time = time.time()
+                
+                # 调用模型
+                if model_info["type"] == "ollama":
+                    response = self.call_ollama_generate(
+                        model_info["name"],
+                        prompt,
+                        max_tokens,
+                        temperature,
+                        top_p,
+                        context=context if keep_context else None
+                    )
+                    if keep_context and "context" in response:
+                        context = response["context"]
+                    
+                    # 标记首token（如果有）
+                    if response.get("first_token_time"):
+                        inference_start_time = monitor.events[-1]["timestamp"]
+                        first_token_abs_time = inference_start_time + response["first_token_time"]
+                        monitor.events.append({
+                            "timestamp": first_token_abs_time,
+                            "event": "first_token",
+                            "metadata": {"turn": i}
+                        })
+                
+                elif model_info["type"] == "huggingface":
+                    response = self.call_hf_generate(
+                        model_info["path"],
+                        prompt,
+                        max_tokens,
+                        temperature,
+                        top_p,
+                        model_info.get("quantize")
+                    )
+                    
+                    # 标记首token（如果有）
+                    if response.get("first_token_time"):
+                        inference_start_time = monitor.events[-1]["timestamp"]
+                        first_token_abs_time = inference_start_time + response["first_token_time"]
+                        monitor.events.append({
+                            "timestamp": first_token_abs_time,
+                            "event": "first_token",
+                            "metadata": {"turn": i}
+                        })
+                else:
+                    raise Exception(f"未知的模型类型: {model_info['type']}")
+                
+                end_time = time.time()
+                monitor.mark_event("inference_end", {
+                    "turn": i,
+                    "tokens": response.get("output_tokens", response.get("token_count", 0))
+                })
+                
+                # 添加对话轮次到exp_result
+                exp_result.add_conversation_turn(
+                    turn=i,
+                    prompt=prompt,
+                    response=response["response"],
+                    start_time=start_time,
+                    end_time=end_time,
+                    turn_monitor=None  # 整体监控模式不传递turn_monitor
+                )
+                
+                print(f"  [OK] 生成完成 (耗时: {response['total_time']:.2f}秒, Tokens: {response.get('output_tokens', response.get('token_count', 0))})")
+                if response.get("first_token_time"):
+                    print(f"    TTFT: {response['first_token_time']*1000:.1f}ms, TPOT: {response.get('tpot', 0)*1000:.1f}ms")
+        
+        except Exception as e:
+            print(f"  [ERROR] 生成文本失败: {e}")
+            monitor.mark_event("experiment_error", {"error": str(e)})
+            monitor.stop()
+            raise
+        
+        # 停止监控
+        monitor.mark_event("experiment_end")
+        time.sleep(0.5)
+        monitor.stop()
+        
+        # 设置监控数据到exp_result
+        exp_result.set_monitoring_data(monitor)
+    
+    def _run_with_per_turn_monitoring_v2(self, exp_result, model_info, prompts,
+                                         task_type, max_tokens, temperature,
+                                         top_p, keep_context):
+        """
+        分轮监控模式：每轮对话使用独立的监控器（新版本，填充ExperimentResult对象）
+        
+        Args:
+            exp_result (ExperimentResult): 实验结果对象
+            model_info (dict): 模型信息
+            prompts (list): 提示词列表
+            task_type (str): 任务类型
+            max_tokens (int): 最大token数
+            temperature (float): 温度参数
+            top_p (float): Top-p采样
+            keep_context (bool): 是否保持上下文
+        """
+        if not MONITOR_AVAILABLE:
+            print(f"  [WARNING] 高级监控不可用，使用基础监控")
+            # 基础监控模式下，无法提供分轮监控数据
+            # 回退到整体监控模式
+            self._run_with_overall_monitoring_v2(
+                exp_result, model_info, prompts, task_type,
+                max_tokens, temperature, top_p, keep_context
+            )
+            return
+        
+        # 创建全局监控器（用于记录整体时间和事件）
+        global_monitor = ResourceMonitor(interval=0.2)
+        global_monitor.start()
+        global_monitor.mark_event("experiment_start", {"task_type": task_type})
+        
+        context = None  # Ollama的对话上下文
+        
+        try:
+            for i, prompt in enumerate(prompts, 1):
+                print(f"\n  [轮次 {i}/{len(prompts)}]")
+                print(f"  提示: {prompt[:50]}..." if len(prompt) > 50 else f"  提示: {prompt}")
+                
+                # 为该轮创建独立监控器
+                turn_monitor = ResourceMonitor(interval=0.2)
+                turn_monitor.start()
+                turn_monitor.mark_event("inference_start", {"turn": i})
+                
+                start_time = time.time()
+                
+                # 调用模型
+                if model_info["type"] == "ollama":
+                    response = self.call_ollama_generate(
+                        model_info["name"],
+                        prompt,
+                        max_tokens,
+                        temperature,
+                        top_p,
+                        context=context if keep_context else None
+                    )
+                    if keep_context and "context" in response:
+                        context = response["context"]
+                    
+                    # 标记首token（如果有）
+                    if response.get("first_token_time"):
+                        inference_start_time = turn_monitor.events[-1]["timestamp"]
+                        first_token_abs_time = inference_start_time + response["first_token_time"]
+                        turn_monitor.events.append({
+                            "timestamp": first_token_abs_time,
+                            "event": "first_token",
+                            "metadata": {"turn": i}
+                        })
+                
+                elif model_info["type"] == "huggingface":
+                    response = self.call_hf_generate(
+                        model_info["path"],
+                        prompt,
+                        max_tokens,
+                        temperature,
+                        top_p,
+                        model_info.get("quantize")
+                    )
+                    
+                    # 标记首token（如果有）
+                    if response.get("first_token_time"):
+                        inference_start_time = turn_monitor.events[-1]["timestamp"]
+                        first_token_abs_time = inference_start_time + response["first_token_time"]
+                        turn_monitor.events.append({
+                            "timestamp": first_token_abs_time,
+                            "event": "first_token",
+                            "metadata": {"turn": i}
+                        })
+                else:
+                    raise Exception(f"未知的模型类型: {model_info['type']}")
+                
+                end_time = time.time()
+                
+                # 停止该轮监控
+                turn_monitor.mark_event("inference_end", {
+                    "turn": i,
+                    "tokens": response.get("output_tokens", response.get("token_count", 0))
+                })
+                time.sleep(0.3)
+                turn_monitor.stop()
+                
+                # 同时在全局监控器中记录事件
+                global_monitor.mark_event("inference_end", {
+                    "turn": i,
+                    "tokens": response.get("output_tokens", response.get("token_count", 0))
+                })
+                
+                # 添加对话轮次到exp_result（包含该轮的监控数据）
+                exp_result.add_conversation_turn(
+                    turn=i,
+                    prompt=prompt,
+                    response=response["response"],
+                    start_time=start_time,
+                    end_time=end_time,
+                    turn_monitor=turn_monitor  # 传递该轮的监控器
+                )
+                
+                print(f"  [OK] 生成完成 (耗时: {response['total_time']:.2f}秒, Tokens: {response.get('output_tokens', response.get('token_count', 0))})")
+                if response.get("first_token_time"):
+                    print(f"    TTFT: {response['first_token_time']*1000:.1f}ms, TPOT: {response.get('tpot', 0)*1000:.1f}ms")
+        
+        except Exception as e:
+            print(f"  [ERROR] 生成文本失败: {e}")
+            global_monitor.mark_event("experiment_error", {"error": str(e)})
+            global_monitor.stop()
+            raise
+        
+        # 停止全局监控
+        global_monitor.mark_event("experiment_end")
+        time.sleep(0.5)
+        global_monitor.stop()
+        
+        # 设置全局监控数据到exp_result
+        exp_result.set_monitoring_data(global_monitor)
+    
+    def measure_idle_baseline(self, duration=10):
+        """
+        测量系统空闲状态的基线功耗
+        
+        Args:
+            duration (int): 测量持续时间（秒）
+            
+        Returns:
+            dict: 空闲基线数据，包含平均功耗、CPU利用率等
+        """
+        if not MONITOR_AVAILABLE:
+            print(f"  [WARNING] 高级监控不可用，跳过空闲基线测量")
+            return None
+        
+        print(f"  --> 测量空闲基线功耗 (持续 {duration} 秒)...")
+        print(f"      请保持系统空闲，不要运行其他程序...")
+        
+        # 启动监控
+        monitor = ResourceMonitor(interval=0.2)
+        monitor.start()
+        monitor.mark_event("baseline_start")
+        
+        # 等待指定时间
+        time.sleep(duration)
+        
+        # 停止监控
+        monitor.mark_event("baseline_end")
+        time.sleep(0.5)
+        monitor.stop()
+        
+        # 获取基线数据
+        baseline_data = monitor.get_phase_data("baseline_start", "baseline_end")
+        summary = monitor.summary()
+        
+        if baseline_data:
+            baseline_result = {
+                "duration_seconds": duration,
+                "gpu_power_avg_w": baseline_data["gpu_power_avg_w"],
+                "gpu_power_peak_w": baseline_data["gpu_power_peak_w"],
+                "gpu_energy_j": baseline_data["gpu_energy_j"],
+                "cpu_percent_avg": summary["cpu_percent_avg"],
+                "gpu_util_avg": summary["gpu_util_avg"],
+                "gpu_mem_peak_mb": summary["gpu_mem_peak_mb"],
+                "timestamp": time.time()
+            }
+            
+            print(f"  [OK] 空闲基线测量完成")
+            print(f"      平均GPU功耗: {baseline_result['gpu_power_avg_w']:.2f} W")
+            print(f"      平均CPU利用率: {baseline_result['cpu_percent_avg']:.1f}%")
+            print(f"      平均GPU利用率: {baseline_result['gpu_util_avg']:.1f}%")
+            
+            return baseline_result
+        else:
+            print(f"  [WARNING] 无法获取空闲基线数据")
+            return None
+    
+    def measure_idle_baseline_v2(self, duration=10):
+        """
+        测量空闲基线，返回ResourceMonitor对象
+        
+        Args:
+            duration (int): 测量持续时间（秒）
+            
+        Returns:
+            ResourceMonitor: 监控器对象（包含完整时间序列数据）
+        """
+        if not MONITOR_AVAILABLE:
+            print(f"  [WARNING] 高级监控不可用，跳过空闲基线测量")
+            return None
+        
+        print(f"  --> 测量空闲基线功耗 (持续 {duration} 秒)...")
+        print(f"      请保持系统空闲，不要运行其他程序...")
+        
+        # 启动监控
+        monitor = ResourceMonitor(interval=0.2)
+        monitor.start()
+        monitor.mark_event("baseline_start")
+        
+        # 等待指定时间
+        time.sleep(duration)
+        
+        # 停止监控
+        monitor.mark_event("baseline_end")
+        time.sleep(0.5)
+        monitor.stop()
+        
+        # 打印基线信息
+        summary = monitor.summary()
+        print(f"  [OK] 空闲基线测量完成")
+        print(f"      平均GPU功耗: {summary['gpu_power_avg_w']:.2f} W")
+        print(f"      平均CPU利用率: {summary['cpu_percent_avg']:.1f}%")
+        
+        return monitor
+    
+    def _print_experiment_results(self, exp_result):
+        """打印实验结果摘要"""
+        performance = exp_result.summary_data["performance"]
+        resources = exp_result.summary_data["resources"]
+        derived = exp_result.summary_data["derived_metrics"]
+        
+        print(f"  [OK] 实验完成")
+        print(f"    - 对话轮数: {performance.get('turns', 0)}")
+        print(f"    - 总生成时间: {performance.get('total_time_seconds', 0):.2f}秒")
+        print(f"    - 总Token数: {performance.get('output_tokens', 0)}")
+        print(f"    - 吞吐量: {performance.get('throughput_tokens_per_sec', 0):.2f} tokens/s")
+        if resources.get("gpu_energy_j", 0) > 0:
+            print(f"    - GPU能耗: {resources['gpu_energy_j']:.2f} J")
+        
+        if derived:
+            print(f"\n  [增量指标]")
+            if "P_idle" in derived:
+                print(f"    空闲功耗 (P_idle): {derived['P_idle']:.2f} W")
+            if "P_inc" in derived:
+                print(f"    增量功耗 (P_inc): {derived['P_inc']:.2f} W")
+            if "E_inc" in derived:
+                print(f"    增量能耗 (E_inc): {derived['E_inc']:.2f} J")
+            if "E_token" in derived:
+                print(f"    每token能耗 (E_token): {derived['E_token']:.4f} J/token")
+            if "PPW" in derived:
+                print(f"    每瓦性能 (PPW): {derived['PPW']:.2f} tokens/s/W")
+            if "TPJ" in derived:
+                print(f"    能效比 (TPJ): {derived['TPJ']:.2f} tokens/J")
+    
     def run_single_experiment(self, model, prompts, task_type, reference_text=None, 
                             max_tokens=500, temperature=0.7, top_p=0.9, 
-                            keep_context=False, per_turn_monitoring=False):
+                            keep_context=False, per_turn_monitoring=False,
+                            idle_measurement_duration=0):
         """
         运行单次实验（支持多轮对话）
         
@@ -774,9 +1770,10 @@ class ExperimentRunner:
             top_p (float): Top-p采样参数
             keep_context (bool): 是否保持对话上下文（多轮对话）
             per_turn_monitoring (bool): 是否为每轮对话独立监控资源（默认False）
+            idle_measurement_duration (int): 空闲基线测量时间（秒），0表示不测量（默认0）
             
         Returns:
-            dict: 实验结果
+            ExperimentResult: 实验结果对象
         """
         # 兼容性处理：如果prompts是字符串，转换为列表
         if isinstance(prompts, str):
@@ -792,21 +1789,60 @@ class ExperimentRunner:
         print(f"  对话轮数: {len(prompts)}")
         print(f"  保持上下文: {'是' if keep_context else '否'}")
         print(f"  分轮监控: {'是' if per_turn_monitoring else '否'}")
+        if idle_measurement_duration > 0:
+            print(f"  空闲基线测量: {idle_measurement_duration} 秒")
         print(f"{'='*60}")
         
-        # 根据 per_turn_monitoring 参数选择执行方式
+        # 1. 创建ExperimentResult对象
+        experiment_id = f"exp_{datetime.now().strftime('%Y%m%d_%H%M%S')}_{id(self)}"
+        exp_result = ExperimentResult(experiment_id)
+        
+        # 2. 设置配置
+        exp_result.set_config(
+            model=model_info["display_name"],
+            model_info=model_info,
+            prompts=prompts,
+            task_type=task_type,
+            keep_context=keep_context,
+            per_turn_monitoring=per_turn_monitoring,
+            max_tokens=max_tokens,
+            temperature=temperature,
+            top_p=top_p,
+            reference_text=reference_text
+        )
+        
+        # 3. 测量空闲基线（返回monitor对象而非汇总数据）
+        baseline_monitor = None
+        if idle_measurement_duration > 0:
+            baseline_monitor = self.measure_idle_baseline_v2(idle_measurement_duration)
+            exp_result.set_baseline_raw(baseline_monitor)
+        
+        # 4. 根据per_turn_monitoring选择执行方式
         if per_turn_monitoring and len(prompts) > 1:
-            # 多轮对话且启用分轮监控：使用独立监控方式
-            return self._run_with_per_turn_monitoring(
-                model_info, prompts, task_type, reference_text,
+            self._run_with_per_turn_monitoring_v2(
+                exp_result, model_info, prompts, task_type,
                 max_tokens, temperature, top_p, keep_context
             )
         else:
-            # 单轮对话或未启用分轮监控：使用整体监控方式
-            return self._run_with_overall_monitoring(
-                model_info, prompts, task_type, reference_text,
+            self._run_with_overall_monitoring_v2(
+                exp_result, model_info, prompts, task_type,
                 max_tokens, temperature, top_p, keep_context
             )
+        
+        # 5. 设置元数据
+        exp_result.set_metadata(
+            max_tokens=max_tokens,
+            temperature=temperature,
+            top_p=top_p
+        )
+        
+        # 6. 计算汇总数据
+        exp_result.calculate_summary(bart_scorer=self.bart_scorer)
+        
+        # 7. 打印结果
+        self._print_experiment_results(exp_result)
+        
+        return exp_result
         
     
     def run_experiment_suite(self, test_cases, output_file=None):
@@ -815,21 +1851,32 @@ class ExperimentRunner:
         
         Args:
             test_cases (list): 测试用例列表
-            output_file (str, optional): 输出文件路径
+            output_file (str, optional): 输出文件基础路径（不含_raw或_summary后缀）
             
         Returns:
-            list: 实验结果列表
+            tuple: (raw_results, summary_results)
         """
+        # 确定输出文件路径
         if output_file is None:
             timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-            output_file = os.path.join(self.output_dir, f"experiment_results_raw_{timestamp}.json")
+            output_base = os.path.join(self.output_dir, f"experiment_results_{timestamp}")
+        else:
+            # 移除可能存在的_raw或_summary后缀
+            output_base = output_file.replace("_raw", "").replace("_summary", "")
+            if output_base.endswith(".json"):
+                output_base = output_base[:-5]
         
-        results = []
+        raw_file = f"{output_base}_raw.json"
+        summary_file = f"{output_base}_summary.json"
+        
+        raw_results = []
+        summary_results = []
         
         print(f"\n{'='*70}")
         print(f"开始执行实验套件")
         print(f"  测试用例数: {len(test_cases)}")
-        print(f"  原始数据保存到: {output_file}")
+        print(f"  原始数据: {raw_file}")
+        print(f"  汇总数据: {summary_file}")
         print(f"{'='*70}\n")
         
         for i, case in enumerate(test_cases, 1):
@@ -841,94 +1888,56 @@ class ExperimentRunner:
                 print(f"  [ERROR] 测试用例缺少 'prompts' 或 'prompt' 字段")
                 continue
             
-            result = self.run_single_experiment(
-                model=case["model"],
-                prompts=prompts,
-                task_type=case["task_type"],
-                reference_text=case.get("reference_text"),
-                max_tokens=case.get("max_tokens", 500),
-                temperature=case.get("temperature", 0.7),
-                top_p=case.get("top_p", 0.9),
-                keep_context=case.get("keep_context", False),
-                per_turn_monitoring=case.get("per_turn_monitoring", False)
-            )
+            try:
+                # 运行实验（返回ExperimentResult对象）
+                exp_result = self.run_single_experiment(
+                    model=case["model"],
+                    prompts=prompts,
+                    task_type=case["task_type"],
+                    reference_text=case.get("reference_text"),
+                    max_tokens=case.get("max_tokens", 500),
+                    temperature=case.get("temperature", 0.7),
+                    top_p=case.get("top_p", 0.9),
+                    keep_context=case.get("keep_context", False),
+                    per_turn_monitoring=case.get("per_turn_monitoring", False),
+                    idle_measurement_duration=case.get("idle_measurement_duration", 0)
+                )
+                
+                if exp_result:
+                    # 获取raw和summary数据
+                    raw_results.append(exp_result.get_raw_data())
+                    summary_results.append(exp_result.get_summary_data())
+                    
+                    # 实时保存两个文件
+                    with open(raw_file, "w", encoding="utf-8") as f:
+                        json.dump(raw_results, f, ensure_ascii=False, indent=2)
+                    
+                    with open(summary_file, "w", encoding="utf-8") as f:
+                        json.dump(summary_results, f, ensure_ascii=False, indent=2)
+                    
+                    print(f"  [OK] 结果已保存")
+                else:
+                    print(f"  [ERROR] 实验失败")
             
-            if result:
-                results.append(result)
-                
-                # 实时保存原始结果
-                with open(output_file, "w", encoding="utf-8") as f:
-                    json.dump(results, f, ensure_ascii=False, indent=2)
-                
-                print(f"  [OK] 结果已保存")
-            else:
-                print(f"  [ERROR] 实验失败")
+            except Exception as e:
+                print(f"  [ERROR] 实验执行失败: {e}")
+                import traceback
+                traceback.print_exc()
+                print(f"  [INFO] 继续执行下一个测试用例...")
             
             # 短暂延迟，避免资源竞争
             if i < len(test_cases):
                 time.sleep(2)
         
-        # 生成汇总文件
-        summary_file = output_file.replace("_raw_", "_summary_")
-        self._generate_summary_file(results, summary_file)
-        
         print(f"\n{'='*70}")
         print(f"所有实验完成")
-        print(f"  成功: {len(results)}/{len(test_cases)}")
-        print(f"  原始数据: {output_file}")
+        print(f"  成功: {len(raw_results)}/{len(test_cases)}")
+        print(f"  原始数据: {raw_file}")
         print(f"  汇总数据: {summary_file}")
         print(f"{'='*70}\n")
         
-        return results
+        return raw_results, summary_results
     
-    def _generate_summary_file(self, results, summary_file):
-        """
-        生成汇总文件（不包含详细监控数据）
-        
-        Args:
-            results (list): 实验结果列表
-            summary_file (str): 汇总文件路径
-        """
-        summary_results = []
-        
-        for result in results:
-            # 提取汇总数据
-            summary = {
-                "model": result["model"],
-                "model_info": result["model_info"],
-                "prompts": result["prompts"],
-                "task_type": result["task_type"],
-                "keep_context": result["keep_context"],
-                "per_turn_monitoring": result.get("per_turn_monitoring", False),
-                "performance": result["performance"],
-                "resources": result["resources"],
-                "quality": result["quality"],
-                "metadata": result["metadata"]
-            }
-            
-            # 如果是分轮监控，添加每轮的汇总（不包含详细监控数据）
-            if result.get("per_turn_monitoring", False):
-                summary["conversation_summary"] = [
-                    {
-                        "turn": turn["turn"],
-                        "prompt": turn["prompt"][:100] + "..." if len(turn["prompt"]) > 100 else turn["prompt"],
-                        "response": turn["response"][:200] + "..." if len(turn["response"]) > 200 else turn["response"],
-                        "performance": turn["performance"],
-                        "resources": turn["resources"]
-                    }
-                    for turn in result["conversation"]
-                ]
-            else:
-                # 整体监控模式，保留简化的对话记录
-                summary["conversation"] = result["conversation"]
-            
-            summary_results.append(summary)
-        
-        # 保存汇总文件
-        with open(summary_file, "w", encoding="utf-8") as f:
-            json.dump(summary_results, f, ensure_ascii=False, indent=2)
-        
-        print(f"  [OK] 汇总数据已保存到: {summary_file}")
     
     def cleanup(self):
         """清理资源"""
@@ -987,11 +1996,12 @@ def main():
     parser.add_argument("--output-dir", default="./results", help="结果输出目录")
     parser.add_argument("--config", help="测试用例配置文件路径（JSON格式）")
     parser.add_argument("--sample", action="store_true", help="运行示例测试用例")
+    parser.add_argument("--skip-bartscore", action="store_true", help="跳过 BARTScore 质量评估（仅收集效率指标）")
     
     args = parser.parse_args()
     
     # 初始化实验运行器
-    runner = ExperimentRunner(output_dir=args.output_dir)
+    runner = ExperimentRunner(output_dir=args.output_dir, skip_bartscore=args.skip_bartscore)
     
     # 确定测试用例
     test_cases = []

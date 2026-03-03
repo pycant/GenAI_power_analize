@@ -1,0 +1,432 @@
+[
+  {
+    "experiment_id": "exp_20260303_154541_1558358968496",
+    "config_ref": {
+      "model": "Ollama:qwen3:4b",
+      "task_type": "qa",
+      "prompts_count": 1,
+      "keep_context": false,
+      "per_turn_monitoring": false
+    },
+    "baseline_summary": {
+      "duration_seconds": 0,
+      "gpu_power_avg_w": 16.222583333333333,
+      "gpu_power_peak_w": 23.068,
+      "gpu_power_std_w": 6.032076545551199,
+      "gpu_energy_j": 168.32350127851961,
+      "cpu_percent_avg": 33.327083333333334,
+      "cpu_percent_peak": 98.5,
+      "gpu_util_avg": 5.8125,
+      "gpu_util_peak": 45,
+      "gpu_mem_avg_mb": 3509.73486328125,
+      "gpu_mem_peak_mb": 3517.2421875,
+      "gpu_temp_avg_c": 57.708333333333336,
+      "gpu_temp_peak_c": 58
+    },
+    "performance": {
+      "total_time_seconds": 6.246852874755859,
+      "token_count": 100,
+      "output_tokens": 100,
+      "throughput_tokens_per_sec": 16.008060699509947,
+      "latency_per_token_ms": 62.468528747558594,
+      "turns": 1,
+      "avg_time_per_turn": 6.246852874755859,
+      "ttft_seconds": null
+    },
+    "resources": {
+      "cpu_percent_avg": 34.27,
+      "cpu_percent_peak": 77.2,
+      "cpu_percent_std": 18.318044837445576,
+      "mem_used_avg_mb": 14172.076692708333,
+      "mem_used_peak_mb": 14367.484375,
+      "gpu_util_avg": 39.63333333333333,
+      "gpu_util_peak": 93,
+      "gpu_util_std": 35.72159322065888,
+      "gpu_mem_avg_mb": 5509.388541666666,
+      "gpu_mem_peak_mb": 6693.796875,
+      "gpu_power_avg_w": 31.853700000000003,
+      "gpu_power_peak_w": 56.128,
+      "gpu_power_std_w": 15.240929786050893,
+      "gpu_energy_j": 200.71766897010806,
+      "gpu_temp_avg_c": 59.56666666666667,
+      "gpu_temp_peak_c": 63,
+      "cpu_energy_j_approx": 99.48445409059526
+    },
+    "derived_metrics": {
+      "P_idle": 16.222583333333333,
+      "P_inc": 15.63111666666667,
+      "E_inc": 99.37757763830824,
+      "E_token": 0.9937757763830823,
+      "PPW": 0.5025494903107001,
+      "TPJ": 0.4982122426645585
+    },
+    "quality": {
+      "bartscore": -4.015417575836182,
+      "generated_text_length": 493,
+      "has_reference": true,
+      "avg_response_length": 493.0
+    },
+    "conversation_summary": [
+      {
+        "turn": 1,
+        "prompt_preview": "Statement 1| In a Bayesian network, the inference ...",
+        "response_preview": "Okay, let's try to figure out this problem step by step. So, there are two statements here, and I ne...",
+        "response_length": 493,
+        "duration_seconds": 5.8628222942352295,
+        "tokens": 100,
+        "throughput": 17.056631598458573
+      }
+    ],
+    "metadata": {
+      "timestamp": "2026-03-03T15:45:58.359709",
+      "analysis_version": "1.0",
+      "max_tokens": 100,
+      "temperature": 0.1,
+      "top_p": 0.9
+    }
+  },
+  {
+    "experiment_id": "exp_20260303_154601_1558358968496",
+    "config_ref": {
+      "model": "Ollama:qwen3:4b",
+      "task_type": "qa",
+      "prompts_count": 1,
+      "keep_context": false,
+      "per_turn_monitoring": false
+    },
+    "baseline_summary": {
+      "duration_seconds": 0,
+      "gpu_power_avg_w": 15.81569387755102,
+      "gpu_power_peak_w": 21.274,
+      "gpu_power_std_w": 3.5126135406390615,
+      "gpu_energy_j": 165.0077769783735,
+      "cpu_percent_avg": 19.522448979591836,
+      "cpu_percent_peak": 37.2,
+      "gpu_util_avg": 11.83673469387755,
+      "gpu_util_peak": 42,
+      "gpu_mem_avg_mb": 6740.280452806122,
+      "gpu_mem_peak_mb": 6773.65625,
+      "gpu_temp_avg_c": 58.46938775510204,
+      "gpu_temp_peak_c": 59
+    },
+    "performance": {
+      "total_time_seconds": 2.57989239692688,
+      "token_count": 100,
+      "output_tokens": 100,
+      "throughput_tokens_per_sec": 38.76130652546523,
+      "latency_per_token_ms": 25.7989239692688,
+      "turns": 1,
+      "avg_time_per_turn": 2.57989239692688,
+      "ttft_seconds": null
+    },
+    "resources": {
+      "cpu_percent_avg": 22.553846153846152,
+      "cpu_percent_peak": 33.3,
+      "cpu_percent_std": 9.353700656763149,
+      "mem_used_avg_mb": 13946.122295673076,
+      "mem_used_peak_mb": 14451.02734375,
+      "gpu_util_avg": 71.46153846153847,
+      "gpu_util_peak": 94,
+      "gpu_util_std": 33.23486442002962,
+      "gpu_mem_avg_mb": 6736.860576923077,
+      "gpu_mem_peak_mb": 6743.4375,
+      "gpu_power_avg_w": 37.38269230769231,
+      "gpu_power_peak_w": 55.016,
+      "gpu_power_std_w": 18.92865192641777,
+      "gpu_energy_j": 97.26794512856006,
+      "gpu_temp_avg_c": 61.30769230769231,
+      "gpu_temp_peak_c": 63,
+      "cpu_energy_j_approx": 27.97036781787872
+    },
+    "derived_metrics": {
+      "P_idle": 15.81569387755102,
+      "P_inc": 21.56699843014129,
+      "E_inc": 56.46515674174318,
+      "E_token": 0.5646515674174318,
+      "PPW": 1.036878409035543,
+      "TPJ": 1.0280879262724112
+    },
+    "quality": {
+      "bartscore": -5.348718166351318,
+      "generated_text_length": 494,
+      "has_reference": true,
+      "avg_response_length": 494.0
+    },
+    "conversation_summary": [
+      {
+        "turn": 1,
+        "prompt_preview": "High entropy means that the partitions in classifi...",
+        "response_preview": "First, the question is: \"High entropy means that the partitions in classification are\" with options:...",
+        "response_length": 494,
+        "duration_seconds": 2.2106399536132812,
+        "tokens": 100,
+        "throughput": 45.235769776326734
+      }
+    ],
+    "metadata": {
+      "timestamp": "2026-03-03T15:46:14.717771",
+      "analysis_version": "1.0",
+      "max_tokens": 100,
+      "temperature": 0.1,
+      "top_p": 0.9
+    }
+  },
+  {
+    "experiment_id": "exp_20260303_154616_1558358968496",
+    "config_ref": {
+      "model": "Ollama:qwen3:4b",
+      "task_type": "qa",
+      "prompts_count": 1,
+      "keep_context": false,
+      "per_turn_monitoring": false
+    },
+    "baseline_summary": {
+      "duration_seconds": 0,
+      "gpu_power_avg_w": 8.598795918367346,
+      "gpu_power_peak_w": 12.416,
+      "gpu_power_std_w": 2.3507957053190744,
+      "gpu_energy_j": 89.37589083266259,
+      "cpu_percent_avg": 11.43469387755102,
+      "cpu_percent_peak": 36.9,
+      "gpu_util_avg": 9.326530612244898,
+      "gpu_util_peak": 18,
+      "gpu_mem_avg_mb": 6737.738520408163,
+      "gpu_mem_peak_mb": 6753.0234375,
+      "gpu_temp_avg_c": 57.55102040816327,
+      "gpu_temp_peak_c": 59
+    },
+    "performance": {
+      "total_time_seconds": 2.152207612991333,
+      "token_count": 100,
+      "output_tokens": 100,
+      "throughput_tokens_per_sec": 46.46391890650872,
+      "latency_per_token_ms": 21.52207612991333,
+      "turns": 1,
+      "avg_time_per_turn": 2.152207612991333,
+      "ttft_seconds": null
+    },
+    "resources": {
+      "cpu_percent_avg": 29.045454545454547,
+      "cpu_percent_peak": 40.7,
+      "cpu_percent_std": 11.564551135915591,
+      "mem_used_avg_mb": 13259.13778409091,
+      "mem_used_peak_mb": 13295.46484375,
+      "gpu_util_avg": 67.45454545454545,
+      "gpu_util_peak": 93,
+      "gpu_util_std": 33.04092128465614,
+      "gpu_mem_avg_mb": 6744.591619318182,
+      "gpu_mem_peak_mb": 6751.5234375,
+      "gpu_power_avg_w": 40.693545454545465,
+      "gpu_power_peak_w": 56.53,
+      "gpu_power_std_w": 19.349530444683978,
+      "gpu_energy_j": 89.92600784170627,
+      "gpu_temp_avg_c": 60.18181818181818,
+      "gpu_temp_peak_c": 62,
+      "cpu_energy_j_approx": 29.919962945580483
+    },
+    "derived_metrics": {
+      "P_idle": 8.598795918367346,
+      "P_inc": 32.09474953617812,
+      "E_inc": 71.41961380363726,
+      "E_token": 0.7141961380363726,
+      "PPW": 1.1418007054314974,
+      "TPJ": 1.112025346171562
+    },
+    "quality": {
+      "bartscore": -4.205978870391846,
+      "generated_text_length": 499,
+      "has_reference": true,
+      "avg_response_length": 499.0
+    },
+    "conversation_summary": [
+      {
+        "turn": 1,
+        "prompt_preview": "A machine learning problem involves four attribute...",
+        "response_preview": "Okay, let's try to figure out this problem. So, the question is about a machine learning problem wit...",
+        "response_length": 499,
+        "duration_seconds": 1.7686536312103271,
+        "tokens": 100,
+        "throughput": 56.54018301569193
+      }
+    ],
+    "metadata": {
+      "timestamp": "2026-03-03T15:46:29.809876",
+      "analysis_version": "1.0",
+      "max_tokens": 100,
+      "temperature": 0.1,
+      "top_p": 0.9
+    }
+  },
+  {
+    "experiment_id": "exp_20260303_154631_1558358968496",
+    "config_ref": {
+      "model": "Ollama:qwen3:4b",
+      "task_type": "qa",
+      "prompts_count": 1,
+      "keep_context": false,
+      "per_turn_monitoring": false
+    },
+    "baseline_summary": {
+      "duration_seconds": 0,
+      "gpu_power_avg_w": 9.01573469387755,
+      "gpu_power_peak_w": 12.765,
+      "gpu_power_std_w": 2.365669942437329,
+      "gpu_energy_j": 94.00304342329501,
+      "cpu_percent_avg": 12.285714285714286,
+      "cpu_percent_peak": 27.2,
+      "gpu_util_avg": 11.979591836734693,
+      "gpu_util_peak": 98,
+      "gpu_mem_avg_mb": 6739.80149872449,
+      "gpu_mem_peak_mb": 6749.1484375,
+      "gpu_temp_avg_c": 57.30612244897959,
+      "gpu_temp_peak_c": 58
+    },
+    "performance": {
+      "total_time_seconds": 2.3710684776306152,
+      "token_count": 100,
+      "output_tokens": 100,
+      "throughput_tokens_per_sec": 42.17507884881039,
+      "latency_per_token_ms": 23.710684776306152,
+      "turns": 1,
+      "avg_time_per_turn": 2.3710684776306152,
+      "ttft_seconds": null
+    },
+    "resources": {
+      "cpu_percent_avg": 22.316666666666663,
+      "cpu_percent_peak": 37.7,
+      "cpu_percent_std": 10.392692411283784,
+      "mem_used_avg_mb": 13293.388997395834,
+      "mem_used_peak_mb": 13315.55859375,
+      "gpu_util_avg": 81.08333333333333,
+      "gpu_util_peak": 98,
+      "gpu_util_std": 27.3570781009636,
+      "gpu_mem_avg_mb": 6762.9453125,
+      "gpu_mem_peak_mb": 6787.4921875,
+      "gpu_power_avg_w": 46.48825,
+      "gpu_power_peak_w": 59.928,
+      "gpu_power_std_w": 17.924215971347255,
+      "gpu_energy_j": 113.41174660909175,
+      "gpu_temp_avg_c": 60.916666666666664,
+      "gpu_temp_peak_c": 62,
+      "cpu_energy_j_approx": 25.573277294039727
+    },
+    "derived_metrics": {
+      "P_idle": 9.01573469387755,
+      "P_inc": 37.47251530612245,
+      "E_inc": 92.03482227375798,
+      "E_token": 0.9203482227375798,
+      "PPW": 0.9072201867958115,
+      "TPJ": 0.8817428792863985
+    },
+    "quality": {
+      "bartscore": -4.60902214050293,
+      "generated_text_length": 390,
+      "has_reference": true,
+      "avg_response_length": 390.0
+    },
+    "conversation_summary": [
+      {
+        "turn": 1,
+        "prompt_preview": "Statement 1| For any two variables x and y having ...",
+        "response_preview": "Okay, let's tackle this problem step by step. So, there are two statements here, and I need to figur...",
+        "response_length": 390,
+        "duration_seconds": 2.015850067138672,
+        "tokens": 100,
+        "throughput": 49.6068639380217
+      }
+    ],
+    "metadata": {
+      "timestamp": "2026-03-03T15:46:45.172074",
+      "analysis_version": "1.0",
+      "max_tokens": 100,
+      "temperature": 0.1,
+      "top_p": 0.9
+    }
+  },
+  {
+    "experiment_id": "exp_20260303_154647_1558358968496",
+    "config_ref": {
+      "model": "Ollama:qwen3:4b",
+      "task_type": "qa",
+      "prompts_count": 1,
+      "keep_context": false,
+      "per_turn_monitoring": false
+    },
+    "baseline_summary": {
+      "duration_seconds": 0,
+      "gpu_power_avg_w": 9.787183673469388,
+      "gpu_power_peak_w": 14.589,
+      "gpu_power_std_w": 3.076265823241491,
+      "gpu_energy_j": 101.96865362560746,
+      "cpu_percent_avg": 13.742857142857142,
+      "cpu_percent_peak": 33.7,
+      "gpu_util_avg": 11.448979591836734,
+      "gpu_util_peak": 55,
+      "gpu_mem_avg_mb": 6699.195950255102,
+      "gpu_mem_peak_mb": 6733.8515625,
+      "gpu_temp_avg_c": 57.61224489795919,
+      "gpu_temp_peak_c": 58
+    },
+    "performance": {
+      "total_time_seconds": 2.375128746032715,
+      "token_count": 100,
+      "output_tokens": 100,
+      "throughput_tokens_per_sec": 42.10298080347624,
+      "latency_per_token_ms": 23.75128746032715,
+      "turns": 1,
+      "avg_time_per_turn": 2.375128746032715,
+      "ttft_seconds": null
+    },
+    "resources": {
+      "cpu_percent_avg": 20.333333333333332,
+      "cpu_percent_peak": 34.0,
+      "cpu_percent_std": 8.563618134617842,
+      "mem_used_avg_mb": 13346.599934895834,
+      "mem_used_peak_mb": 13378.734375,
+      "gpu_util_avg": 79.16666666666667,
+      "gpu_util_peak": 94,
+      "gpu_util_std": 27.27890923202189,
+      "gpu_mem_avg_mb": 6699.5546875,
+      "gpu_mem_peak_mb": 6702.9765625,
+      "gpu_power_avg_w": 36.89675,
+      "gpu_power_peak_w": 55.13,
+      "gpu_power_std_w": 21.623331882193828,
+      "gpu_energy_j": 90.79514021599293,
+      "gpu_temp_avg_c": 60.333333333333336,
+      "gpu_temp_peak_c": 63,
+      "cpu_energy_j_approx": 23.198849306702613
+    },
+    "derived_metrics": {
+      "P_idle": 9.787183673469388,
+      "P_inc": 27.10956632653061,
+      "E_inc": 67.54931893043373,
+      "E_token": 0.6754931893043373,
+      "PPW": 1.1411026934208635,
+      "TPJ": 1.1013805338271365
+    },
+    "quality": {
+      "bartscore": -4.8164963722229,
+      "generated_text_length": 513,
+      "has_reference": true,
+      "avg_response_length": 513.0
+    },
+    "conversation_summary": [
+      {
+        "turn": 1,
+        "prompt_preview": "Which of the following sentence is FALSE regarding...",
+        "response_preview": "We are to determine which statement is FALSE regarding regression.\n\nLet's evaluate each option:\n\nA. ...",
+        "response_length": 513,
+        "duration_seconds": 2.043253183364868,
+        "tokens": 100,
+        "throughput": 48.9415608472554
+      }
+    ],
+    "metadata": {
+      "timestamp": "2026-03-03T15:47:00.507017",
+      "analysis_version": "1.0",
+      "max_tokens": 100,
+      "temperature": 0.1,
+      "top_p": 0.9
+    }
+  }
+]

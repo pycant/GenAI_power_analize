@@ -1,0 +1,33 @@
+{
+  "timestamp": "20260302_224313",
+  "args": {
+    "models": [
+      "qwen3:4b",
+      "qwen3:8b",
+      "deepseek-r1:8b",
+      "gemma3:4b"
+    ],
+    "runs": 1,
+    "temperature": 0.7,
+    "top_p": 0.9,
+    "num_ctx": 8192,
+    "max_tokens": 512,
+    "seed": 42,
+    "warmup": true,
+    "keepalive": "5m"
+  },
+  "exp_config_path": "data\\experiments_5\\config.py",
+  "cases_file": "data\\experiments_5\\test_cases.json",
+  "source_test_cases": "data\\test_cases\\test_cases_comprehensive.json",
+  "total_tasks": 320,
+  "task_distribution": {
+    "qa": 18,
+    "math": 12,
+    "code": 12,
+    "translation": 10,
+    "reasoning": 10,
+    "summary": 6,
+    "creative": 6,
+    "multi_turn": 6
+  }
+}

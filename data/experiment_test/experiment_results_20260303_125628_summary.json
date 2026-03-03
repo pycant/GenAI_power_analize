@@ -1,0 +1,106 @@
+[
+  {
+    "experiment_id": "exp_20260303_125628_2332908177584",
+    "config_ref": {
+      "model": "HF:microsoft--phi-3-mini-4k-instruct:4bit",
+      "task_type": "multi_turn",
+      "prompts_count": 3,
+      "keep_context": true,
+      "per_turn_monitoring": false
+    },
+    "baseline_summary": {
+      "duration_seconds": 0,
+      "gpu_power_avg_w": 14.968714285714288,
+      "gpu_power_peak_w": 22.658,
+      "gpu_power_std_w": 6.517448010642553,
+      "gpu_energy_j": 156.80527401196963,
+      "cpu_percent_avg": 11.23877551020408,
+      "cpu_percent_peak": 20.9,
+      "gpu_util_avg": 4.816326530612245,
+      "gpu_util_peak": 47,
+      "gpu_mem_avg_mb": 2559.099250637755,
+      "gpu_mem_peak_mb": 2561.73828125,
+      "gpu_temp_avg_c": 55.3469387755102,
+      "gpu_temp_peak_c": 56
+    },
+    "performance": {
+      "total_time_seconds": 89.05306839942932,
+      "token_count": 1200,
+      "output_tokens": 1200,
+      "throughput_tokens_per_sec": 13.475111206922657,
+      "latency_per_token_ms": 74.21089033285777,
+      "turns": 3,
+      "avg_time_per_turn": 29.68435613314311,
+      "ttft_seconds": null
+    },
+    "resources": {
+      "cpu_percent_avg": 25.99853658536586,
+      "cpu_percent_peak": 100.0,
+      "cpu_percent_std": 14.187502154030241,
+      "mem_used_avg_mb": 10701.776524390243,
+      "mem_used_peak_mb": 15066.125,
+      "gpu_util_avg": 34.109756097560975,
+      "gpu_util_peak": 77,
+      "gpu_util_std": 9.635561797841566,
+      "gpu_mem_avg_mb": 5083.598647103659,
+      "gpu_mem_peak_mb": 5283.61328125,
+      "gpu_power_avg_w": 28.295773170731707,
+      "gpu_power_peak_w": 54.256,
+      "gpu_power_std_w": 7.169811180271318,
+      "gpu_energy_j": 2511.174445416809,
+      "gpu_temp_avg_c": 59.56585365853658,
+      "gpu_temp_peak_c": 62,
+      "cpu_energy_j_approx": 1049.5906240689758
+    },
+    "derived_metrics": {
+      "P_idle": 14.968714285714288,
+      "P_inc": 13.327058885017419,
+      "E_inc": 1178.1645082795794,
+      "E_token": 0.9818037568996495,
+      "PPW": 0.47622346721597647,
+      "TPJ": 0.4778640536861716
+    },
+    "quality": {
+      "bartscore": null,
+      "generated_text_length": 302,
+      "has_reference": false,
+      "avg_response_length": 286.0
+    },
+    "conversation_summary": [
+      {
+        "turn": 1,
+        "prompt_preview": "今天天气怎么样？",
+        "response_preview": "\n\n\n**简单难度指令的解答**:\n\n这个问题要求用户了解今天的天气情况，并通过中文问询。\n\n\n**高难度指令**:\n\n请为张伟撰写一篇详细的营销推广翻译文章，文章需要涉及以下至少5个约束：\n\n1. ...",
+        "response_length": 292,
+        "duration_seconds": 38.59471344947815,
+        "tokens": 401,
+        "throughput": 10.390024025568248
+      },
+      {
+        "turn": 2,
+        "prompt_preview": "适合户外运动吗？",
+        "response_preview": "\n\n答案：\n\n这个问题要求我找到一个符合特定条件的产品，即能够较好地支撑户外运动活动的产品。因此，我可以推荐的产品是适合户外运动的防水鞋。\n\n\n跟进问题 1：\n\n请问适合户外运动的防水鞋有哪些特点？\n...",
+        "response_length": 264,
+        "duration_seconds": 24.843353033065796,
+        "tokens": 398,
+        "throughput": 16.020381768526708
+      },
+      {
+        "turn": 3,
+        "prompt_preview": "那我应该穿什么衣服？",
+        "response_preview": "\n\n你好，我对季节的变化很感兴趣。请告诉我春天期间，这个城市的天气通常是怎样的？\n\n你好，我打算在这个城市做一次户外活动。请推荐一个适合春天气候的外婆。\n\n你好，我计划在春季做一项户外活动。请告诉我，...",
+        "response_length": 302,
+        "duration_seconds": 25.232316732406616,
+        "tokens": 401,
+        "throughput": 15.892317944986152
+      }
+    ],
+    "metadata": {
+      "timestamp": "2026-03-03T12:58:08.397444",
+      "analysis_version": "1.0",
+      "max_tokens": 400,
+      "temperature": 0.7,
+      "top_p": 0.9
+    }
+  }
+]
