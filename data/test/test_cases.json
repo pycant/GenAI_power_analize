@@ -1,0 +1,11 @@
+[
+  {
+    "model": "hf:models/huggingface/Qwen--Qwen2.5-7B-Instruct:4bit",
+    "prompt": "请总结以下文本的主要内容：人工智能技术正在快速发展，深度学习、自然语言处理和计算机视觉等领域取得了重大突破。这些技术正在改变我们的生活方式，从智能助手到自动驾驶汽车，AI的应用无处不在。",
+    "task_type": "summary",
+    "reference_text": "人工智能技术快速发展，深度学习等领域取得突破，正在改变生活方式，应用广泛。",
+    "max_tokens": 150,
+    "temperature": 0.5,
+    "top_p": 0.9
+  }
+]

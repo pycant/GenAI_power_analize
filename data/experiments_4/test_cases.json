@@ -1,0 +1,15 @@
+[
+  {
+    "model": "hf:models/huggingface/Qwen--Qwen2.5-7B-Instruct:4bit",
+    "prompts": [
+      "什么是Python？",
+      "它有哪些主要特点？",
+      "请给我一个简单的代码示例。"
+    ],
+    "task_type": "qa",
+    "keep_context":true,
+    "max_tokens": 150,
+    "temperature": 0.5,
+    "top_p": 0.9
+  }
+]

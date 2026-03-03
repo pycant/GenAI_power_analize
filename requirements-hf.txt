@@ -1,0 +1,71 @@
+# Hugging Face模型支持依赖
+# 用于从Hugging Face下载和使用大语言模型
+
+# 核心依赖
+transformers>=4.36.0        # Hugging Face Transformers库
+huggingface_hub>=0.19.0     # Hugging Face Hub API
+accelerate>=0.25.0          # 模型加速和分布式训练
+tokenizers>=0.15.0          # 快速分词器
+
+# PyTorch (根据系统选择合适版本)
+# CPU版本
+# torch>=2.1.0 --index-url https://download.pytorch.org/whl/cpu
+
+# CUDA 11.8版本 (推荐)
+# torch>=2.1.0 --index-url https://download.pytorch.org/whl/cu118
+
+# CUDA 12.1版本
+# torch>=2.1.0 --index-url https://download.pytorch.org/whl/cu121
+
+# 量化支持
+bitsandbytes>=0.41.0        # 4bit/8bit量化 (需要CUDA)
+# 注意: bitsandbytes仅支持Linux和Windows (WSL)
+
+# 配置文件支持
+pyyaml>=6.0                 # YAML配置文件解析
+
+# 可选依赖
+
+# ONNX支持 (用于模型优化)
+# onnx>=1.15.0
+# onnxruntime>=1.16.0
+# onnxruntime-gpu>=1.16.0  # GPU版本
+
+# 模型优化
+# optimum>=1.14.0          # Hugging Face优化工具
+# auto-gptq>=0.5.0         # GPTQ量化
+
+# 分布式训练
+# deepspeed>=0.12.0        # DeepSpeed分布式训练
+
+# 监控和日志
+# tensorboard>=2.15.0      # TensorBoard可视化
+# wandb>=0.16.0            # Weights & Biases实验跟踪
+
+# 数据处理
+# datasets>=2.15.0         # Hugging Face数据集库
+
+# 安装说明:
+# 
+# 1. 基础安装 (CPU):
+#    pip install -r requirements-hf.txt
+#    pip install torch --index-url https://download.pytorch.org/whl/cpu
+#
+# 2. GPU安装 (CUDA 11.8):
+#    pip install -r requirements-hf.txt
+#    pip install torch --index-url https://download.pytorch.org/whl/cu118
+#
+# 3. GPU安装 (CUDA 12.1):
+#    pip install -r requirements-hf.txt
+#    pip install torch --index-url https://download.pytorch.org/whl/cu121
+#
+# 4. 完整安装 (包含所有可选依赖):
+#    pip install -r requirements-hf.txt
+#    pip install torch --index-url https://download.pytorch.org/whl/cu118
+#    pip install onnx onnxruntime-gpu optimum auto-gptq datasets wandb
+#
+# 注意事项:
+# - bitsandbytes需要CUDA支持，CPU环境无法使用量化功能
+# - Windows用户可能需要使用WSL来运行bitsandbytes
+# - 根据你的CUDA版本选择对应的PyTorch版本
+# - 量化功能需要至少4GB显存
