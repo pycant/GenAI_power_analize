@@ -1,0 +1,6 @@
+﻿question_id,prompt
+q01,Which of the following algorithms has running time Θ(n^2) in the worst case but Θ(n log n) on average?
+q02,Hash tables can contribute to an efficient average-case solution for all of the problems described below EXCEPT:
+q03,What is Nmap?
+q04,Any set of Boolean operators that is sufficient to represent all Boolean expressions is said to be complete. Which of the following is NOT complete?
+q05,"The AH Protocol provides source authentication and data integrity, but not"
