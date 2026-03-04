@@ -1,0 +1,13 @@
+﻿model,compilation_rate_mean,compilation_rate_std,compilation_rate_count,code_length_mean,code_length_std,code_length_min,code_length_max,cyclomatic_complexity_mean,cyclomatic_complexity_std,cyclomatic_complexity_min,cyclomatic_complexity_max,has_code_mean
+deepseek_8b_ol_q4km,0.6,0.5477,5,3.4,2.3022,1,7,2.2,1.6432,1,4,1.0
+gemma_2b_hf_4bit,0.8,0.4472,5,2.6,2.1909,1,5,2.6,2.6077,1,7,1.0
+gemma_2b_hf_8bit,0.6,0.5477,5,3.8,4.3818,1,11,3.2,2.49,1,7,1.0
+gemma_4b_ol_q4km,1.0,0.0,5,20.0,6.1644,11,26,5.8,2.3875,2,8,1.0
+phi3_4b_hf_4bit,0.2,0.4472,5,5.8,4.4385,1,13,3.2,2.49,1,7,1.0
+phi3_4b_hf_8bit,0.2,0.4472,5,5.0,2.5495,2,9,2.4,1.5166,1,4,1.0
+qwen25_3b_hf_4bit,0.8,0.4472,5,9.8,15.1559,1,36,3.8,3.7014,1,10,1.0
+qwen25_3b_hf_8bit,0.4,0.5477,5,11.0,8.6313,1,24,5.0,2.7386,1,8,1.0
+qwen25_7b_hf_4bit,0.6,0.5477,5,17.4,9.685,6,28,6.2,2.2804,4,10,1.0
+qwen25_7b_hf_8bit,0.6,0.5477,5,15.6,10.3586,6,29,5.8,3.2711,1,10,1.0
+qwen_4b_ol_q4km,0.0,0.0,5,2.2,0.8367,1,3,1.6,0.8944,1,3,1.0
+qwen_8b_ol_q4km,0.2,0.4472,5,10.8,7.7266,1,19,17.0,13.784,1,35,1.0
