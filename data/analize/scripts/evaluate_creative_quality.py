@@ -203,6 +203,17 @@ class CreativeQualityEvaluator:
 
 def main():
     """主函数"""
+    import argparse
+    
+    parser = argparse.ArgumentParser(description='创意写作质量评估')
+    parser.add_argument('--with-perplexity', action='store_true',
+                       help='计算困惑度（需要额外时间和GPU）')
+    parser.add_argument('--perplexity-model', type=str,
+                       default='uer/gpt2-chinese-cluecorpussmall',
+                       help='困惑度计算使用的模型')
+    
+    args = parser.parse_args()
+    
     print("="*60)
     print("创意写作任务质量评估")
     print("="*60)
@@ -318,6 +329,28 @@ def main():
     print(f"  1. {detail_file}")
     print(f"  2. {summary_file}")
     print(f"  3. {matching_file}")
+    
+    # 可选：计算困惑度
+    if args.with_perplexity:
+        print("\n" + "="*60)
+        print("📊 计算困惑度（可能需要几分钟）...")
+        print("="*60)
+        
+        try:
+            from calculate_perplexity import add_perplexity_to_creative_scores
+            
+            add_perplexity_to_creative_scores(
+                input_file=str(detail_file),
+                output_file=str(output_dir / 'creative_quality_scores_with_perplexity.csv'),
+                model_name=args.perplexity_model,
+                device='cuda'
+            )
+        except ImportError:
+            print("⚠️  困惑度计算需要安装 transformers 和 torch")
+            print("   运行: pip install transformers torch")
+        except Exception as e:
+            print(f"⚠️  困惑度计算失败: {e}")
+            print("   可以稍后单独运行: python calculate_perplexity.py")
 
 
 if __name__ == '__main__':

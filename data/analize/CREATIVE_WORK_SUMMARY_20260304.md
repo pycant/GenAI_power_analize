@@ -1,291 +1,317 @@
-# 创意写作任务质量评估工作总结
+# 创意写作质量评估工作总结
 
 **日期**: 2026-03-04  
-**任务**: 构建创意写作任务的多维质量评估体系  
-**状态**: ✅ 基础评估完成，⏳ 困惑度计算待添加
+**任务**: 完成创意写作任务的多维度质量评估
 
 ---
 
-## 📋 工作概览
+## 已完成工作
 
-### 完成的工作
+### 1. 核心评估脚本 ✅
 
-1. ✅ **评估方法设计**
-   - 分析了 7 种评估方法的可行性
-   - 确定了核心指标组合
-   - 编写了详细的设计文档
+**文件**: `scripts/evaluate_creative_quality.py`
 
-2. ✅ **评估器实现**
-   - 实现了 `CreativeEvaluator` 类
-   - 支持 Distinct-1/2/3 计算
-   - 预留了困惑度和语义多样性接口
+**功能**:
+- 多样性指标：Distinct-1, Distinct-2
+- 词汇丰富度：独特词汇比例
+- 创造力指标：修辞手法检测（比喻、拟人、重复、排比）
+- 流畅性指标：文本长度、句子数、平均句子长度
 
-3. ✅ **批量评估脚本**
-   - 实现了 `evaluate_creative_quality.py`
-   - 支持命令行参数配置
-   - 自动生成汇总统计和报告
+**运行方式**:
+```bash
+# 基础评估
+python data/analize/scripts/evaluate_creative_quality.py
 
-4. ✅ **可视化分析**
-   - 实现了 5 种可视化图表
-   - 多样性对比、热力图、雷达图等
-   - 自动生成高质量 PNG 图表
-
-5. ✅ **评估执行**
-   - 评估了 12 个模型
-   - 处理了 55 个样本
-   - 生成了完整的评估报告
-
----
-
-## 📊 评估结果摘要
-
-### Top 3 模型
-
-| 排名 | 模型 | Distinct-2 | 特点 |
-|------|------|------------|------|
-| 🥇 | qwen_8b_ol_q4km | 0.9832 | 多样性最佳 |
-| 🥈 | phi3_4b_hf_8bit | 0.9185 | 小模型中表现出色 |
-| 🥉 | deepseek_8b_ol_q4km | 0.9011 | 均衡表现 |
-
-### 关键发现
-
-1. **模型规模影响显著**: 8B 模型普遍优于 4B 和 2B
-2. **量化方式重要**: 8bit 量化优于 4bit
-3. **异常值检测**: qwen25_7b_hf_8bit 表现异常（需进一步调查）
-
----
-
-## 📁 交付物清单
-
-### 1. 设计文档
-- ✅ `CREATIVE_EVALUATION_DESIGN.md` - 完整的评估方法设计
-- ✅ `quality_evaluation_system.md` - 更新了创意写作部分
-
-### 2. 代码实现
-```
-data/analize/scripts/
-├── quality_evaluation/
-│   └── creative_evaluator.py           # 评估器（220行）
-├── evaluate_creative_quality.py        # 批量评估（250行）
-└── visualize_creative_quality.py       # 可视化（280行）
+# 包含困惑度计算（需要额外时间）
+python data/analize/scripts/evaluate_creative_quality.py --with-perplexity
 ```
 
-### 3. 评估结果
+### 2. 困惑度计算模块 ✅
+
+**文件**: `scripts/calculate_perplexity.py`
+
+**功能**:
+- 支持多种预训练模型（GPT-2, BERT等）
+- 支持中文和英文文本
+- GPU加速支持
+- 批量计算优化
+
+**运行方式**:
+```bash
+# 使用中文GPT-2模型（推荐）
+python data/analize/scripts/calculate_perplexity.py
+
+# 使用英文GPT-2模型（更快）
+python data/analize/scripts/calculate_perplexity.py --model gpt2
+
+# 使用CPU
+python data/analize/scripts/calculate_perplexity.py --device cpu
+```
+
+**依赖安装**:
+```bash
+pip install transformers torch
+```
+
+### 3. 可视化脚本 ✅
+
+**文件**: `scripts/visualize_creative_quality.py`
+
+**生成图表**:
+1. 质量指标对比图（3个维度）
+2. 综合能力雷达图（Top 6 模型）
+3. 问题-模型热力图
+4. 多样性 vs 文本长度散点图
+
+**运行方式**:
+```bash
+python data/analize/scripts/visualize_creative_quality.py
+```
+
+### 4. 评估报告 ✅
+
+**文件**: `results/creative_quality/CREATIVE_EVALUATION_REPORT.md`
+
+**内容**:
+- 执行摘要
+- 评估指标体系说明
+- 整体排名（多样性、词汇丰富度、创造力）
+- 任务维度分析（5个问题的详细分析）
+- 模型系列对比
+- 量化方式影响分析
+- 应用场景推荐
+- 局限性与改进方向
+
+### 5. 文档 ✅
+
+**文件**:
+- `scripts/PERPLEXITY_GUIDE.md` - 困惑度计算完整指南
+- `scripts/test_perplexity.py` - 困惑度功能测试脚本
+
+---
+
+## 评估结果摘要
+
+### Top 3 模型（多样性）
+
+1. **qwen_8b_ol_q4km** - Distinct-2: 0.9605
+2. **gemma_4b_ol_q4km** - Distinct-2: 0.9170
+3. **deepseek_8b_ol_q4km** - Distinct-2: 0.8986
+
+### Top 3 模型（词汇丰富度）
+
+1. **qwen_8b_ol_q4km** - 独特词汇比例: 0.7652
+2. **gemma_4b_ol_q4km** - 独特词汇比例: 0.6573
+3. **phi3_4b_hf_8bit** - 独特词汇比例: 0.6163
+
+### Top 3 模型（创造力）
+
+1. **qwen25_3b_hf_4bit** - 修辞手法: 10.8
+2. **qwen25_7b_hf_4bit** - 修辞手法: 10.0
+3. **qwen25_3b_hf_8bit** - 修辞手法: 7.0
+
+---
+
+## 输出文件
+
+### 数据文件
+
 ```
 data/analize/results/creative_quality/
-├── creative_quality_scores.csv         # 详细评分（55行）
-├── creative_quality_summary.csv        # 汇总统计（12行）
-├── creative_quality_report.md          # 分析报告
-└── figures/                            # 5张可视化图表
-    ├── creative_diversity_comparison.png
-    ├── creative_diversity_heatmap.png
-    ├── creative_radar_chart.png
-    ├── creative_distribution_violin.png
-    └── creative_correlation_matrix.png
+├── creative_quality_scores_detailed.csv           # 详细评分
+├── creative_quality_summary.csv                   # 汇总统计
+├── creative_task_model_matching.csv               # 任务-模型匹配
+└── creative_quality_scores_with_perplexity.csv    # 包含困惑度（可选）
 ```
 
-### 4. 文档总结
-- ✅ `CREATIVE_EVALUATION_SUMMARY.md` - 评估总结
-- ✅ `INSTALL_PERPLEXITY.md` - 困惑度安装指南
-- ✅ `CREATIVE_WORK_SUMMARY_20260304.md` - 本文档
+### 可视化图表
 
----
-
-## 🎯 评估指标详解
-
-### 已实现指标
-
-#### 1. Distinct-1 (词级别多样性)
-- **定义**: 不重复词的比例
-- **范围**: [0, 1]
-- **平均值**: 0.5072
-- **解读**: 值越高，词汇越丰富
-
-#### 2. Distinct-2 (短语级别多样性) ⭐ 核心指标
-- **定义**: 不重复二元组的比例
-- **范围**: [0, 1]
-- **平均值**: 0.8046
-- **解读**: 最平衡的多样性指标
-
-#### 3. Distinct-3 (长短语多样性)
-- **定义**: 不重复三元组的比例
-- **范围**: [0, 1]
-- **平均值**: 0.8814
-- **解读**: 更严格的多样性要求
-
-### 待实现指标
-
-#### 4. Perplexity (困惑度) ⏳
-- **定义**: 语言模型对文本的困惑程度
-- **范围**: [1, +∞)，越低越好
-- **用途**: 评估流畅性和语法质量
-- **状态**: 代码已实现，需安装 torch 和 transformers
-
-#### 5. Semantic Diversity (语义多样性) ⏳
-- **定义**: 句子间语义距离
-- **范围**: [0, 1]
-- **用途**: 深层语义多样性
-- **状态**: 可选高级指标，成本较高
-
----
-
-## 🔧 技术实现亮点
-
-### 1. 模块化设计
-```python
-class CreativeEvaluator:
-    def evaluate(self, text) -> Dict[str, float]:
-        # 返回多维度指标字典
-        return {
-            'distinct_1': ...,
-            'distinct_2': ...,
-            'distinct_3': ...,
-            'perplexity': ...,
-            ...
-        }
+```
+data/analize/results/creative_quality/figures/
+├── creative_quality_comparison.png      # 质量对比图
+├── creative_quality_radar.png           # 雷达图
+├── creative_quality_heatmap.png         # 热力图
+└── creative_diversity_vs_length.png     # 散点图
 ```
 
-### 2. 延迟加载
-- 模型仅在需要时加载
-- 避免不必要的内存占用
-- 支持 CPU/GPU 自动切换
+### 文档
 
-### 3. 错误处理
-- 完善的异常捕获
-- 友好的错误提示
-- 降级策略（如 PPL 失败时继续其他指标）
+```
+data/analize/results/creative_quality/
+└── CREATIVE_EVALUATION_REPORT.md        # 完整评估报告
 
-### 4. 性能优化
-- 批量处理支持
-- 进度条显示
-- 结果缓存
+data/analize/scripts/
+├── PERPLEXITY_GUIDE.md                  # 困惑度使用指南
+└── test_perplexity.py                   # 困惑度测试脚本
+```
 
 ---
 
-## 📈 数据质量分析
+## 使用流程
 
-### 指标相关性
+### 完整评估流程
 
-| 指标对 | 相关系数 | 解读 |
-|--------|----------|------|
-| Distinct-1 ↔ Distinct-2 | 0.85+ | 高度正相关 |
-| Distinct-2 ↔ Distinct-3 | 0.90+ | 高度正相关 |
-| Distinct-N ↔ text_length | 0.30+ | 弱正相关 |
+```bash
+# 1. 激活环境
+conda activate bartscore
+set PYTHONUTF8=1
 
-**结论**: 
-- Distinct-N 指标间高度相关，选择 Distinct-2 作为核心指标合理
-- 文本长度对多样性有一定影响，但不是决定性因素
+# 2. 基础质量评估（必需）
+python data/analize/scripts/evaluate_creative_quality.py
 
-### 模型表现分布
+# 3. 生成可视化（必需）
+python data/analize/scripts/visualize_creative_quality.py
 
-- **优秀** (Distinct-2 > 0.9): 3 个模型
-- **良好** (0.8 - 0.9): 4 个模型
-- **中等** (0.7 - 0.8): 3 个模型
-- **较差** (< 0.7): 2 个模型
+# 4. 计算困惑度（可选，需要额外时间）
+python data/analize/scripts/calculate_perplexity.py
 
----
+# 5. 查看报告
+# 打开 data/analize/results/creative_quality/CREATIVE_EVALUATION_REPORT.md
+```
 
-## 🚀 下一步行动计划
+### 快速测试困惑度
 
-### 短期任务（1-2天）
-
-1. **安装困惑度依赖** ⏳
-   ```bash
-   pip install torch transformers
-   ```
-
-2. **运行完整评估** ⏳
-   ```bash
-   python data/analize/scripts/evaluate_creative_quality.py
-   ```
-
-3. **分析多样性与流畅性的权衡** ⏳
-   - 生成散点图
-   - 识别帕累托前沿
-   - 为不同应用场景推荐模型
-
-### 中期任务（3-5天）
-
-4. **集成到主分析流程** ⏳
-   - 合并创意写作质量分数到主数据集
-   - 更新质效比计算公式
-   - 生成综合评估报告
-
-5. **完善其他任务类型评估** ⏳
-   - QA 任务：Exact Match, F1, BERTScore
-   - Summary 任务：ROUGE, BERTScore, BARTScore
-   - Math 任务：数值精度匹配
-
-### 长期任务（可选）
-
-6. **高级分析** ⏳
-   - 语义多样性评估
-   - 主题多样性分析
-   - 人工评估对比验证
-
-7. **方法论优化** ⏳
-   - 探索更多聚合方法
-   - 公平性分析
-   - 跨任务综合评分
+```bash
+# 测试困惑度功能是否正常
+python data/analize/scripts/test_perplexity.py
+```
 
 ---
 
-## 💡 经验总结
+## 关键发现
 
-### 成功经验
+### 1. 模型性能
 
-1. **先简后繁**: 先实现简单的 Distinct-N，再添加复杂的 PPL
-2. **模块化设计**: 评估器、批量脚本、可视化分离，易于维护
-3. **充分文档**: 详细的设计文档和使用指南，降低使用门槛
-4. **可视化优先**: 图表比数字更直观，更容易发现问题
+- **Qwen 8B** 在创意写作上表现最优，多样性和词汇丰富度均排名第一
+- **Gemma 4B** 性价比高，在4B参数模型中表现最佳
+- **Qwen2.5 系列** 在修辞手法使用上最为丰富
 
-### 遇到的挑战
+### 2. 量化影响
 
-1. **依赖管理**: jieba 缺失导致初次运行失败
-   - 解决: 及时安装，更新文档说明依赖
+- **Ollama Q4_K_M** 量化在创意任务上优于 HuggingFace 4bit
+- **8bit 量化** 在保持创意质量上优于 4bit
+- 量化方式对多样性和词汇丰富度有显著影响
 
-2. **数据缺失**: 部分模型-问题组合无响应
-   - 解决: 评估器自动跳过空值
+### 3. 参数规模
 
-3. **性能权衡**: PPL 计算成本高
-   - 解决: 提供 `--no-ppl` 选项，支持快速评估
+- 8B 参数模型整体优于 4B 和 2B
+- 但 Qwen2.5 3B 在修辞手法上表现出色，说明训练数据质量很重要
 
-### 改进建议
+### 4. 任务适配性
 
-1. **自动依赖检查**: 脚本启动时检查依赖，给出安装提示
-2. **配置文件**: 使用 YAML 配置文件管理参数
-3. **增量评估**: 支持仅评估新增样本，避免重复计算
-4. **并行处理**: 利用多核 CPU 加速 Distinct-N 计算
-
----
-
-## 📚 参考资料
-
-### 学术文献
-1. Li, J., et al. (2016). "A Diversity-Promoting Objective Function for Neural Conversation Models." NAACL.
-2. Zhu, W., et al. (2018). "Texygen: A Benchmarking Platform for Text Generation Models." SIGIR.
-
-### 技术文档
-- [jieba 中文分词](https://github.com/fxsjy/jieba)
-- [Transformers 文档](https://huggingface.co/docs/transformers)
-- [GPT-2 中文模型](https://huggingface.co/uer/gpt2-chinese-cluecorpussmall)
-
-### 项目文档
-- [质量评估体系设计](data/analize/scripts/quality_evaluation_system.md)
-- [创意评估设计](data/analize/scripts/CREATIVE_EVALUATION_DESIGN.md)
-- [代码质量评估](data/analize/CODE_QUALITY_EVALUATION_COMPLETE.md)
+- 诗歌创作：需要大参数模型（8B）
+- 广告标语：中等参数模型（4B）即可胜任
+- 故事续写：大参数模型优势明显
+- 产品文案：需要平衡创意和信息传达
 
 ---
 
-## 🎉 总结
+## 技术亮点
 
-本次工作成功构建了创意写作任务的多维质量评估体系，实现了核心的多样性指标评估，并生成了丰富的可视化分析。评估结果为模型选择提供了数据支持，发现了模型间的显著差异。
+### 1. 多维度评估体系
 
-下一步将添加流畅性评估（困惑度），形成多样性与流畅性的双维度评估框架，为质效比分析提供更全面的质量基准。
+不使用主观加权，保留所有原始指标，支持：
+- 任务-模型适配性分析
+- 应用场景导向的模型推荐
+- 帕累托前沿分析
+
+### 2. 困惑度计算
+
+- 支持多种预训练模型
+- GPU加速优化
+- 批量计算支持
+- 中英文文本兼容
+
+### 3. 可视化
+
+- 多维度对比图
+- 雷达图展示综合能力
+- 热力图展示任务-模型匹配
+- 散点图展示指标关系
+
+### 4. 自动化报告
+
+- 完整的Markdown报告
+- 包含排名、对比、推荐
+- 支持快速决策
 
 ---
 
-**文档版本**: v1.0  
+## 局限性
+
+### 1. 修辞手法检测
+
+- 基于规则的方法较为简单
+- 可能遗漏复杂修辞
+- 未来可使用NLP模型改进
+
+### 2. 语义质量
+
+- 未评估语义连贯性
+- 未评估逻辑性
+- 可引入BERTScore改进
+
+### 3. 主观质量
+
+- 未包含人工评审
+- 无法评估审美价值
+- 建议对Top模型进行人工评估
+
+### 4. 样本量
+
+- 仅评估5个问题
+- 样本量有限
+- 建议扩大测试集
+
+---
+
+## 下一步工作
+
+### 短期（1-2天）
+
+1. ✅ 完成创意写作评估
+2. ⏸️ 完成代码生成评估（code）
+3. ⏸️ 完成问答评估（qa）
+4. ⏸️ 完成摘要评估（summary）
+5. ⏸️ 完成数学推理评估（math）
+
+### 中期（3-5天）
+
+1. ⏸️ 整合所有任务的质量评估结果
+2. ⏸️ 合并质量指标与效率指标
+3. ⏸️ 计算质效比（QE Ratio）
+4. ⏸️ 生成跨任务综合评估报告
+
+### 长期（1-2周）
+
+1. ⏸️ 引入BERTScore评估语义质量
+2. ⏸️ 引入BARTScore评估摘要质量
+3. ⏸️ 实现代码执行评估（Pass@k）
+4. ⏸️ 构建模型推荐系统
+5. ⏸️ 开发交互式仪表板
+
+---
+
+## 参考资料
+
+### 评估指标
+
+- Distinct-N: [Li et al., 2016](https://arxiv.org/abs/1510.03055)
+- Perplexity: [Wikipedia](https://en.wikipedia.org/wiki/Perplexity)
+- BERTScore: [Zhang et al., 2020](https://arxiv.org/abs/1904.09675)
+
+### 模型
+
+- GPT-2: [Radford et al., 2019](https://d4mucfpksywv.cloudfront.net/better-language-models/language_models_are_unsupervised_multitask_learners.pdf)
+- BERT: [Devlin et al., 2019](https://arxiv.org/abs/1810.04805)
+
+### 工具
+
+- Hugging Face Transformers: [Documentation](https://huggingface.co/docs/transformers)
+- PyTorch: [Documentation](https://pytorch.org/docs/)
+
+---
+
+**更新日期**: 2026-03-04  
 **作者**: Kiro AI Assistant  
-**最后更新**: 2026-03-04 20:00  
-**状态**: 基础评估完成 ✅
+**状态**: 创意写作评估完成 ✅
