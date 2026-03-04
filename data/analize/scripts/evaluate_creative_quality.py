@@ -1,242 +1,324 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 """
-创意写作任务质量批量评估脚本
+创意写作任务质量评估脚本
 
-评估所有模型在创意写作任务上的表现，生成多维度质量指标。
+根据 quality_evaluation_system.md 设计，评估创意写作任务的多维度质量指标：
+- 多样性：Distinct-1, Distinct-2
+- 流畅性：文本长度、句子数
+- 创造力：独特表达、修辞手法
+
+作者：Kiro AI Assistant
+日期：2026-03-04
 """
 
-import sys
 import pandas as pd
+import numpy as np
 from pathlib import Path
-from tqdm import tqdm
+import re
+from collections import Counter
 import warnings
 warnings.filterwarnings('ignore')
 
-# 添加项目路径
-sys.path.insert(0, str(Path(__file__).parent))
 
-from quality_evaluation.creative_evaluator import CreativeEvaluator
-
-
-def evaluate_creative_quality(data_dir: Path, output_dir: Path, 
-                              use_ppl: bool = True, 
-                              use_semantic: bool = False):
-    """
-    评估创意写作任务质量
+class CreativeQualityEvaluator:
+    """创意写作质量评估器"""
     
-    Args:
-        data_dir: 数据目录
-        output_dir: 输出目录
-        use_ppl: 是否计算困惑度
-        use_semantic: 是否计算语义多样性
-    """
+    def __init__(self):
+        self.metrics = {}
     
-    print("\n" + "="*60)
-    print("🎨 Creative Writing Quality Evaluation")
+    def tokenize_chinese(self, text):
+        """简单的中文分词（基于字符和标点）"""
+        # 移除多余空白
+        text = re.sub(r'\s+', ' ', text)
+        # 分离标点符号
+        text = re.sub(r'([，。！？；：、""''（）《》【】])', r' \1 ', text)
+        # 分词：中文按字，英文按词
+        tokens = []
+        for word in text.split():
+            if re.match(r'[a-zA-Z]+', word):
+                tokens.append(word.lower())
+            elif re.match(r'[\u4e00-\u9fff]', word):
+                tokens.extend(list(word))
+            elif word.strip():
+                tokens.append(word)
+        return [t for t in tokens if t.strip()]
+    
+    def calculate_distinct_n(self, tokens, n=2):
+        """
+        计算 Distinct-N 指标
+        
+        Args:
+            tokens: 分词列表
+            n: N-gram 大小
+        
+        Returns:
+            float: Distinct-N 分数 [0, 1]
+        """
+        if len(tokens) < n:
+            return 0.0
+        
+        ngrams = []
+        for i in range(len(tokens) - n + 1):
+            ngram = tuple(tokens[i:i+n])
+            ngrams.append(ngram)
+        
+        if not ngrams:
+            return 0.0
+        
+        unique_ngrams = len(set(ngrams))
+        total_ngrams = len(ngrams)
+        
+        return unique_ngrams / total_ngrams
+    
+    def count_rhetorical_devices(self, text):
+        """
+        检测修辞手法（简化版）
+        
+        Returns:
+            dict: 修辞手法计数
+        """
+        devices = {
+            'metaphor': 0,      # 比喻
+            'personification': 0,  # 拟人
+            'repetition': 0,    # 重复
+            'parallelism': 0    # 排比
+        }
+        
+        # 比喻标志词
+        metaphor_markers = ['像', '如', '似', '仿佛', '好像', '犹如', '宛如']
+        for marker in metaphor_markers:
+            devices['metaphor'] += text.count(marker)
+        
+        # 拟人标志（动词+非生物主语）
+        personification_markers = ['微笑', '哭泣', '歌唱', '舞蹈', '低语', '呼唤', '拥抱']
+        for marker in personification_markers:
+            devices['personification'] += text.count(marker)
+        
+        # 重复（连续相同词）
+        tokens = self.tokenize_chinese(text)
+        for i in range(len(tokens) - 1):
+            if tokens[i] == tokens[i+1] and len(tokens[i]) > 1:
+                devices['repetition'] += 1
+        
+        # 排比（简化：检测句式重复）
+        sentences = re.split(r'[。！？；]', text)
+        sentence_starts = [s.strip()[:2] for s in sentences if len(s.strip()) > 2]
+        start_counts = Counter(sentence_starts)
+        devices['parallelism'] = sum(1 for count in start_counts.values() if count >= 2)
+        
+        return devices
+    
+    def evaluate_single_response(self, text, question_id):
+        """
+        评估单个回答
+        
+        Args:
+            text: 生成文本
+            question_id: 问题ID
+        
+        Returns:
+            dict: 质量指标
+        """
+        if pd.isna(text) or not text.strip():
+            return {
+                'question_id': question_id,
+                'distinct_1': 0.0,
+                'distinct_2': 0.0,
+                'text_length': 0,
+                'sentence_count': 0,
+                'avg_sentence_length': 0.0,
+                'token_count': 0,
+                'unique_token_ratio': 0.0,
+                'metaphor_count': 0,
+                'personification_count': 0,
+                'repetition_count': 0,
+                'parallelism_count': 0,
+                'total_rhetorical_devices': 0
+            }
+        
+        # 分词
+        tokens = self.tokenize_chinese(text)
+        
+        # 基础统计
+        text_length = len(text)
+        sentences = [s.strip() for s in re.split(r'[。！？；]', text) if s.strip()]
+        sentence_count = len(sentences)
+        avg_sentence_length = text_length / sentence_count if sentence_count > 0 else 0
+        
+        # 多样性指标
+        distinct_1 = self.calculate_distinct_n(tokens, n=1)
+        distinct_2 = self.calculate_distinct_n(tokens, n=2)
+        
+        # 词汇丰富度
+        token_count = len(tokens)
+        unique_tokens = len(set(tokens))
+        unique_token_ratio = unique_tokens / token_count if token_count > 0 else 0
+        
+        # 修辞手法
+        rhetorical = self.count_rhetorical_devices(text)
+        
+        return {
+            'question_id': question_id,
+            'distinct_1': round(distinct_1, 4),
+            'distinct_2': round(distinct_2, 4),
+            'text_length': text_length,
+            'sentence_count': sentence_count,
+            'avg_sentence_length': round(avg_sentence_length, 2),
+            'token_count': token_count,
+            'unique_token_ratio': round(unique_token_ratio, 4),
+            'metaphor_count': rhetorical['metaphor'],
+            'personification_count': rhetorical['personification'],
+            'repetition_count': rhetorical['repetition'],
+            'parallelism_count': rhetorical['parallelism'],
+            'total_rhetorical_devices': sum(rhetorical.values())
+        }
+    
+    def evaluate_model(self, model_name, responses_df):
+        """
+        评估单个模型的所有回答
+        
+        Args:
+            model_name: 模型名称
+            responses_df: 回答数据框（行=模型，列=问题）
+        
+        Returns:
+            pd.DataFrame: 质量评估结果
+        """
+        if model_name not in responses_df.index:
+            print(f"⚠️  模型 {model_name} 不在数据中")
+            return None
+        
+        model_responses = responses_df.loc[model_name]
+        results = []
+        
+        for question_id in responses_df.columns:
+            response_text = model_responses[question_id]
+            metrics = self.evaluate_single_response(response_text, question_id)
+            metrics['model'] = model_name
+            results.append(metrics)
+        
+        return pd.DataFrame(results)
+
+
+def main():
+    """主函数"""
+    print("="*60)
+    print("创意写作任务质量评估")
     print("="*60)
     
+    # 路径配置
+    data_dir = Path('data/analize/pre_data/comparison_matrices/creative')
+    output_dir = Path('data/analize/results/creative_quality')
+    output_dir.mkdir(parents=True, exist_ok=True)
+    
     # 加载数据
-    responses_file = data_dir / 'comparison_matrices/creative/creative_responses.csv'
+    print("\n📂 加载数据...")
+    responses_file = data_dir / 'creative_responses.csv'
+    prompts_file = data_dir / 'creative_prompts.csv'
     
     if not responses_file.exists():
-        print(f"❌ File not found: {responses_file}")
-        return None
+        print(f"❌ 文件不存在: {responses_file}")
+        return
     
-    print(f"\n📂 Loading data from: {responses_file}")
-    df = pd.read_csv(responses_file)
+    responses_df = pd.read_csv(responses_file, encoding='utf-8-sig', index_col=0)
+    prompts_df = pd.read_csv(prompts_file, encoding='utf-8-sig')
     
-    print(f"✅ Loaded {len(df)} models")
-    print(f"📝 Questions: {len([c for c in df.columns if c != 'model'])}")
+    print(f"✅ 加载完成")
+    print(f"   - 模型数量: {len(responses_df)}")
+    print(f"   - 问题数量: {len(responses_df.columns)}")
     
     # 初始化评估器
-    config = {
-        'use_ppl': use_ppl,
-        'use_semantic': use_semantic,
-        'ppl_model': 'uer/gpt2-chinese-cluecorpussmall'
-    }
+    evaluator = CreativeQualityEvaluator()
     
-    print(f"\n⚙️  Configuration:")
-    print(f"  - Distinct-N: ✅ Enabled")
-    print(f"  - Perplexity: {'✅ Enabled' if use_ppl else '❌ Disabled'}")
-    print(f"  - Semantic Diversity: {'✅ Enabled' if use_semantic else '❌ Disabled'}")
+    # 评估所有模型
+    print("\n🔍 开始评估...")
+    all_results = []
     
-    evaluator = CreativeEvaluator(config)
+    for model_name in responses_df.index:
+        print(f"   评估模型: {model_name}")
+        model_results = evaluator.evaluate_model(model_name, responses_df)
+        if model_results is not None:
+            all_results.append(model_results)
     
-    # 评估每个模型的每个响应
-    results = []
+    # 合并结果
+    if not all_results:
+        print("❌ 没有评估结果")
+        return
     
-    print(f"\n🔄 Evaluating responses...")
-    
-    for _, row in tqdm(df.iterrows(), total=len(df), desc="Models"):
-        model = row['model']
-        
-        for col in df.columns:
-            if col == 'model':
-                continue
-            
-            # 提取响应文本
-            response = row[col]
-            
-            if pd.isna(response) or len(str(response).strip()) == 0:
-                continue
-            
-            # 评估质量
-            scores = evaluator.evaluate(str(response))
-            
-            # 保存结果
-            result = {
-                'model': model,
-                'question_id': col,
-                **scores
-            }
-            results.append(result)
-    
-    # 转换为DataFrame
-    results_df = pd.DataFrame(results)
+    final_df = pd.concat(all_results, ignore_index=True)
     
     # 保存详细结果
-    output_dir.mkdir(parents=True, exist_ok=True)
-    output_file = output_dir / 'creative_quality_scores.csv'
-    results_df.to_csv(output_file, index=False, encoding='utf-8-sig')
-    
-    print(f"\n✅ Evaluation completed!")
-    print(f"📊 Results saved to: {output_file}")
-    print(f"📈 Total evaluations: {len(results_df)}")
+    detail_file = output_dir / 'creative_quality_scores_detailed.csv'
+    final_df.to_csv(detail_file, index=False, encoding='utf-8-sig')
+    print(f"\n✅ 详细结果已保存: {detail_file}")
     
     # 生成汇总统计
-    generate_summary_stats(results_df, output_dir)
+    print("\n📊 生成汇总统计...")
+    summary_stats = final_df.groupby('model').agg({
+        'distinct_1': ['mean', 'std'],
+        'distinct_2': ['mean', 'std'],
+        'text_length': ['mean', 'std'],
+        'sentence_count': ['mean', 'std'],
+        'unique_token_ratio': ['mean', 'std'],
+        'total_rhetorical_devices': ['mean', 'std']
+    }).round(4)
     
-    # 生成分析报告
-    generate_analysis_report(results_df, output_dir)
-    
-    return results_df
-
-
-def generate_summary_stats(df: pd.DataFrame, output_dir: Path):
-    """生成汇总统计"""
-    
-    print(f"\n📊 Generating summary statistics...")
-    
-    # 按模型汇总
-    metric_cols = [col for col in df.columns 
-                   if col not in ['model', 'question_id'] and df[col].dtype in ['float64', 'int64']]
-    
-    summary = df.groupby('model')[metric_cols].agg(['mean', 'std', 'min', 'max'])
-    
-    # 保存汇总统计
+    summary_stats.columns = ['_'.join(col).strip() for col in summary_stats.columns.values]
     summary_file = output_dir / 'creative_quality_summary.csv'
-    summary.to_csv(summary_file, encoding='utf-8-sig')
+    summary_stats.to_csv(summary_file, encoding='utf-8-sig')
+    print(f"✅ 汇总统计已保存: {summary_file}")
     
-    print(f"✅ Summary statistics: {summary_file}")
+    # 打印关键指标排名
+    print("\n🏆 关键指标排名（按均值）:")
+    print("\n1. Distinct-2（多样性，越高越好）:")
+    top_distinct2 = final_df.groupby('model')['distinct_2'].mean().sort_values(ascending=False).head(5)
+    for i, (model, score) in enumerate(top_distinct2.items(), 1):
+        print(f"   {i}. {model}: {score:.4f}")
     
-    # 打印Top 3模型（按Distinct-2排序）
-    print(f"\n🏆 Top 3 Models by Distinct-2:")
-    if 'distinct_2' in df.columns:
-        top_models = df.groupby('model')['distinct_2'].mean().sort_values(ascending=False).head(3)
-        for rank, (model, score) in enumerate(top_models.items(), 1):
-            print(f"  {rank}. {model}: {score:.4f}")
+    print("\n2. 独特词汇比例（词汇丰富度，越高越好）:")
+    top_unique = final_df.groupby('model')['unique_token_ratio'].mean().sort_values(ascending=False).head(5)
+    for i, (model, score) in enumerate(top_unique.items(), 1):
+        print(f"   {i}. {model}: {score:.4f}")
     
-    # 打印流畅性最好的模型
-    if 'perplexity' in df.columns and df['perplexity'].notna().any():
-        print(f"\n🎯 Top 3 Models by Fluency (lowest perplexity):")
-        top_fluency = df.groupby('model')['perplexity'].mean().sort_values(ascending=True).head(3)
-        for rank, (model, score) in enumerate(top_fluency.items(), 1):
-            print(f"  {rank}. {model}: {score:.2f}")
-
-
-def generate_analysis_report(df: pd.DataFrame, output_dir: Path):
-    """生成分析报告"""
+    print("\n3. 修辞手法总数（创造力，越高越好）:")
+    top_rhetorical = final_df.groupby('model')['total_rhetorical_devices'].mean().sort_values(ascending=False).head(5)
+    for i, (model, score) in enumerate(top_rhetorical.items(), 1):
+        print(f"   {i}. {model}: {score:.2f}")
     
-    print(f"\n📝 Generating analysis report...")
+    # 生成任务-模型匹配分析
+    print("\n🎯 生成任务-模型匹配分析...")
+    matching_results = []
     
-    report_lines = []
-    report_lines.append("# 创意写作任务质量评估报告\n")
-    report_lines.append(f"**生成时间**: {pd.Timestamp.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
-    report_lines.append(f"**评估模型数**: {df['model'].nunique()}\n")
-    report_lines.append(f"**评估样本数**: {len(df)}\n")
-    
-    # 指标说明
-    report_lines.append("\n## 评估指标说明\n")
-    report_lines.append("### 多样性指标\n")
-    report_lines.append("- **Distinct-1**: 词级别多样性（去重率）\n")
-    report_lines.append("- **Distinct-2**: 短语级别多样性（核心指标）\n")
-    report_lines.append("- **Distinct-3**: 长短语多样性\n")
-    
-    if 'perplexity' in df.columns and df['perplexity'].notna().any():
-        report_lines.append("\n### 流畅性指标\n")
-        report_lines.append("- **Perplexity**: 困惑度，越低表示越流畅\n")
-    
-    if 'semantic_diversity' in df.columns and df['semantic_diversity'].notna().any():
-        report_lines.append("\n### 语义多样性\n")
-        report_lines.append("- **Semantic Diversity**: 句子间语义距离，越高越多样\n")
-    
-    # 整体统计
-    report_lines.append("\n## 整体统计\n")
-    report_lines.append("| 指标 | 均值 | 标准差 | 最小值 | 最大值 |\n")
-    report_lines.append("|------|------|--------|--------|--------|\n")
-    
-    for col in ['distinct_1', 'distinct_2', 'distinct_3', 'perplexity']:
-        if col in df.columns and df[col].notna().any():
-            mean_val = df[col].mean()
-            std_val = df[col].std()
-            min_val = df[col].min()
-            max_val = df[col].max()
-            report_lines.append(f"| {col} | {mean_val:.4f} | {std_val:.4f} | {min_val:.4f} | {max_val:.4f} |\n")
-    
-    # 模型排名
-    report_lines.append("\n## 模型排名\n")
-    
-    if 'distinct_2' in df.columns:
-        report_lines.append("\n### 按多样性排名（Distinct-2）\n")
-        report_lines.append("| 排名 | 模型 | Distinct-2 | Distinct-1 | Distinct-3 |\n")
-        report_lines.append("|------|------|------------|------------|------------|\n")
+    for question_id in final_df['question_id'].unique():
+        question_data = final_df[final_df['question_id'] == question_id]
         
-        model_diversity = df.groupby('model')[['distinct_1', 'distinct_2', 'distinct_3']].mean()
-        model_diversity = model_diversity.sort_values('distinct_2', ascending=False)
-        
-        for rank, (model, row) in enumerate(model_diversity.iterrows(), 1):
-            report_lines.append(f"| {rank} | {model} | {row['distinct_2']:.4f} | {row['distinct_1']:.4f} | {row['distinct_3']:.4f} |\n")
+        # 每个指标的Top 3模型
+        metrics = ['distinct_2', 'unique_token_ratio', 'total_rhetorical_devices']
+        for metric in metrics:
+            top3 = question_data.nlargest(3, metric)[['model', metric]]
+            for rank, (idx, row) in enumerate(top3.iterrows(), 1):
+                matching_results.append({
+                    'question_id': question_id,
+                    'metric': metric,
+                    'rank': rank,
+                    'model': row['model'],
+                    'score': row[metric]
+                })
     
-    if 'perplexity' in df.columns and df['perplexity'].notna().any():
-        report_lines.append("\n### 按流畅性排名（Perplexity，越低越好）\n")
-        report_lines.append("| 排名 | 模型 | Perplexity |\n")
-        report_lines.append("|------|------|------------|\n")
-        
-        model_fluency = df.groupby('model')['perplexity'].mean().sort_values(ascending=True)
-        
-        for rank, (model, score) in enumerate(model_fluency.items(), 1):
-            report_lines.append(f"| {rank} | {model} | {score:.2f} |\n")
+    matching_df = pd.DataFrame(matching_results)
+    matching_file = output_dir / 'creative_task_model_matching.csv'
+    matching_df.to_csv(matching_file, index=False, encoding='utf-8-sig')
+    print(f"✅ 任务-模型匹配已保存: {matching_file}")
     
-    # 保存报告
-    report_file = output_dir / 'creative_quality_report.md'
-    with open(report_file, 'w', encoding='utf-8') as f:
-        f.writelines(report_lines)
-    
-    print(f"✅ Analysis report: {report_file}")
+    print("\n" + "="*60)
+    print("✅ 创意写作质量评估完成！")
+    print("="*60)
+    print(f"\n输出文件:")
+    print(f"  1. {detail_file}")
+    print(f"  2. {summary_file}")
+    print(f"  3. {matching_file}")
 
 
 if __name__ == '__main__':
-    import argparse
-    
-    parser = argparse.ArgumentParser(description='评估创意写作质量')
-    parser.add_argument('--data-dir', type=str, 
-                       default='data/analize/pre_data',
-                       help='数据目录')
-    parser.add_argument('--output-dir', type=str,
-                       default='data/analize/results/creative_quality',
-                       help='输出目录')
-    parser.add_argument('--no-ppl', action='store_true',
-                       help='禁用困惑度计算（节省时间和显存）')
-    parser.add_argument('--use-semantic', action='store_true',
-                       help='启用语义多样性计算（需要额外模型）')
-    
-    args = parser.parse_args()
-    
-    data_dir = Path(args.data_dir)
-    output_dir = Path(args.output_dir)
-    
-    evaluate_creative_quality(
-        data_dir, 
-        output_dir, 
-        use_ppl=not args.no_ppl,
-        use_semantic=args.use_semantic
-    )
+    main()
