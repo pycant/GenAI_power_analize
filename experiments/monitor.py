@@ -1,6 +1,7 @@
 import time
 import threading
 import psutil
+import os
 
 class ResourceMonitor:
     def __init__(self, interval=0.2):
@@ -21,6 +22,7 @@ class ResourceMonitor:
         self.cpu_proc_percent = []
         self.cpu_power_w_approx = []
         self.cpu_energy_j_approx = 0.0
+        self.events = []  # 新增：事件标记列表
 
     def start(self):
         self._stop.clear()
@@ -149,6 +151,70 @@ class ResourceMonitor:
             "cpu_energy_j_approx": self.cpu_energy_j_approx
         }
 
+    def mark_event(self, event_name, metadata=None):
+        """
+        标记关键事件（如首token生成、推理开始/结束等）
+        
+        Args:
+            event_name (str): 事件名称，如 "inference_start", "first_token", "inference_end"
+            metadata (dict): 事件相关的元数据
+        """
+        event = {
+            "timestamp": time.time(),
+            "event": event_name,
+            "metadata": metadata or {}
+        }
+        self.events.append(event)
+    
+    def get_phase_data(self, start_event, end_event):
+        """
+        获取两个事件之间的监控数据（用于分阶段能耗分析）
+        
+        Args:
+            start_event (str): 起始事件名称
+            end_event (str): 结束事件名称
+            
+        Returns:
+            dict: 包含该阶段的功耗、能耗等数据，如果事件不存在则返回None
+        """
+        # 查找事件时间戳
+        start_ts = None
+        end_ts = None
+        
+        for event in self.events:
+            if event["event"] == start_event and start_ts is None:
+                start_ts = event["timestamp"]
+            if event["event"] == end_event:
+                end_ts = event["timestamp"]
+        
+        if start_ts is None or end_ts is None:
+            return None
+        
+        # 筛选时间范围内的数据索引
+        indices = [i for i, ts in enumerate(self.timestamps) 
+                   if start_ts <= ts <= end_ts]
+        
+        if not indices:
+            return None
+        
+        # 提取该阶段的数据
+        phase_gpu_power = [self.gpu_power_w[i] for i in indices]
+        phase_timestamps = [self.timestamps[i] for i in indices]
+        
+        # 计算该阶段的能耗
+        phase_gpu_energy = 0.0
+        for i in range(len(phase_timestamps) - 1):
+            dt = phase_timestamps[i+1] - phase_timestamps[i]
+            phase_gpu_energy += phase_gpu_power[i] * dt
+        
+        return {
+            "duration_seconds": end_ts - start_ts,
+            "gpu_power_avg_w": sum(phase_gpu_power) / len(phase_gpu_power) if phase_gpu_power else 0,
+            "gpu_power_peak_w": max(phase_gpu_power) if phase_gpu_power else 0,
+            "gpu_energy_j": phase_gpu_energy,
+            "sample_count": len(indices)
+        }
+    
     def to_dict(self):
         return {
             "timestamps": self.timestamps,
@@ -165,5 +231,6 @@ class ResourceMonitor:
             "gpu_energy_j": self.gpu_energy_j,
             "cpu_power_w_approx": self.cpu_power_w_approx,
             "cpu_energy_j_approx": self.cpu_energy_j_approx,
+            "events": self.events,  # 新增：包含事件列表
             "summary": self.summary()
         }

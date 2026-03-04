@@ -1,0 +1,170 @@
+{
+  "metadata": {
+    "task_type": "reasoning",
+    "count": 10,
+    "created_date": "2026-03-02"
+  },
+  "tasks": [
+    {
+      "id": "reasoning_001",
+      "task_type": "reasoning",
+      "difficulty": "easy",
+      "language": "zh",
+      "question": "所有的猫都是哺乳动物。所有的哺乳动物都需要呼吸。小花是一只猫。请问：小花需要呼吸吗？请给出推理过程。",
+      "expected_answer": "是",
+      "expected_reasoning": [
+        "小花是猫",
+        "猫是哺乳动物",
+        "哺乳动物需要呼吸",
+        "因此小花需要呼吸"
+      ],
+      "temperature": 0.1,
+      "max_tokens": 200,
+      "repeat": 3
+    },
+    {
+      "id": "reasoning_002",
+      "task_type": "reasoning",
+      "difficulty": "medium",
+      "language": "zh",
+      "question": "如果今天下雨，小明就不去公园。今天小明去了公园。请问今天下雨了吗？",
+      "expected_answer": "没有",
+      "expected_reasoning": [
+        "如果下雨→不去公园",
+        "去了公园",
+        "因此没有下雨（逆否命题）"
+      ],
+      "temperature": 0.1,
+      "max_tokens": 200,
+      "repeat": 3
+    },
+    {
+      "id": "reasoning_003",
+      "task_type": "reasoning",
+      "difficulty": "medium",
+      "language": "zh",
+      "question": "在一个房间里有三个开关，分别控制三个灯泡，但你只能进入房间一次。如何确定哪个开关控制哪个灯泡？",
+      "expected_answer_contains": [
+        "打开",
+        "时间",
+        "温度",
+        "热"
+      ],
+      "temperature": 0.1,
+      "max_tokens": 300,
+      "repeat": 3
+    },
+    {
+      "id": "reasoning_004",
+      "task_type": "reasoning",
+      "difficulty": "medium",
+      "language": "zh",
+      "question": "有5个海盗抢到了100颗宝石，他们按照以下规则分配：最凶的海盗提出分配方案，所有海盗投票，如果半数或以上同意就按此方案分配，否则提出方案的海盗被扔进海里，由次凶的海盗继续提案。假设每个海盗都足够聪明且理性，最凶的海盗应该提出什么方案？",
+      "expected_answer_contains": [
+        "97",
+        "0",
+        "1",
+        "0",
+        "2"
+      ],
+      "temperature": 0.1,
+      "max_tokens": 400,
+      "repeat": 3
+    },
+    {
+      "id": "reasoning_005",
+      "task_type": "reasoning",
+      "difficulty": "hard",
+      "language": "zh",
+      "question": "有三个盒子，一个装有两个金币，一个装有两个银币，一个装有一金一银。盒子上的标签都是错的。你只能从一个盒子中取出一枚硬币，如何确定每个盒子的真实内容？",
+      "expected_answer_contains": [
+        "一金一银",
+        "标签",
+        "取出"
+      ],
+      "temperature": 0.1,
+      "max_tokens": 300,
+      "repeat": 3
+    },
+    {
+      "id": "reasoning_006",
+      "task_type": "reasoning",
+      "difficulty": "easy",
+      "language": "zh",
+      "question": "小红比小明高，小明比小刚高。请问：小红和小刚谁更高？",
+      "expected_answer": "小红",
+      "expected_reasoning": [
+        "小红>小明",
+        "小明>小刚",
+        "因此小红>小刚"
+      ],
+      "temperature": 0.1,
+      "max_tokens": 150,
+      "repeat": 3
+    },
+    {
+      "id": "reasoning_007",
+      "task_type": "reasoning",
+      "difficulty": "medium",
+      "language": "zh",
+      "question": "一个农夫带着一只狼、一只羊和一棵白菜要过河，船只能载农夫和其中一样东西。如果农夫不在场，狼会吃羊，羊会吃白菜。农夫应该如何安排才能让所有东西都安全过河？",
+      "expected_answer_contains": [
+        "羊",
+        "先",
+        "回来",
+        "顺序"
+      ],
+      "temperature": 0.1,
+      "max_tokens": 300,
+      "repeat": 3
+    },
+    {
+      "id": "reasoning_008",
+      "task_type": "reasoning",
+      "difficulty": "hard",
+      "language": "zh",
+      "question": "有12个外观相同的球，其中11个重量相同，1个重量不同（可能更重或更轻）。用天平称3次，如何找出这个球并确定它是更重还是更轻？",
+      "expected_answer_contains": [
+        "分组",
+        "4",
+        "称",
+        "对比"
+      ],
+      "temperature": 0.1,
+      "max_tokens": 500,
+      "repeat": 3
+    },
+    {
+      "id": "reasoning_009",
+      "task_type": "reasoning",
+      "difficulty": "easy",
+      "language": "zh",
+      "question": "如果所有A都是B，所有B都是C，那么所有A都是C吗？",
+      "expected_answer": "是",
+      "expected_reasoning": [
+        "三段论",
+        "传递性"
+      ],
+      "temperature": 0.1,
+      "max_tokens": 150,
+      "repeat": 3
+    },
+    {
+      "id": "reasoning_010",
+      "task_type": "reasoning",
+      "difficulty": "medium",
+      "language": "zh",
+      "question": "在一个岛上，有两种人：说真话的人（总是说真话）和说谎的人（总是说谎）。你遇到两个人A和B，A说：'我们两个都是说谎的人。'请问A和B分别是什么人？",
+      "expected_answer": "A是说谎的人，B是说真话的人",
+      "expected_reasoning": [
+        "如果A说真话，则矛盾",
+        "因此A说谎",
+        "A的话为假，所以至少一个说真话",
+        "因此B说真话"
+      ],
+      "temperature": 0.1,
+      "max_tokens": 300,
+      "repeat": 3
+    }
+  ]
+}

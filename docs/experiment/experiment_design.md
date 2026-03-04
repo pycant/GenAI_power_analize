@@ -138,33 +138,76 @@
 
 **还需空间**：~35.9 GB → 含开销 ~39 GB
 
-### 推荐下载策略
+### 推荐下载策略（使用 HuggingFace）
 
-**阶段一：核心模型（优先）**
+**阶段一：核心小型模型（优先，适合快速测试）**
 ```bash
-# 下载 5 个缺失的 Q4 模型
-ollama pull phi3.5:3.8b
-ollama pull smollm3:3b  
-ollama pull mistral:7b
-ollama pull llama3.1:8b
-ollama pull glm4:9b
-```
-**需要空间**：~20 GB
+# 下载 3-4B 模型（4bit 量化）
+python scripts/download_hf_model.py --model-name Qwen/Qwen2.5-3B-Instruct --quantize 4bit
+python scripts/download_hf_model.py --model-name microsoft/phi-3-mini-4k-instruct --quantize 4bit
+python scripts/download_hf_model.py --model-name google/gemma-2b-it --quantize 4bit
 
-**阶段二：量化对比（可选）**
-```bash
-# 为已有的 4 个模型下载 Q8 版本
-ollama pull qwen3:8b-q8_0
-ollama pull qwen3:4b-q8_0
-ollama pull gemma3:4b-q8_0
-ollama pull deepseek-r1:8b-q8_0
+# 或使用批量下载脚本
+python scripts/batch_download_models.py --category small_models --priority high
 ```
-**额外需要**：~20 GB
+**需要空间**：~18-20 GB（4bit 量化后）
+
+**阶段二：中型模型（主要评估）**
+```bash
+# 下载 7-8B 模型（4bit 量化）
+python scripts/download_hf_model.py --model-name Qwen/Qwen2.5-7B-Instruct --quantize 4bit
+python scripts/download_hf_model.py --model-name meta-llama/Llama-3.2-7B-Instruct --quantize 4bit --token YOUR_HF_TOKEN
+python scripts/download_hf_model.py --model-name mistralai/Mistral-7B-Instruct-v0.3 --quantize 4bit
+
+# 或使用批量下载脚本
+python scripts/batch_download_models.py --category medium_models --priority high
+```
+**需要空间**：~40-45 GB（4bit 量化后）
+
+**阶段三：专用模型（代码任务优化）**
+```bash
+# 下载代码生成专用模型
+python scripts/download_hf_model.py --model-name Qwen/Qwen2.5-Coder-7B-Instruct --quantize 4bit
+python scripts/download_hf_model.py --model-name deepseek-ai/deepseek-coder-6.7b-instruct --quantize 4bit
+
+# 或使用批量下载脚本
+python scripts/batch_download_models.py --category specialized_models
+```
+**需要空间**：~28-30 GB（4bit 量化后）
+
+**阶段四：量化对比实验（可选）**
+```bash
+# 下载同一模型的不同量化版本（用于量化影响分析）
+python scripts/download_hf_model.py --model-name Qwen/Qwen2.5-7B-Instruct --quantize 4bit
+python scripts/download_hf_model.py --model-name Qwen/Qwen2.5-7B-Instruct --quantize 8bit
+python scripts/download_hf_model.py --model-name Qwen/Qwen2.5-7B-Instruct  # FP16（无量化）
+```
+**额外需要**：~35-40 GB（同一模型的 3 个版本）
+
+**推荐下载顺序**（基于项目需求）：
+1. Qwen/Qwen2.5-3B-Instruct (4bit) - 快速测试基准
+2. Qwen/Qwen2.5-7B-Instruct (4bit) - 主要评估模型
+3. microsoft/phi-3-mini-4k-instruct (4bit) - 小模型对比
+4. Qwen/Qwen2.5-Coder-7B-Instruct (4bit) - 代码任务专用
 
 **总存储需求建议**：
-- 最小配置（仅 Q4）：40 GB 可用空间
-- 推荐配置（Q4 + 部分 Q8）：60 GB 可用空间
-- 完整配置（含 FP16）：100 GB 可用空间
+- 最小配置（3-4B 模型，4bit）：20 GB 可用空间
+- 推荐配置（7-8B 模型，4bit）：60 GB 可用空间
+- 完整配置（含多种量化版本）：100 GB 可用空间
+- 学术研究配置（含 FP16 基准）：150 GB 可用空间
+
+**HuggingFace 下载优势**：
+- 精确版本控制（可指定 revision）
+- 支持多种量化方案（4bit/8bit/GPTQ/AWQ）
+- 可复现性强（论文引用需要）
+- 灵活的模型定制和微调
+- 完整的模型元信息和配置
+
+**注意事项**：
+- 某些模型需要 HuggingFace Token（如 Llama 系列）
+- 设置环境变量：`export HF_TOKEN="your_token"`
+- 首次下载会较慢，建议使用镜像站点
+- 下载后模型存储在 `models/huggingface/` 目录
 
 ### 实验组合统计
 
@@ -301,7 +344,7 @@ ollama pull deepseek-r1:8b-q8_0
 | **Python** | 3.10 | Conda 环境：bartscore | 统一环境 |
 
 **Ollama 配置**：
-- 模型存储：`C:\Users\<用户>\.ollama\models\`
+- 模型存储：`F:\AIwork\ollama_model`
 - API 端点：`http://localhost:11434/`
 - 量化支持：Q4_K_M, Q8_0（自动）
 - 上下文窗口：根据模型自动调整（通常 4K-128K）
@@ -402,83 +445,6 @@ print(f"CPU 估算能耗: {summary['cpu_energy_j_approx']:.2f} J")
 3. **空闲冷却**：任务间间隔
    - 用于区分任务间能耗，验证 \(P_{idle}\) 稳定性
 
-**事件标记方法**：
-
-```python
-import time
-import json
-
-class EventLogger:
-    """事件时间戳记录器"""
-    def __init__(self, log_file="event_log.json"):
-        self.log_file = log_file
-        self.events = []
-        
-    def log(self, event_name, metadata=None):
-        """记录事件"""
-        event = {
-            "timestamp": time.time(),
-            "event": event_name,
-            "metadata": metadata or {}
-        }
-        self.events.append(event)
-        
-    def save(self):
-        """保存到文件"""
-        with open(self.log_file, 'w', encoding='utf-8') as f:
-            json.dump(self.events, f, indent=2, ensure_ascii=False)
-
-# 使用示例
-logger = EventLogger()
-monitor = ResourceMonitor()
-
-# 开始推理
-logger.log("inference_start", {"model": "qwen3:8b", "task": "qa"})
-monitor.start()
-
-# 记录首 token 生成
-response_stream = ollama_client.generate(model="qwen3:8b", prompt="...", stream=True)
-first_token = True
-for chunk in response_stream:
-    if first_token:
-        logger.log("first_token_generated")
-        first_token = False
-
-# 结束推理
-logger.log("inference_end")
-monitor.stop()
-logger.save()
-```
-
-**后处理分析**：
-
-```python
-import pandas as pd
-
-def analyze_phases(monitor_data, event_log):
-    """分析各阶段能耗"""
-    df = pd.DataFrame({
-        'timestamp': monitor_data['timestamps'],
-        'gpu_power_w': monitor_data['gpu_power_w'],
-        'cpu_power_w': monitor_data['cpu_power_w_approx']
-    })
-    
-    # 查找事件时间戳
-    t_start = next(e['timestamp'] for e in event_log if e['event'] == 'inference_start')
-    t_first = next(e['timestamp'] for e in event_log if e['event'] == 'first_token_generated')
-    t_end = next(e['timestamp'] for e in event_log if e['event'] == 'inference_end')
-    
-    # 分阶段统计
-    prefill = df[(df['timestamp'] >= t_start) & (df['timestamp'] < t_first)]
-    decode = df[(df['timestamp'] >= t_first) & (df['timestamp'] <= t_end)]
-    
-    return {
-        'prefill_energy_j': prefill['gpu_power_w'].sum() * 0.2,  # 0.2s 采样间隔
-        'decode_energy_j': decode['gpu_power_w'].sum() * 0.2,
-        'prefill_avg_power_w': prefill['gpu_power_w'].mean(),
-        'decode_avg_power_w': decode['gpu_power_w'].mean()
-    }
-```
 
 ### 4.4 测量精度与误差分析
 
@@ -509,43 +475,6 @@ def analyze_phases(monitor_data, event_log):
    - 剔除异常值（±3σ）
    - 计算增量功耗：\(P_{inc} = P_{measured} - P_{idle}\)
 
-**数据质量检查**：
-
-```python
-def validate_monitoring_data(monitor):
-    """验证监控数据质量"""
-    issues = []
-    
-    # 检查采样率
-    if len(monitor.timestamps) < 2:
-        issues.append("采样点不足")
-    else:
-        intervals = [monitor.timestamps[i+1] - monitor.timestamps[i] 
-                     for i in range(len(monitor.timestamps)-1)]
-        avg_interval = sum(intervals) / len(intervals)
-        if abs(avg_interval - monitor.interval) > 0.05:
-            issues.append(f"采样间隔不稳定: {avg_interval:.3f}s")
-    
-    # 检查 GPU 功耗合理性
-    if monitor.gpu_power_w:
-        max_power = max(monitor.gpu_power_w)
-        if max_power > 140:  # RTX 4060 Laptop 最大功耗约 140W
-            issues.append(f"GPU 功耗异常: {max_power:.1f}W")
-    
-    # 检查数据完整性
-    if not monitor.gpu_power_w or all(p == 0 for p in monitor.gpu_power_w):
-        issues.append("GPU 功耗数据缺失，请检查 pynvml 安装")
-    
-    return issues
-
-# 使用示例
-issues = validate_monitoring_data(monitor)
-if issues:
-    print("⚠️ 数据质量问题:")
-    for issue in issues:
-        print(f"  - {issue}")
-```
-
 
 ## 5. 测试任务集：客观+主观混合设计
 
@@ -553,18 +482,18 @@ if issues:
 
 基于实际硬件环境（RTX 4060 Laptop 8GB）和 Ollama 推理框架，设计涵盖多种应用场景的测试任务集：
 
-| 任务大类 | 子类型 | 题目数量 | 评估方法 | 生成策略 | 温度 | 重复次数 |
-|---------|--------|---------|----------|----------|------|---------|
-| **客观任务** | 知识问答 | 15-20 | 准确率、F1 | Greedy | 0.0 | 1 |
-| | 数学计算 | 10-15 | 准确率、步骤完整性 | Greedy | 0.0 | 1 |
-| | 代码生成 | 10-12 | 编译率、测试通过率 | 低温度 | 0.1 | 3 |
-| | 逻辑推理 | 8-10 | 准确率、推理链 | 低温度 | 0.1 | 3 |
-| **主观任务** | 文本摘要 | 5-8 | ROUGE-L、BERTScore | 采样 | 0.7 | 5 |
-| | 创意写作 | 5-8 | Distinct-2、流畅度 | 采样 | 0.8 | 5 |
-| | 多轮对话 | 5-8 组 | 上下文一致性、BERTScore | 采样 | 0.7 | 3 |
-| **上下文检验** | 信息提取 | 3-4 | 准确率 | 低温度 | 0.2 | 3 |
-| | 信息整合 | 2-3 | 完整性、准确率 | 低温度 | 0.2 | 3 |
-| | 指令遵循 | 2-3 | 遵循率 | 低温度 | 0.2 | 3 |
+| 任务大类　　　 | 子类型　 | 题目数量 | 评估方法　　　　　　　　| 生成策略 | 温度 | 重复次数 |
+| ----------------| ----------| ----------| -------------------------| ----------| ------| ----------|
+| **客观任务**　 | 知识问答 | 15-20　　| 准确率、F1　　　　　　　| Greedy　 | 0.0　| 1　　　　|
+| 　　　　　　　 | 数学计算 | 10-15　　| 准确率、步骤完整性　　　| Greedy　 | 0.0　| 1　　　　|
+| 　　　　　　　 | 代码生成 | 10-12　　| 编译率、测试通过率　　　| 低温度　 | 0.1　| 3　　　　|
+| 　　　　　　　 | 逻辑推理 | 8-10　　 | 准确率、推理链　　　　　| 低温度　 | 0.1　| 3　　　　|
+| **主观任务**　 | 文本摘要 | 5-8　　　| ROUGE-L、BERTScore　　　| 采样　　 | 0.7　| 5　　　　|
+| 　　　　　　　 | 创意写作 | 5-8　　　| Distinct-2、流畅度　　　| 采样　　 | 0.8　| 5　　　　|
+| 　　　　　　　 | 多轮对话 | 5-8 组　 | 上下文一致性、BERTScore | 采样　　 | 0.7　| 3　　　　|
+| **上下文检验** | 信息提取 | 3-4　　　| 准确率　　　　　　　　　| 低温度　 | 0.2　| 3　　　　|
+| 　　　　　　　 | 信息整合 | 2-3　　　| 完整性、准确率　　　　　| 低温度　 | 0.2　| 3　　　　|
+| 　　　　　　　 | 指令遵循 | 2-3　　　| 遵循率　　　　　　　　　| 低温度　 | 0.2　| 3　　　　|
 
 **总计**：约 80-100 道题目，单个模型完整测试时间约 2-4 小时
 
@@ -902,172 +831,15 @@ if issues:
 
 **准确率计算**（知识问答、数学）：
 
-```python
-def evaluate_accuracy(generated_answer, expected_answer):
-    """
-    简单字符串匹配或关键词匹配
-    """
-    generated = generated_answer.strip().lower()
-    expected = expected_answer.strip().lower()
-    
-    # 精确匹配
-    if generated == expected:
-        return 1.0
-    
-    # 包含匹配
-    if expected in generated:
-        return 0.8
-    
-    # 关键词匹配（针对长答案）
-    keywords = expected.split()
-    matched = sum(1 for kw in keywords if kw in generated)
-    return matched / len(keywords) if keywords else 0.0
-```
-
 **代码评估**（编译率、测试通过率）：
-
-```python
-import subprocess
-import tempfile
-import os
-
-def evaluate_code(generated_code, test_cases, language="python"):
-    """
-    评估生成的代码
-    """
-    results = {
-        "compiles": False,
-        "test_passed": 0,
-        "test_total": len(test_cases),
-        "errors": []
-    }
-    
-    # 保存代码到临时文件
-    with tempfile.NamedTemporaryFile(mode='w', suffix='.py', delete=False) as f:
-        f.write(generated_code)
-        code_file = f.name
-    
-    try:
-        # 检查编译（Python 语法检查）
-        result = subprocess.run(
-            ['python', '-m', 'py_compile', code_file],
-            capture_output=True,
-            timeout=5
-        )
-        
-        if result.returncode == 0:
-            results["compiles"] = True
-            
-            # 运行测试用例
-            for test in test_cases:
-                try:
-                    # 执行代码并检查输出
-                    # （此处简化，实际需要更复杂的沙箱环境）
-                    exec_result = subprocess.run(
-                        ['python', code_file],
-                        input=str(test['input']),
-                        capture_output=True,
-                        timeout=5,
-                        text=True
-                    )
-                    
-                    if str(test['expected']) in exec_result.stdout:
-                        results["test_passed"] += 1
-                except Exception as e:
-                    results["errors"].append(str(e))
-        else:
-            results["errors"].append(result.stderr.decode())
-            
-    except Exception as e:
-        results["errors"].append(str(e))
-    finally:
-        os.unlink(code_file)
-    
-    return results
-```
 
 #### 5.6.2 主观任务评估
 
 **ROUGE 评估**（文本摘要）：
 
-```python
-from rouge import Rouge
-
-def evaluate_summary(generated_summary, reference_summary):
-    """
-    使用 ROUGE 评估摘要质量
-    """
-    rouge = Rouge()
-    scores = rouge.get_scores(generated_summary, reference_summary)[0]
-    
-    return {
-        "rouge_1_f": scores['rouge-1']['f'],
-        "rouge_2_f": scores['rouge-2']['f'],
-        "rouge_l_f": scores['rouge-l']['f']
-    }
-```
-
 **Distinct-N 评估**（创意写作）：
 
-```python
-def calculate_distinct_n(text, n=2):
-    """
-    计算 Distinct-N（词汇多样性）
-    """
-    tokens = text.split()
-    if len(tokens) < n:
-        return 0.0
-    
-    ngrams = [tuple(tokens[i:i+n]) for i in range(len(tokens)-n+1)]
-    unique_ngrams = set(ngrams)
-    
-    return len(unique_ngrams) / len(ngrams) if ngrams else 0.0
-
-def evaluate_creativity(generated_texts):
-    """
-    评估多次生成的创意性
-    """
-    distinct_2_scores = [calculate_distinct_n(text, 2) for text in generated_texts]
-    
-    # Self-BLEU（多样性）
-    from nltk.translate.bleu_score import sentence_bleu
-    self_bleu_scores = []
-    for i, text in enumerate(generated_texts):
-        references = [t.split() for j, t in enumerate(generated_texts) if j != i]
-        hypothesis = text.split()
-        if references:
-            score = sentence_bleu(references, hypothesis)
-            self_bleu_scores.append(score)
-    
-    return {
-        "distinct_2_mean": sum(distinct_2_scores) / len(distinct_2_scores),
-        "distinct_2_std": np.std(distinct_2_scores),
-        "self_bleu_mean": sum(self_bleu_scores) / len(self_bleu_scores) if self_bleu_scores else 0.0
-    }
-```
-
 **BERTScore 评估**（多轮对话）：
-
-```python
-from bert_score import score
-
-def evaluate_dialogue(generated_response, reference_response):
-    """
-    使用 BERTScore 评估对话质量
-    """
-    P, R, F1 = score(
-        [generated_response],
-        [reference_response],
-        lang='zh',
-        model_type='bert-base-chinese'
-    )
-    
-    return {
-        "bertscore_precision": P.item(),
-        "bertscore_recall": R.item(),
-        "bertscore_f1": F1.item()
-    }
-```
 
 ### 5.7 测试用例文件结构
 
@@ -1182,50 +954,50 @@ data/experiments_N/
 
 为确保全文符号使用一致，以下列出所有关键指标的符号、含义、单位和计算方法：
 
-| 类别 | 符号 | 名称 | 单位 | 计算公式 | 说明 |
-|------|------|------|------|----------|------|
-| **功耗指标** | $P_{idle}$ | 空闲功耗 | W | 系统空闲时功耗均值 | 基线功耗，每轮实验前测量 |
-| | $P_{total}$ | 总功耗 | W | GPU + CPU 功耗之和 | 实时测量值 |
-| | $P_{inc}$ | 增量功耗 | W | $P_{total} - P_{idle}$ | 推理引起的额外功耗 |
-| | $P_{GPU}$ | GPU 功耗 | W | 通过 pynvml 读取 | RTX 4060 实测值 |
-| | $P_{CPU}$ | CPU 功耗 | W | $U_{CPU} \times TDP$ | 估算值，$TDP=65W$ |
-| | $P_{prefill}$ | Prefill 阶段功耗 | W | 事件标记分段统计 | 首 token 生成前 |
-| | $P_{decode}$ | Decode 阶段功耗 | W | 事件标记分段统计 | 后续 token 生成 |
-| **能耗指标** | $E_{total}$ | 总能耗 | J | $\int P_{total}(t) dt$ | 整个推理过程能耗 |
-| | $E_{GPU}$ | GPU 能耗 | J | $\int P_{GPU}(t) dt$ | GPU 部分能耗 |
-| | $E_{CPU}$ | CPU 能耗 | J | $\int P_{CPU}(t) dt$ | CPU 部分能耗（估算） |
-| | $E_{token}$ | 每 token 能耗 | J/token | $E_{total} / N_{tokens}$ | 能耗效率核心指标 |
-| **时间指标** | $T_{total}$ | 总推理时间 | s | 从开始到结束的时间 | 包含 prefill + decode |
-| | $T_{prefill}$ | Prefill 时间 | s | 首 token 生成前时间 | 即 TTFT |
-| | $T_{decode}$ | Decode 时间 | s | 后续 token 生成时间 | $T_{total} - T_{prefill}$ |
-| | $TTFT$ | 首 token 延迟 | ms | 从输入到首 token 时间 | Time To First Token |
-| | $TPOT$ | 每 token 延迟 | ms/token | $T_{decode} / (N_{tokens} - 1)$ | Time Per Output Token |
-| | $Latency$ | 总延迟 | s | $T_{total}$ | 用户感知延迟 |
-| **吞吐指标** | $N_{tokens}$ | 生成 token 数 | tokens | 模型输出 token 总数 | 不含输入 tokens |
-| | $N_{input}$ | 输入 token 数 | tokens | 输入 prompt token 数 | 用于上下文分析 |
-| | $Throughput$ | 吞吐量 | tokens/s | $N_{tokens} / T_{total}$ | 生成速度 |
-| | $PPW$ | 每瓦性能 | tokens/s/W | $Throughput / P_{inc}$ | 能效综合指标 |
-| **质量指标** | $Q_{task}$ | 任务质量得分 | [0, 1] | 按任务类型计算 | 归一化到 0-1 |
-| | $Q_{overall}$ | 综合质量得分 | [0, 1] | $\sum w_i \cdot Q_{task_i}$ | 加权平均，$\sum w_i = 1$ |
-| | $Acc$ | 准确率 | [0, 1] | 正确数 / 总数 | 客观任务 |
-| | $ROUGE$ | ROUGE 分数 | [0, 1] | ROUGE-L F1 | 文本摘要 |
-| | $BERTScore$ | BERTScore | [0, 1] | BERT 语义相似度 | 对话、摘要 |
-| | $Distinct$ | Distinct-N | [0, 1] | N-gram 去重率 | 创意写作多样性 |
-| **归一化指标** | $Q_{norm}$ | 归一化质量 | [0, 1] | Min-Max Scaling | 按任务分组归一化 |
-| | $E_{norm}$ | 归一化能效 | [0, 1] | $1 - \frac{E_{token} - E_{min}}{E_{max} - E_{min}}$ | 越小越好，反转归一化 |
-| | $T_{norm}$ | 归一化吞吐 | [0, 1] | $\frac{Throughput - T_{min}}{T_{max} - T_{min}}$ | 越大越好 |
-| | $L_{norm}$ | 归一化延迟 | [0, 1] | $1 - \frac{Latency - L_{min}}{L_{max} - L_{min}}$ | 越小越好，反转归一化 |
-| **复合指标** | $Eff_{score}$ | 效率得分 | [0, 1] | $0.4 T_{norm} + 0.3 L_{norm} + 0.3 E_{norm}$ | 综合效率评分 |
-| | $QE_{ratio}$ | 质效比 | - | $\frac{Q_{norm} + \epsilon}{1.01 - Eff_{score}}$ | $\epsilon=0.01$ 避免除零 |
-| | $Score_{final}$ | 最终得分 | - | $Q_{overall} \times PPW$ | 质量×能效 |
-| **成本指标** | $Cost_{GPU}$ | GPU 成本 | $ | $C_{GPU/h} \times T_{total}/3600$ | 云服务定价 |
-| | $Cost_{energy}$ | 能耗成本 | $ | $E_{total} \times P_{elec} / 3.6 \times 10^6$ | 电价 $P_{elec}$ $/kWh |
-| | $Cost_{total}$ | 总成本 | $ | $Cost_{GPU} + Cost_{energy}$ | 简化 TCO |
-| | $CPQ$ | 单位成本质量 | 1/$ | $Q_{overall} / Cost_{total}$ | Cost Per Quality |
-| **系统指标** | $U_{CPU}$ | CPU 利用率 | % | psutil 测量 | 0-100% |
-| | $U_{GPU}$ | GPU 利用率 | % | pynvml 测量 | 0-100% |
-| | $M_{GPU}$ | GPU 显存使用 | MB | pynvml 测量 | 峰值显存 |
-| | $T_{GPU}$ | GPU 温度 | °C | pynvml 测量 | 热管理参考 |
+| 类别　　　　　 | 符号　　　　　　| 名称　　　　　　 | 单位　　　 | 计算公式　　　　　　　　　　　　　　　　　　　　　　| 说明　　　　　　　　　　　|
+| ----------------| -----------------| ------------------| ------------| -----------------------------------------------------| ---------------------------|
+| **功耗指标**　 | $P_{idle}$　　　| 空闲功耗　　　　 | W　　　　　| 系统空闲时功耗均值　　　　　　　　　　　　　　　　　| 基线功耗，每轮实验前测量　|
+| 　　　　　　　 | $P_{total}$　　 | 总功耗　　　　　 | W　　　　　| GPU + CPU 功耗之和　　　　　　　　　　　　　　　　　| 实时测量值　　　　　　　　|
+| 　　　　　　　 | $P_{inc}$　　　 | 增量功耗　　　　 | W　　　　　| $P_{total} - P_{idle}$　　　　　　　　　　　　　　　| 推理引起的额外功耗　　　　|
+| 　　　　　　　 | $P_{GPU}$　　　 | GPU 功耗　　　　 | W　　　　　| 通过 pynvml 读取　　　　　　　　　　　　　　　　　　| RTX 4060 实测值　　　　　 |
+| 　　　　　　　 | $P_{CPU}$　　　 | CPU 功耗　　　　 | W　　　　　| $U_{CPU} \times TDP$　　　　　　　　　　　　　　　　| 估算值，$TDP=65W$　　　　 |
+| 　　　　　　　 | $P_{prefill}$　 | Prefill 阶段功耗 | W　　　　　| 事件标记分段统计　　　　　　　　　　　　　　　　　　| 首 token 生成前　　　　　 |
+| 　　　　　　　 | $P_{decode}$　　| Decode 阶段功耗　| W　　　　　| 事件标记分段统计　　　　　　　　　　　　　　　　　　| 后续 token 生成　　　　　 |
+| **能耗指标**　 | $E_{total}$　　 | 总能耗　　　　　 | J　　　　　| $\int P_{total}(t) dt$　　　　　　　　　　　　　　　| 整个推理过程能耗　　　　　|
+| 　　　　　　　 | $E_{GPU}$　　　 | GPU 能耗　　　　 | J　　　　　| $\int P_{GPU}(t) dt$　　　　　　　　　　　　　　　　| GPU 部分能耗　　　　　　　|
+| 　　　　　　　 | $E_{CPU}$　　　 | CPU 能耗　　　　 | J　　　　　| $\int P_{CPU}(t) dt$　　　　　　　　　　　　　　　　| CPU 部分能耗（估算）　　　|
+| 　　　　　　　 | $E_{token}$　　 | 每 token 能耗　　| J/token　　| $E_{total} / N_{tokens}$　　　　　　　　　　　　　　| 能耗效率核心指标　　　　　|
+| **时间指标**　 | $T_{total}$　　 | 总推理时间　　　 | s　　　　　| 从开始到结束的时间　　　　　　　　　　　　　　　　　| 包含 prefill + decode　　 |
+| 　　　　　　　 | $T_{prefill}$　 | Prefill 时间　　 | s　　　　　| 首 token 生成前时间　　　　　　　　　　　　　　　　 | 即 TTFT　　　　　　　　　 |
+| 　　　　　　　 | $T_{decode}$　　| Decode 时间　　　| s　　　　　| 后续 token 生成时间　　　　　　　　　　　　　　　　 | $T_{total} - T_{prefill}$ |
+| 　　　　　　　 | $TTFT$　　　　　| 首 token 延迟　　| ms　　　　 | 从输入到首 token 时间　　　　　　　　　　　　　　　 | Time To First Token　　　 |
+| 　　　　　　　 | $TPOT$　　　　　| 每 token 延迟　　| ms/token　 | $T_{decode} / (N_{tokens} - 1)$　　　　　　　　　　 | Time Per Output Token　　 |
+| 　　　　　　　 | $Latency$　　　 | 总延迟　　　　　 | s　　　　　| $T_{total}$　　　　　　　　　　　　　　　　　　　　 | 用户感知延迟　　　　　　　|
+| **吞吐指标**　 | $N_{tokens}$　　| 生成 token 数　　| tokens　　 | 模型输出 token 总数　　　　　　　　　　　　　　　　 | 不含输入 tokens　　　　　 |
+| 　　　　　　　 | $N_{input}$　　 | 输入 token 数　　| tokens　　 | 输入 prompt token 数　　　　　　　　　　　　　　　　| 用于上下文分析　　　　　　|
+| 　　　　　　　 | $Throughput$　　| 吞吐量　　　　　 | tokens/s　 | $N_{tokens} / T_{total}$　　　　　　　　　　　　　　| 生成速度　　　　　　　　　|
+| 　　　　　　　 | $PPW$　　　　　 | 每瓦性能　　　　 | tokens/s/W | $Throughput / P_{inc}$　　　　　　　　　　　　　　　| 能效综合指标　　　　　　　|
+| **质量指标**　 | $Q_{task}$　　　| 任务质量得分　　 | [0, 1]　　 | 按任务类型计算　　　　　　　　　　　　　　　　　　　| 归一化到 0-1　　　　　　　|
+| 　　　　　　　 | $Q_{overall}$　 | 综合质量得分　　 | [0, 1]　　 | $\sum w_i \cdot Q_{task_i}$　　　　　　　　　　　　 | 加权平均，$\sum w_i = 1$　|
+| 　　　　　　　 | $Acc$　　　　　 | 准确率　　　　　 | [0, 1]　　 | 正确数 / 总数　　　　　　　　　　　　　　　　　　　 | 客观任务　　　　　　　　　|
+| 　　　　　　　 | $ROUGE$　　　　 | ROUGE 分数　　　 | [0, 1]　　 | ROUGE-L F1　　　　　　　　　　　　　　　　　　　　　| 文本摘要　　　　　　　　　|
+| 　　　　　　　 | $BERTScore$　　 | BERTScore　　　　| [0, 1]　　 | BERT 语义相似度　　　　　　　　　　　　　　　　　　 | 对话、摘要　　　　　　　　|
+| 　　　　　　　 | $Distinct$　　　| Distinct-N　　　 | [0, 1]　　 | N-gram 去重率　　　　　　　　　　　　　　　　　　　 | 创意写作多样性　　　　　　|
+| **归一化指标** | $Q_{norm}$　　　| 归一化质量　　　 | [0, 1]　　 | Min-Max Scaling　　　　　　　　　　　　　　　　　　 | 按任务分组归一化　　　　　|
+| 　　　　　　　 | $E_{norm}$　　　| 归一化能效　　　 | [0, 1]　　 | $1 - \frac{E_{token} - E_{min}}{E_{max} - E_{min}}$ | 越小越好，反转归一化　　　|
+| 　　　　　　　 | $T_{norm}$　　　| 归一化吞吐　　　 | [0, 1]　　 | $\frac{Throughput - T_{min}}{T_{max} - T_{min}}$　　| 越大越好　　　　　　　　　|
+| 　　　　　　　 | $L_{norm}$　　　| 归一化延迟　　　 | [0, 1]　　 | $1 - \frac{Latency - L_{min}}{L_{max} - L_{min}}$　 | 越小越好，反转归一化　　　|
+| **复合指标**　 | $Eff_{score}$　 | 效率得分　　　　 | [0, 1]　　 | $0.4 T_{norm} + 0.3 L_{norm} + 0.3 E_{norm}$　　　　| 综合效率评分　　　　　　　|
+| 　　　　　　　 | $QE_{ratio}$　　| 质效比　　　　　 | -　　　　　| $\frac{Q_{norm} + \epsilon}{1.01 - Eff_{score}}$　　| $\epsilon=0.01$ 避免除零　|
+| 　　　　　　　 | $Score_{final}$ | 最终得分　　　　 | -　　　　　| $Q_{overall} \times PPW$　　　　　　　　　　　　　　| 质量×能效　　　　　　　　 |
+| **成本指标**　 | $Cost_{GPU}$　　| GPU 成本　　　　 | $　　　　　| $C_{GPU/h} \times T_{total}/3600$　　　　　　　　　 | 云服务定价　　　　　　　　|
+| 　　　　　　　 | $Cost_{energy}$ | 能耗成本　　　　 | $　　　　　| $E_{total} \times P_{elec} / 3.6 \times 10^6$　　　 | 电价 $P_{elec}$ $/kWh　　 |
+| 　　　　　　　 | $Cost_{total}$　| 总成本　　　　　 | $　　　　　| $Cost_{GPU} + Cost_{energy}$　　　　　　　　　　　　| 简化 TCO　　　　　　　　　|
+| 　　　　　　　 | $CPQ$　　　　　 | 单位成本质量　　 | 1/$　　　　| $Q_{overall} / Cost_{total}$　　　　　　　　　　　　| Cost Per Quality　　　　　|
+| **系统指标**　 | $U_{CPU}$　　　 | CPU 利用率　　　 | %　　　　　| psutil 测量　　　　　　　　　　　　　　　　　　　　 | 0-100%　　　　　　　　　　|
+| 　　　　　　　 | $U_{GPU}$　　　 | GPU 利用率　　　 | %　　　　　| pynvml 测量　　　　　　　　　　　　　　　　　　　　 | 0-100%　　　　　　　　　　|
+| 　　　　　　　 | $M_{GPU}$　　　 | GPU 显存使用　　 | MB　　　　 | pynvml 测量　　　　　　　　　　　　　　　　　　　　 | 峰值显存　　　　　　　　　|
+| 　　　　　　　 | $T_{GPU}$　　　 | GPU 温度　　　　 | °C　　　　 | pynvml 测量　　　　　　　　　　　　　　　　　　　　 | 热管理参考　　　　　　　　|
 
 **符号使用规范**：
 1. 所有功耗/能耗相关指标使用 $P$ (Power) 或 $E$ (Energy) 前缀
@@ -1251,87 +1023,6 @@ data/experiments_N/
 | **每 token 能耗** | $E_{token}$ | $E_{total} / N_{tokens}$ | J/token | 后处理计算 | 更精确的能耗度量 |
 | **每瓦性能** | $PPW$ | $Throughput / P_{inc}$ | tokens/s/W | 后处理计算 | 能效的综合指标 |
 | **标准化能效分** | $E_{norm}$ | $1 - \frac{E_{token} - E_{min}}{E_{max} - E_{min}}$ | [0, 1] | 按任务分组归一化 | 1 为最优，便于横向比较 |
-
-**计算示例**（Python 实现）：
-
-```python
-def calculate_efficiency_metrics(monitor_data, n_tokens, t_total, t_prefill):
-    """
-    计算能效指标
-    
-    Args:
-        monitor_data: 监控数据字典（来自 ResourceMonitor.summary()）
-        n_tokens: 生成的 token 数量
-        t_total: 总推理时间（秒）
-        t_prefill: Prefill 时间（秒）
-    
-    Returns:
-        dict: 能效指标字典
-    """
-    # 基础指标
-    p_idle = 50.0  # 假设空闲功耗 50W（需实测）
-    p_total_avg = monitor_data['gpu_power_avg_w'] + monitor_data.get('cpu_power_avg_w', 0)
-    p_inc = p_total_avg - p_idle
-    
-    e_total = monitor_data['gpu_energy_j'] + monitor_data.get('cpu_energy_j_approx', 0)
-    
-    # 计算指标
-    throughput = n_tokens / t_total if t_total > 0 else 0
-    ttft = t_prefill * 1000  # 转换为毫秒
-    tpot = (t_total - t_prefill) / (n_tokens - 1) * 1000 if n_tokens > 1 else 0
-    e_token = e_total / n_tokens if n_tokens > 0 else 0
-    ppw = throughput / p_inc if p_inc > 0 else 0
-    
-    return {
-        'p_idle_w': p_idle,
-        'p_inc_w': p_inc,
-        'e_total_j': e_total,
-        'throughput_tps': throughput,
-        'ttft_ms': ttft,
-        'tpot_ms': tpot,
-        'e_token_j': e_token,
-        'ppw': ppw
-    }
-```
-
-**归一化方法**（Min-Max Scaling）：
-
-```python
-import pandas as pd
-
-def normalize_efficiency_metrics(df, task_col='task_type'):
-    """
-    按任务类型分组归一化能效指标
-    
-    Args:
-        df: 包含原始指标的 DataFrame
-        task_col: 任务类型列名
-    
-    Returns:
-        DataFrame: 添加归一化列的 DataFrame
-    """
-    # 按任务分组归一化
-    for task in df[task_col].unique():
-        mask = df[task_col] == task
-        
-        # 吞吐量：越大越好
-        throughput = df.loc[mask, 'throughput_tps']
-        df.loc[mask, 't_norm'] = (throughput - throughput.min()) / (throughput.max() - throughput.min() + 1e-9)
-        
-        # 延迟：越小越好（反转）
-        latency = df.loc[mask, 'ttft_ms']
-        df.loc[mask, 'l_norm'] = 1 - (latency - latency.min()) / (latency.max() - latency.min() + 1e-9)
-        
-        # 能耗：越小越好（反转）
-        energy = df.loc[mask, 'e_token_j']
-        df.loc[mask, 'e_norm'] = 1 - (energy - energy.min()) / (energy.max() - energy.min() + 1e-9)
-    
-    # 综合效率得分
-    df['eff_score'] = 0.4 * df['t_norm'] + 0.3 * df['l_norm'] + 0.3 * df['e_norm']
-    
-    return df
-```
-
 
 
 ### 6.2 质量指标详解
@@ -1360,83 +1051,6 @@ Q_{overall} = \sum_{i=1}^{8} w_i \cdot Q_{task_i}
 - 默认均等权重：$w_i = 1/8 = 0.125$
 - 可根据应用场景调整权重（如代码生成场景提高 $w_{code}$）
 
-**质量指标计算示例**：
-
-```python
-def calculate_quality_metrics(results_df):
-    """
-    计算各任务类型的质量指标
-    
-    Args:
-        results_df: 包含任务结果的 DataFrame
-            必需列：task_type, correct, total, rouge_l, bertscore_f1, distinct_2
-    
-    Returns:
-        dict: 各任务质量得分
-    """
-    quality_scores = {}
-    
-    # 客观任务：准确率
-    for task in ['qa', 'math', 'reasoning', 'context']:
-        mask = results_df['task_type'] == task
-        if mask.sum() > 0:
-            acc = results_df.loc[mask, 'correct'].sum() / results_df.loc[mask, 'total'].sum()
-            quality_scores[f'q_{task}'] = acc
-    
-    # 代码生成：测试通过率
-    mask = results_df['task_type'] == 'code'
-    if mask.sum() > 0:
-        pass_rate = results_df.loc[mask, 'tests_passed'].sum() / results_df.loc[mask, 'tests_total'].sum()
-        quality_scores['q_code'] = pass_rate
-    
-    # 文本摘要：ROUGE-L
-    mask = results_df['task_type'] == 'summary'
-    if mask.sum() > 0:
-        rouge_l = results_df.loc[mask, 'rouge_l'].mean()
-        quality_scores['q_summary'] = rouge_l
-    
-    # 创意写作：Distinct-2
-    mask = results_df['task_type'] == 'creative'
-    if mask.sum() > 0:
-        distinct_2 = results_df.loc[mask, 'distinct_2'].mean()
-        quality_scores['q_creative'] = distinct_2
-    
-    # 多轮对话：BERTScore
-    mask = results_df['task_type'] == 'dialogue'
-    if mask.sum() > 0:
-        bertscore = results_df.loc[mask, 'bertscore_f1'].mean()
-        quality_scores['q_dialogue'] = bertscore
-    
-    # 综合质量得分（均等权重）
-    quality_scores['q_overall'] = sum(quality_scores.values()) / len(quality_scores)
-    
-    return quality_scores
-```
-
-**归一化质量指标**：
-
-```python
-def normalize_quality_metrics(df, task_col='task_type'):
-    """
-    按任务类型分组归一化质量指标
-    
-    Args:
-        df: 包含原始质量指标的 DataFrame
-        task_col: 任务类型列名
-    
-    Returns:
-        DataFrame: 添加归一化质量列的 DataFrame
-    """
-    # 按任务分组归一化
-    for task in df[task_col].unique():
-        mask = df[task_col] == task
-        
-        # 质量指标：越大越好
-        quality = df.loc[mask, 'quality_score']
-        df.loc[mask, 'q_norm'] = (quality - quality.min()) / (quality.max() - quality.min() + 1e-9)
-    
-    return df
-```
 
 ### 6.3 综合效质比与最终评分
 
@@ -1459,24 +1073,6 @@ QE_{ratio} = \frac{Q_{norm} + \epsilon}{1.01 - Eff_{score}}
 - 平衡质量和效率两个维度
 - 适用于模型横向对比
 
-**计算示例**：
-
-```python
-def calculate_qe_ratio(df):
-    """
-    计算质效比
-    
-    Args:
-        df: 包含 q_norm 和 eff_score 的 DataFrame
-    
-    Returns:
-        DataFrame: 添加 qe_ratio 列的 DataFrame
-    """
-    epsilon = 0.01
-    df['qe_ratio'] = (df['q_norm'] + epsilon) / (1.01 - df['eff_score'])
-    return df
-```
-
 #### 6.3.2 能效加权得分
 
 \[
@@ -1493,30 +1089,6 @@ Score_{final} = \frac{Q_{overall}}{E_{token}}
 - 直接反映"单位能耗的质量产出"
 - 适用于能耗敏感场景
 - 数值越大越好
-
-**计算示例**：
-
-```python
-def calculate_final_score(df, method='ppw'):
-    """
-    计算最终得分
-    
-    Args:
-        df: 包含质量和能效指标的 DataFrame
-        method: 'ppw' 或 'energy'
-    
-    Returns:
-        DataFrame: 添加 score_final 列的 DataFrame
-    """
-    if method == 'ppw':
-        df['score_final'] = df['q_overall'] * df['ppw']
-    elif method == 'energy':
-        df['score_final'] = df['q_overall'] / (df['e_token_j'] + 1e-9)
-    else:
-        raise ValueError(f"Unknown method: {method}")
-    
-    return df
-```
 
 #### 6.3.3 成本效能比（Cost-Performance Ratio）
 
@@ -1549,36 +1121,6 @@ Cost_{energy} = E_{total} \times \frac{P_{elec}}{3.6 \times 10^6}
 CPQ = \frac{Q_{overall}}{Cost_{total}}
 \]
 
-**计算示例**：
-
-```python
-def calculate_cost_metrics(df, gpu_cost_per_hour=0.75, electricity_price=0.08):
-    """
-    计算成本指标
-    
-    Args:
-        df: 包含时间和能耗指标的 DataFrame
-        gpu_cost_per_hour: GPU 小时成本（$/h）
-        electricity_price: 电价（$/kWh）
-    
-    Returns:
-        DataFrame: 添加成本列的 DataFrame
-    """
-    # GPU 成本
-    df['cost_gpu_usd'] = gpu_cost_per_hour * df['t_total_s'] / 3600
-    
-    # 能耗成本（J 转 kWh）
-    df['cost_energy_usd'] = df['e_total_j'] * electricity_price / (3.6 * 1e6)
-    
-    # 总成本
-    df['cost_total_usd'] = df['cost_gpu_usd'] + df['cost_energy_usd']
-    
-    # 单位成本质量
-    df['cpq'] = df['q_overall'] / (df['cost_total_usd'] + 1e-9)
-    
-    return df
-```
-
 #### 6.3.4 帕累托前沿分析
 
 在质量-能效二维空间中，识别帕累托最优解：
@@ -1587,79 +1129,6 @@ def calculate_cost_metrics(df, gpu_cost_per_hour=0.75, electricity_price=0.08):
 - $Q_A \geq Q_B$ 且 $E_A \leq E_B$（至少一个严格不等）
 
 **帕累托前沿**：所有不被其他模型帕累托支配的模型集合
-
-**计算示例**：
-
-```python
-def find_pareto_frontier(df, quality_col='q_overall', efficiency_col='e_token_j'):
-    """
-    识别帕累托前沿
-    
-    Args:
-        df: 包含质量和能效指标的 DataFrame
-        quality_col: 质量列名（越大越好）
-        efficiency_col: 能效列名（越小越好）
-    
-    Returns:
-        DataFrame: 添加 is_pareto 列的 DataFrame
-    """
-    df = df.copy()
-    df['is_pareto'] = True
-    
-    for i in df.index:
-        for j in df.index:
-            if i != j:
-                # 如果 j 帕累托优于 i
-                if (df.loc[j, quality_col] >= df.loc[i, quality_col] and
-                    df.loc[j, efficiency_col] <= df.loc[i, efficiency_col] and
-                    (df.loc[j, quality_col] > df.loc[i, quality_col] or
-                     df.loc[j, efficiency_col] < df.loc[i, efficiency_col])):
-                    df.loc[i, 'is_pareto'] = False
-                    break
-    
-    return df
-```
-
-**可视化示例**：
-
-```python
-import matplotlib.pyplot as plt
-
-def plot_pareto_frontier(df, quality_col='q_overall', efficiency_col='e_token_j'):
-    """
-    绘制帕累托前沿图
-    """
-    plt.figure(figsize=(10, 6))
-    
-    # 非帕累托点
-    non_pareto = df[~df['is_pareto']]
-    plt.scatter(non_pareto[efficiency_col], non_pareto[quality_col], 
-                c='lightgray', s=100, alpha=0.5, label='Non-Pareto')
-    
-    # 帕累托前沿点
-    pareto = df[df['is_pareto']].sort_values(efficiency_col)
-    plt.scatter(pareto[efficiency_col], pareto[quality_col], 
-                c='red', s=150, marker='*', label='Pareto Frontier')
-    
-    # 连接帕累托点
-    plt.plot(pareto[efficiency_col], pareto[quality_col], 
-             'r--', alpha=0.5, linewidth=2)
-    
-    # 标注模型名称
-    for idx, row in pareto.iterrows():
-        plt.annotate(row['model_name'], 
-                     (row[efficiency_col], row[quality_col]),
-                     xytext=(5, 5), textcoords='offset points')
-    
-    plt.xlabel('Energy per Token (J/token) - Lower is Better')
-    plt.ylabel('Quality Score - Higher is Better')
-    plt.title('Pareto Frontier: Quality vs Energy Efficiency')
-    plt.legend()
-    plt.grid(True, alpha=0.3)
-    plt.tight_layout()
-    plt.savefig('pareto_frontier.png', dpi=300)
-    plt.show()
-```
 
 ### 6.4 指标汇总与使用建议
 
@@ -1680,99 +1149,6 @@ def plot_pareto_frontier(df, quality_col='q_overall', efficiency_col='e_token_j'
 4. **帕累托分析**：识别最优模型集合
 5. **可视化**：生成对比图表
 6. **报告生成**：自动化 Markdown 报告
-
-**完整计算管线示例**：
-
-```python
-def complete_evaluation_pipeline(raw_results_df):
-    """
-    完整的评估指标计算管线
-    
-    Args:
-        raw_results_df: 原始实验结果 DataFrame
-    
-    Returns:
-        DataFrame: 包含所有指标的完整 DataFrame
-    """
-    df = raw_results_df.copy()
-    
-    # 1. 计算质量指标
-    quality_metrics = calculate_quality_metrics(df)
-    df = df.merge(pd.DataFrame([quality_metrics]), how='cross')
-    
-    # 2. 归一化质量和效率
-    df = normalize_quality_metrics(df)
-    df = normalize_efficiency_metrics(df)
-    
-    # 3. 计算质效比
-    df = calculate_qe_ratio(df)
-    
-    # 4. 计算最终得分
-    df = calculate_final_score(df, method='ppw')
-    
-    # 5. 计算成本指标
-    df = calculate_cost_metrics(df)
-    
-    # 6. 帕累托前沿分析
-    df = find_pareto_frontier(df)
-    
-    return df
-```
-
-
-## 7. 实验流程（针对每个模型-量化组合）
-
-### 7.1 实验前准备
-
-#### 7.1.1 环境配置检查清单
-
-```bash
-# 1. 检查 Ollama 服务状态
-ollama list
-
-# 2. 检查 GPU 状态
-nvidia-smi
-
-# 3. 检查 Python 环境
-conda activate bartscore
-python --version
-pip list | findstr "pynvml psutil pandas"
-
-# 4. 检查磁盘空间
-dir C:\Users\<用户>\.ollama\models
-
-# 5. 设置环境变量
-set PYTHONUTF8=1
-set CPU_TDP_W=65
-```
-
-#### 7.1.2 系统优化设置
-
-**Windows 电源设置**：
-1. 打开"控制面板" → "电源选项"
-2. 选择"高性能"模式
-3. 点击"更改计划设置" → "更改高级电源设置"
-4. 设置：
-   - 处理器电源管理 → 最小处理器状态：100%
-   - 处理器电源管理 → 最大处理器状态：100%
-   - PCI Express → 链接状态电源管理：关闭
-
-**关闭后台进程**：
-```powershell
-# 关闭不必要的服务（可选）
-Stop-Process -Name "chrome", "firefox", "Teams", "Slack" -ErrorAction SilentlyContinue
-
-# 检查 CPU 和内存使用
-Get-Process | Sort-Object CPU -Descending | Select-Object -First 10
-```
-
-**清理 GPU 缓存**：
-```python
-import torch
-torch.cuda.empty_cache()
-```
-
-#### 7.1.3 创建实验目录结构
 
 ## 7. 实验流程（针对每个模型-框架-精度组合）
 
@@ -1801,526 +1177,37 @@ torch.cuda.empty_cache()
 
 #### 7.1.2 模型下载与验证
 
-```bash
-# 下载所需模型（如果尚未下载）
-ollama pull qwen3:4b
-ollama pull qwen3:8b
-ollama pull deepseek-r1:8b
-ollama pull gemma3:4b
-
-# 验证模型可用性
-ollama list
-
-# 测试模型推理
-ollama run qwen3:4b "你好，请介绍一下自己。"
-```
-
 ### 7.2 单次实验完整流程
 
 #### 步骤 1：测量空闲功耗（5 分钟）
 
 **目的**：建立功耗基线 $P_{idle}$
 
-```python
-import time
-from experiments.monitor import ResourceMonitor
-
-# 初始化监控器
-monitor = ResourceMonitor(interval=0.2)  # 5Hz 采样
-
-print("开始测量空闲功耗，请保持系统空闲...")
-monitor.start()
-
-# 空闲 5 分钟
-time.sleep(300)
-
-monitor.stop()
-summary = monitor.summary()
-
-# 记录空闲功耗
-p_idle = summary['gpu_power_avg_w'] + summary.get('cpu_power_avg_w', 0)
-p_idle_std = 0  # 可计算标准差
-
-print(f"空闲功耗: {p_idle:.2f} ± {p_idle_std:.2f} W")
-
-# 保存基线数据
-import json
-with open('logs/experiments_N/idle_baseline.json', 'w') as f:
-    json.dump({
-        'p_idle_w': p_idle,
-        'p_idle_std_w': p_idle_std,
-        'timestamp': time.time(),
-        'summary': summary
-    }, f, indent=2)
-```
-
 #### 步骤 2：加载模型并预热（1-2 分钟）
 
 **目的**：稳定 GPU 温度和频率
-
-```python
-import ollama
-
-model_name = "qwen3:8b"
-
-print(f"加载模型: {model_name}")
-
-# 预热：运行 3 次简单推理
-warmup_prompts = [
-    "你好",
-    "1+1=?",
-    "请介绍一下Python"
-]
-
-for i, prompt in enumerate(warmup_prompts, 1):
-    print(f"预热 {i}/3...")
-    response = ollama.generate(model=model_name, prompt=prompt)
-    print(f"  生成 {len(response['response'])} 字符")
-
-print("预热完成")
-```
 
 #### 步骤 3：冷却至空闲（1-2 分钟）
 
 **目的**：确保功耗回落到基线水平
 
-```python
-print("等待系统冷却...")
-
-# 启动监控检查功耗
-monitor = ResourceMonitor(interval=1.0)
-monitor.start()
-
-cooled = False
-check_interval = 10  # 每 10 秒检查一次
-max_wait = 120  # 最多等待 2 分钟
-
-start_time = time.time()
-while not cooled and (time.time() - start_time) < max_wait:
-    time.sleep(check_interval)
-    
-    # 检查最近功耗
-    if len(monitor.gpu_power_w) > 5:
-        recent_power = sum(monitor.gpu_power_w[-5:]) / 5
-        if abs(recent_power - p_idle) < p_idle * 0.05:  # 在 ±5% 范围内
-            cooled = True
-            print(f"系统已冷却至基线: {recent_power:.2f} W")
-
-monitor.stop()
-
-if not cooled:
-    print("警告：系统未完全冷却，但继续实验")
-```
-
 #### 步骤 4：启动同步监控（准备阶段）
 
 **目的**：同时启动功耗监控和事件日志
-
-```python
-from experiments.monitor import ResourceMonitor
-import json
-import time
-
-class EventLogger:
-    """事件时间戳记录器"""
-    def __init__(self, log_file):
-        self.log_file = log_file
-        self.events = []
-        
-    def log(self, event_name, metadata=None):
-        event = {
-            "timestamp": time.time(),
-            "event": event_name,
-            "metadata": metadata or {}
-        }
-        self.events.append(event)
-        print(f"[Event] {event_name}: {metadata}")
-        
-    def save(self):
-        with open(self.log_file, 'w', encoding='utf-8') as f:
-            json.dump(self.events, f, indent=2, ensure_ascii=False)
-
-# 初始化
-experiment_id = f"exp_{int(time.time())}"
-monitor = ResourceMonitor(interval=0.2)
-logger = EventLogger(f"logs/experiments_N/{experiment_id}_events.json")
-
-print(f"实验 ID: {experiment_id}")
-logger.log("experiment_start", {
-    "model": model_name,
-    "experiment_id": experiment_id,
-    "p_idle_w": p_idle
-})
-```
 
 #### 步骤 5：执行任务（主实验阶段）
 
 **目的**：遍历所有测试用例，记录详细数据
 
-```python
-import json
-
-# 加载测试用例
-with open('data/experiments_N/test_cases.json', 'r', encoding='utf-8') as f:
-    test_cases = json.load(f)
-
-# 结果存储
-results = []
-
-# 启动监控
-monitor.start()
-logger.log("monitoring_start")
-
-# 遍历任务
-for task_idx, task in enumerate(test_cases['tasks'], 1):
-    task_id = task['id']
-    task_type = task['task_type']
-    prompt = task['question']
-    temperature = task.get('temperature', 0.0)
-    repeat = task.get('repeat', 1)
-    
-    print(f"\n[{task_idx}/{len(test_cases['tasks'])}] 任务: {task_id} ({task_type})")
-    
-    # 重复生成
-    for run in range(repeat):
-        logger.log("task_start", {
-            "task_id": task_id,
-            "task_type": task_type,
-            "run": run + 1,
-            "repeat": repeat
-        })
-        
-        # 记录开始时间
-        t_start = time.time()
-        
-        # 流式生成（用于记录首 token 时间）
-        response_text = ""
-        first_token_time = None
-        
-        try:
-            stream = ollama.generate(
-                model=model_name,
-                prompt=prompt,
-                stream=True,
-                options={
-                    'temperature': temperature,
-                    'num_predict': task.get('max_tokens', 500)
-                }
-            )
-            
-            for chunk in stream:
-                if first_token_time is None and chunk.get('response'):
-                    first_token_time = time.time()
-                    logger.log("first_token", {
-                        "task_id": task_id,
-                        "run": run + 1,
-                        "ttft_ms": (first_token_time - t_start) * 1000
-                    })
-                
-                response_text += chunk.get('response', '')
-            
-            t_end = time.time()
-            
-            # 记录结束
-            logger.log("task_end", {
-                "task_id": task_id,
-                "run": run + 1,
-                "latency_s": t_end - t_start
-            })
-            
-            # 计算指标
-            n_tokens = len(response_text.split())  # 简化，实际应用 tokenizer
-            latency = t_end - t_start
-            ttft = (first_token_time - t_start) if first_token_time else 0
-            tpot = (t_end - first_token_time) / (n_tokens - 1) if n_tokens > 1 and first_token_time else 0
-            
-            # 保存结果
-            result = {
-                "task_id": task_id,
-                "task_type": task_type,
-                "run": run + 1,
-                "model": model_name,
-                "prompt": prompt,
-                "response": response_text,
-                "n_tokens": n_tokens,
-                "latency_s": latency,
-                "ttft_s": ttft,
-                "tpot_s": tpot,
-                "temperature": temperature,
-                "timestamp": t_start
-            }
-            
-            results.append(result)
-            
-            print(f"  Run {run+1}/{repeat}: {n_tokens} tokens, {latency:.2f}s, TTFT={ttft*1000:.0f}ms")
-            
-        except Exception as e:
-            print(f"  错误: {e}")
-            logger.log("task_error", {
-                "task_id": task_id,
-                "run": run + 1,
-                "error": str(e)
-            })
-        
-        # 任务间冷却（30 秒）
-        if task_idx < len(test_cases['tasks']) or run < repeat - 1:
-            print("  冷却 30 秒...")
-            time.sleep(30)
-
-# 停止监控
-monitor.stop()
-logger.log("monitoring_stop")
-logger.log("experiment_end")
-
-print("\n实验完成！")
-```
-
 #### 步骤 6：停止监控并保存数据
 
-```python
-# 保存监控数据
-monitor_data = monitor.to_dict()
-with open(f"logs/experiments_N/{experiment_id}_monitor.json", 'w') as f:
-    json.dump(monitor_data, f, indent=2)
-
-# 保存事件日志
-logger.save()
-
-# 保存任务结果
-with open(f"data/experiments_N/raw/{model_name}/{experiment_id}_results.json", 'w', encoding='utf-8') as f:
-    json.dump(results, f, indent=2, ensure_ascii=False)
-
-# 保存文本输出
-for result in results:
-    text_file = f"data/experiments_N/texts/{model_name}/{result['task_id']}_r{result['run']}.txt"
-    with open(text_file, 'w', encoding='utf-8') as f:
-        f.write(result['response'])
-
-print(f"数据已保存到: data/experiments_N/raw/{model_name}/")
-```
-
 #### 步骤 7：冷却与数据转存
-
-```python
-print("等待系统完全冷却（5 分钟）...")
-time.sleep(300)
-
-# 生成摘要报告
-summary = monitor.summary()
-print("\n=== 实验摘要 ===")
-print(f"模型: {model_name}")
-print(f"任务数: {len(results)}")
-print(f"总时间: {sum(r['latency_s'] for r in results):.2f} s")
-print(f"平均 GPU 功耗: {summary['gpu_power_avg_w']:.2f} W")
-print(f"总 GPU 能耗: {summary['gpu_energy_j']:.2f} J")
-print(f"峰值 GPU 温度: {summary['gpu_temp_peak_c']:.1f} °C")
-```
 
 #### 步骤 8：重复实验（可选）
 
 **建议**：每个模型至少运行 3 次（不同日期），评估复现性
 
-```python
-# 记录实验元数据
-metadata = {
-    "experiment_id": experiment_id,
-    "model": model_name,
-    "date": time.strftime("%Y-%m-%d"),
-    "time": time.strftime("%H:%M:%S"),
-    "n_tasks": len(results),
-    "total_time_s": sum(r['latency_s'] for r in results),
-    "summary": summary
-}
-
-with open(f"logs/experiments_N/{experiment_id}_metadata.json", 'w') as f:
-    json.dump(metadata, f, indent=2)
-
-print("\n实验完成！请在不同日期重复 2 次以评估复现性。")
-```
-
 ### 7.3 批量实验自动化脚本
-
-**完整的自动化脚本示例**：
-
-```python
-#!/usr/bin/env python3
-"""
-批量实验自动化脚本
-运行多个模型的完整评估实验
-"""
-
-import os
-import time
-import json
-from experiments.monitor import ResourceMonitor
-import ollama
-
-# 配置
-MODELS = [
-    "qwen3:4b",
-    "qwen3:8b",
-    "deepseek-r1:8b",
-    "gemma3:4b"
-]
-
-EXPERIMENT_DIR = "data/experiments_5"
-TEST_CASES_FILE = f"{EXPERIMENT_DIR}/test_cases.json"
-
-def measure_idle_power(duration=300):
-    """测量空闲功耗"""
-    print(f"测量空闲功耗 ({duration}s)...")
-    monitor = ResourceMonitor(interval=0.2)
-    monitor.start()
-    time.sleep(duration)
-    monitor.stop()
-    
-    summary = monitor.summary()
-    p_idle = summary['gpu_power_avg_w']
-    
-    print(f"空闲功耗: {p_idle:.2f} W")
-    return p_idle, summary
-
-def warmup_model(model_name, n_runs=3):
-    """预热模型"""
-    print(f"预热模型: {model_name}")
-    prompts = ["你好", "1+1=?", "介绍Python"]
-    
-    for i, prompt in enumerate(prompts[:n_runs], 1):
-        print(f"  预热 {i}/{n_runs}...")
-        ollama.generate(model=model_name, prompt=prompt)
-    
-    print("预热完成")
-
-def wait_for_cooldown(target_power, tolerance=0.05, max_wait=120):
-    """等待系统冷却"""
-    print("等待系统冷却...")
-    monitor = ResourceMonitor(interval=1.0)
-    monitor.start()
-    
-    start_time = time.time()
-    cooled = False
-    
-    while not cooled and (time.time() - start_time) < max_wait:
-        time.sleep(10)
-        
-        if len(monitor.gpu_power_w) > 5:
-            recent_power = sum(monitor.gpu_power_w[-5:]) / 5
-            if abs(recent_power - target_power) < target_power * tolerance:
-                cooled = True
-                print(f"系统已冷却: {recent_power:.2f} W")
-    
-    monitor.stop()
-    return cooled
-
-def run_experiment(model_name, test_cases, p_idle):
-    """运行单个模型的完整实验"""
-    experiment_id = f"{model_name}_{int(time.time())}"
-    print(f"\n{'='*60}")
-    print(f"开始实验: {experiment_id}")
-    print(f"{'='*60}\n")
-    
-    # 初始化
-    monitor = ResourceMonitor(interval=0.2)
-    results = []
-    
-    # 启动监控
-    monitor.start()
-    
-    # 执行任务
-    for task_idx, task in enumerate(test_cases['tasks'], 1):
-        task_id = task['id']
-        print(f"[{task_idx}/{len(test_cases['tasks'])}] {task_id}")
-        
-        for run in range(task.get('repeat', 1)):
-            try:
-                t_start = time.time()
-                
-                response = ollama.generate(
-                    model=model_name,
-                    prompt=task['question'],
-                    options={
-                        'temperature': task.get('temperature', 0.0),
-                        'num_predict': task.get('max_tokens', 500)
-                    }
-                )
-                
-                t_end = time.time()
-                
-                result = {
-                    "task_id": task_id,
-                    "run": run + 1,
-                    "response": response['response'],
-                    "latency_s": t_end - t_start,
-                    "n_tokens": len(response['response'].split())
-                }
-                
-                results.append(result)
-                print(f"  Run {run+1}: {result['latency_s']:.2f}s")
-                
-            except Exception as e:
-                print(f"  错误: {e}")
-            
-            time.sleep(30)  # 冷却
-    
-    # 停止监控
-    monitor.stop()
-    
-    # 保存数据
-    os.makedirs(f"{EXPERIMENT_DIR}/raw/{model_name}", exist_ok=True)
-    
-    with open(f"{EXPERIMENT_DIR}/raw/{model_name}/{experiment_id}.json", 'w', encoding='utf-8') as f:
-        json.dump({
-            "experiment_id": experiment_id,
-            "model": model_name,
-            "results": results,
-            "monitor": monitor.to_dict()
-        }, f, indent=2, ensure_ascii=False)
-    
-    print(f"\n实验完成: {experiment_id}")
-    return experiment_id
-
-def main():
-    """主函数"""
-    print("=" * 60)
-    print("批量实验自动化脚本")
-    print("=" * 60)
-    
-    # 加载测试用例
-    with open(TEST_CASES_FILE, 'r', encoding='utf-8') as f:
-        test_cases = json.load(f)
-    
-    print(f"测试用例数: {len(test_cases['tasks'])}")
-    
-    # 测量空闲功耗
-    p_idle, _ = measure_idle_power(duration=300)
-    
-    # 遍历模型
-    for model_idx, model_name in enumerate(MODELS, 1):
-        print(f"\n{'#'*60}")
-        print(f"模型 {model_idx}/{len(MODELS)}: {model_name}")
-        print(f"{'#'*60}")
-        
-        # 预热
-        warmup_model(model_name)
-        
-        # 冷却
-        wait_for_cooldown(p_idle)
-        
-        # 运行实验
-        run_experiment(model_name, test_cases, p_idle)
-        
-        # 模型间冷却
-        if model_idx < len(MODELS):
-            print("\n模型间冷却 10 分钟...")
-            time.sleep(600)
-    
-    print("\n" + "=" * 60)
-    print("所有实验完成！")
-    print("=" * 60)
-
-if __name__ == "__main__":
-    main()
-```
 
 **运行方式**：
 
@@ -2339,83 +1226,7 @@ python scripts/run_batch_experiments.py
 
 #### 7.4.1 数据质量检查
 
-```python
-def validate_experiment_data(experiment_dir):
-    """验证实验数据完整性"""
-    issues = []
-    
-    # 检查文件存在性
-    required_files = [
-        'test_cases.json',
-        'raw/',
-        'texts/',
-        'summary/'
-    ]
-    
-    for file in required_files:
-        path = os.path.join(experiment_dir, file)
-        if not os.path.exists(path):
-            issues.append(f"缺失: {file}")
-    
-    # 检查监控数据
-    for model_dir in os.listdir(f"{experiment_dir}/raw"):
-        for result_file in os.listdir(f"{experiment_dir}/raw/{model_dir}"):
-            with open(f"{experiment_dir}/raw/{model_dir}/{result_file}") as f:
-                data = json.load(f)
-                
-                # 检查监控数据完整性
-                if 'monitor' in data:
-                    monitor = data['monitor']
-                    if not monitor.get('gpu_power_w'):
-                        issues.append(f"GPU 功耗数据缺失: {result_file}")
-                    
-                    if len(monitor.get('timestamps', [])) < 10:
-                        issues.append(f"采样点不足: {result_file}")
-    
-    return issues
-
-# 使用示例
-issues = validate_experiment_data("data/experiments_5")
-if issues:
-    print("数据质量问题:")
-    for issue in issues:
-        print(f"  - {issue}")
-else:
-    print("数据质量检查通过")
-```
-
 #### 7.4.2 异常值检测
-
-```python
-import numpy as np
-
-def detect_outliers(values, method='iqr', threshold=1.5):
-    """检测异常值"""
-    values = np.array(values)
-    
-    if method == 'iqr':
-        q1 = np.percentile(values, 25)
-        q3 = np.percentile(values, 75)
-        iqr = q3 - q1
-        lower = q1 - threshold * iqr
-        upper = q3 + threshold * iqr
-        outliers = (values < lower) | (values > upper)
-    
-    elif method == 'zscore':
-        mean = np.mean(values)
-        std = np.std(values)
-        z_scores = np.abs((values - mean) / std)
-        outliers = z_scores > threshold
-    
-    return outliers
-
-# 使用示例
-latencies = [2.1, 2.3, 2.2, 15.0, 2.4, 2.1]  # 15.0 是异常值
-outliers = detect_outliers(latencies, method='iqr')
-print(f"异常值索引: {np.where(outliers)[0]}")
-```
-
-
 
 ## 8. 数据分析与可视化
 
@@ -2423,730 +1234,41 @@ print(f"异常值索引: {np.where(outliers)[0]}")
 
 #### 8.1.1 原始数据加载
 
-```python
-import pandas as pd
-import json
-import os
-from pathlib import Path
-
-def load_experiment_results(experiment_dir):
-    """
-    加载实验结果数据
-    
-    Args:
-        experiment_dir: 实验目录路径
-    
-    Returns:
-        DataFrame: 包含所有实验结果的数据框
-    """
-    all_results = []
-    
-    raw_dir = Path(experiment_dir) / 'raw'
-    
-    for model_dir in raw_dir.iterdir():
-        if not model_dir.is_dir():
-            continue
-        
-        model_name = model_dir.name
-        
-        for result_file in model_dir.glob('*.json'):
-            with open(result_file, 'r', encoding='utf-8') as f:
-                data = json.load(f)
-            
-            # 提取结果
-            for result in data.get('results', []):
-                result['model'] = model_name
-                result['experiment_id'] = data.get('experiment_id')
-                
-                # 提取监控数据摘要
-                if 'monitor' in data:
-                    monitor = data['monitor']
-                    summary = monitor.get('summary', {})
-                    
-                    result['gpu_power_avg_w'] = summary.get('gpu_power_avg_w', 0)
-                    result['gpu_energy_j'] = summary.get('gpu_energy_j', 0)
-                    result['gpu_util_avg'] = summary.get('gpu_util_avg', 0)
-                    result['gpu_mem_peak_mb'] = summary.get('gpu_mem_peak_mb', 0)
-                    result['cpu_energy_j_approx'] = summary.get('cpu_energy_j_approx', 0)
-                
-                all_results.append(result)
-    
-    df = pd.DataFrame(all_results)
-    return df
-
-# 使用示例
-df = load_experiment_results('data/experiments_5')
-print(f"加载 {len(df)} 条结果")
-print(df.head())
-```
-
 #### 8.1.2 数据清洗与验证
 
-```python
-def clean_experiment_data(df):
-    """
-    清洗实验数据
-    
-    Args:
-        df: 原始数据框
-    
-    Returns:
-        DataFrame: 清洗后的数据框
-    """
-    df_clean = df.copy()
-    
-    # 1. 删除缺失关键字段的行
-    required_cols = ['task_id', 'model', 'latency_s', 'n_tokens']
-    df_clean = df_clean.dropna(subset=required_cols)
-    
-    # 2. 删除异常值
-    # 延迟异常（> 60s 或 < 0.1s）
-    df_clean = df_clean[(df_clean['latency_s'] > 0.1) & (df_clean['latency_s'] < 60)]
-    
-    # token 数异常（< 5 或 > 2000）
-    df_clean = df_clean[(df_clean['n_tokens'] > 5) & (df_clean['n_tokens'] < 2000)]
-    
-    # 3. 计算派生指标
-    df_clean['throughput_tps'] = df_clean['n_tokens'] / df_clean['latency_s']
-    df_clean['e_token_j'] = df_clean['gpu_energy_j'] / df_clean['n_tokens']
-    
-    # 4. 提取任务类型
-    df_clean['task_type'] = df_clean['task_id'].str.split('_').str[0]
-    
-    print(f"清洗前: {len(df)} 条")
-    print(f"清洗后: {len(df_clean)} 条")
-    print(f"删除: {len(df) - len(df_clean)} 条")
-    
-    return df_clean
-
-# 使用示例
-df_clean = clean_experiment_data(df)
-```
-
-
-
 #### 8.1.3 汇总统计
-
-```python
-def generate_summary_statistics(df):
-    """
-    生成汇总统计
-    
-    Args:
-        df: 清洗后的数据框
-    
-    Returns:
-        DataFrame: 汇总统计表
-    """
-    # 按模型和任务类型分组
-    summary = df.groupby(['model', 'task_type']).agg({
-        'latency_s': ['mean', 'std', 'min', 'max'],
-        'throughput_tps': ['mean', 'std'],
-        'e_token_j': ['mean', 'std'],
-        'gpu_power_avg_w': ['mean'],
-        'n_tokens': ['mean', 'count']
-    }).round(3)
-    
-    summary.columns = ['_'.join(col).strip() for col in summary.columns.values]
-    summary = summary.reset_index()
-    
-    return summary
-
-# 使用示例
-summary_stats = generate_summary_statistics(df_clean)
-print(summary_stats)
-
-# 保存到 CSV
-summary_stats.to_csv('data/experiments_5/summary/stats.csv', index=False)
-```
 
 ### 8.2 功耗-时间曲线分析
 
 #### 8.2.1 单次推理功耗曲线
 
-```python
-import matplotlib.pyplot as plt
-import matplotlib
-matplotlib.rcParams['font.sans-serif'] = ['Microsoft YaHei']
-matplotlib.rcParams['axes.unicode_minus'] = False
-
-def plot_power_trace(monitor_data, events, save_path=None):
-    """
-    绘制功耗-时间曲线
-    
-    Args:
-        monitor_data: 监控数据字典
-        events: 事件日志列表
-        save_path: 保存路径
-    """
-    fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(14, 8), sharex=True)
-    
-    # 时间轴（相对时间）
-    timestamps = monitor_data['timestamps']
-    t_start = timestamps[0]
-    time_rel = [(t - t_start) for t in timestamps]
-    
-    # 上图：功耗曲线
-    ax1.plot(time_rel, monitor_data['gpu_power_w'], 
-             label='GPU 功耗', color='#2E86AB', linewidth=1.5)
-    ax1.plot(time_rel, monitor_data['cpu_power_w_approx'], 
-             label='CPU 功耗（估算）', color='#A23B72', linewidth=1.5, alpha=0.7)
-    
-    # 标记事件
-    for event in events:
-        t_event = event['timestamp'] - t_start
-        event_name = event['event']
-        
-        if 'start' in event_name:
-            ax1.axvline(t_event, color='green', linestyle='--', alpha=0.6, linewidth=1)
-            ax1.text(t_event, ax1.get_ylim()[1] * 0.95, event_name, 
-                    rotation=90, va='top', fontsize=8)
-        elif 'first_token' in event_name:
-            ax1.axvline(t_event, color='orange', linestyle='--', alpha=0.6, linewidth=1)
-            ax1.text(t_event, ax1.get_ylim()[1] * 0.95, 'First Token', 
-                    rotation=90, va='top', fontsize=8)
-        elif 'end' in event_name:
-            ax1.axvline(t_event, color='red', linestyle='--', alpha=0.6, linewidth=1)
-            ax1.text(t_event, ax1.get_ylim()[1] * 0.95, event_name, 
-                    rotation=90, va='top', fontsize=8)
-    
-    ax1.set_ylabel('功耗 (W)', fontsize=12)
-    ax1.legend(loc='upper right')
-    ax1.grid(True, alpha=0.3)
-    ax1.set_title('推理过程功耗曲线', fontsize=14, fontweight='bold')
-    
-    # 下图：GPU 利用率
-    ax2.plot(time_rel, monitor_data['gpu_util'], 
-             label='GPU 利用率', color='#F18F01', linewidth=1.5)
-    ax2.fill_between(time_rel, 0, monitor_data['gpu_util'], 
-                      color='#F18F01', alpha=0.3)
-    
-    ax2.set_xlabel('时间 (s)', fontsize=12)
-    ax2.set_ylabel('GPU 利用率 (%)', fontsize=12)
-    ax2.legend(loc='upper right')
-    ax2.grid(True, alpha=0.3)
-    ax2.set_ylim([0, 100])
-    
-    plt.tight_layout()
-    
-    if save_path:
-        plt.savefig(save_path, dpi=300, bbox_inches='tight')
-        print(f"图表已保存: {save_path}")
-    
-    plt.show()
-
-# 使用示例
-with open('logs/experiments_5/exp_123_monitor.json') as f:
-    monitor_data = json.load(f)
-
-with open('logs/experiments_5/exp_123_events.json') as f:
-    events = json.load(f)
-
-plot_power_trace(monitor_data, events, 
-                 save_path='results/experiments_5/figures/power_trace.png')
-```
-
-
-
 ### 8.3 核心对比图表
 
 #### 8.3.1 吞吐量 vs 延迟散点图
 
-```python
-import seaborn as sns
-
-def plot_throughput_vs_latency(df, save_path=None):
-    """
-    绘制吞吐量 vs 延迟散点图
-    """
-    fig, ax = plt.subplots(figsize=(10, 7))
-    
-    # 按模型分组绘制
-    for model in df['model'].unique():
-        model_data = df[df['model'] == model]
-        
-        ax.scatter(model_data['latency_s'], 
-                  model_data['throughput_tps'],
-                  label=model, s=100, alpha=0.6, edgecolors='black', linewidth=0.5)
-    
-    ax.set_xlabel('延迟 (s) - 越小越好', fontsize=12)
-    ax.set_ylabel('吞吐量 (tokens/s) - 越大越好', fontsize=12)
-    ax.set_title('吞吐量 vs 延迟对比', fontsize=14, fontweight='bold')
-    ax.legend(title='模型', fontsize=10)
-    ax.grid(True, alpha=0.3)
-    
-    # 添加理想区域标注（左上角）
-    ax.axvspan(ax.get_xlim()[0], ax.get_xlim()[0] + (ax.get_xlim()[1] - ax.get_xlim()[0]) * 0.3, 
-               alpha=0.1, color='green', label='理想区域')
-    ax.axhspan(ax.get_ylim()[1] * 0.7, ax.get_ylim()[1], 
-               alpha=0.1, color='green')
-    
-    plt.tight_layout()
-    
-    if save_path:
-        plt.savefig(save_path, dpi=300, bbox_inches='tight')
-    
-    plt.show()
-
-# 使用示例
-plot_throughput_vs_latency(df_clean, 
-                           save_path='results/experiments_5/figures/throughput_vs_latency.png')
-```
-
 #### 8.3.2 能耗 vs 质量散点图
-
-```python
-def plot_energy_vs_quality(df, quality_col='quality_score', save_path=None):
-    """
-    绘制能耗 vs 质量散点图
-    """
-    fig, ax = plt.subplots(figsize=(10, 7))
-    
-    # 按任务类型分组
-    for task_type in df['task_type'].unique():
-        task_data = df[df['task_type'] == task_type]
-        
-        ax.scatter(task_data['e_token_j'], 
-                  task_data[quality_col],
-                  label=task_type, s=100, alpha=0.6, edgecolors='black', linewidth=0.5)
-    
-    ax.set_xlabel('每 Token 能耗 (J/token) - 越小越好', fontsize=12)
-    ax.set_ylabel('质量得分 - 越大越好', fontsize=12)
-    ax.set_title('能耗 vs 质量对比', fontsize=14, fontweight='bold')
-    ax.legend(title='任务类型', fontsize=10)
-    ax.grid(True, alpha=0.3)
-    
-    # 添加帕累托前沿线（简化）
-    # 找到每个能耗水平的最高质量
-    df_sorted = df.sort_values('e_token_j')
-    pareto_points = []
-    max_quality = 0
-    
-    for _, row in df_sorted.iterrows():
-        if row[quality_col] > max_quality:
-            max_quality = row[quality_col]
-            pareto_points.append((row['e_token_j'], row[quality_col]))
-    
-    if pareto_points:
-        pareto_x, pareto_y = zip(*pareto_points)
-        ax.plot(pareto_x, pareto_y, 'r--', linewidth=2, alpha=0.5, label='帕累托前沿')
-    
-    plt.tight_layout()
-    
-    if save_path:
-        plt.savefig(save_path, dpi=300, bbox_inches='tight')
-    
-    plt.show()
-
-# 使用示例
-plot_energy_vs_quality(df_clean, 
-                       save_path='results/experiments_5/figures/energy_vs_quality.png')
-```
 
 #### 8.3.3 质效比柱状图
 
-```python
-def plot_qe_ratio_bars(df, save_path=None):
-    """
-    绘制质效比柱状图（按任务和模型分组）
-    """
-    # 计算平均质效比
-    qe_summary = df.groupby(['model', 'task_type'])['qe_ratio'].mean().reset_index()
-    
-    # 透视表
-    qe_pivot = qe_summary.pivot(index='task_type', columns='model', values='qe_ratio')
-    
-    fig, ax = plt.subplots(figsize=(12, 7))
-    
-    qe_pivot.plot(kind='bar', ax=ax, width=0.8, edgecolor='black', linewidth=0.5)
-    
-    ax.set_xlabel('任务类型', fontsize=12)
-    ax.set_ylabel('质效比 (QE Ratio)', fontsize=12)
-    ax.set_title('质效比对比（按任务类型）', fontsize=14, fontweight='bold')
-    ax.legend(title='模型', fontsize=10, loc='upper right')
-    ax.grid(True, alpha=0.3, axis='y')
-    
-    # 旋转 x 轴标签
-    plt.xticks(rotation=45, ha='right')
-    
-    plt.tight_layout()
-    
-    if save_path:
-        plt.savefig(save_path, dpi=300, bbox_inches='tight')
-    
-    plt.show()
-
-# 使用示例
-plot_qe_ratio_bars(df_clean, 
-                   save_path='results/experiments_5/figures/qe_ratio_bars.png')
-```
-
 #### 8.3.4 综合能力雷达图
-
-```python
-from math import pi
-
-def plot_radar_chart(df, save_path=None):
-    """
-    绘制综合能力雷达图
-    """
-    # 计算各模型的归一化指标
-    metrics = ['throughput_tps', 'latency_s', 'e_token_j', 'quality_score']
-    metric_labels = ['吞吐量', '延迟优', '能耗优', '质量']
-    
-    model_scores = {}
-    
-    for model in df['model'].unique():
-        model_data = df[df['model'] == model]
-        
-        scores = []
-        for metric in metrics:
-            values = model_data[metric].values
-            
-            # 归一化（延迟和能耗需要反转）
-            if metric in ['latency_s', 'e_token_j']:
-                # 越小越好，反转归一化
-                norm_value = 1 - (values.mean() - df[metric].min()) / (df[metric].max() - df[metric].min() + 1e-9)
-            else:
-                # 越大越好
-                norm_value = (values.mean() - df[metric].min()) / (df[metric].max() - df[metric].min() + 1e-9)
-            
-            scores.append(norm_value)
-        
-        model_scores[model] = scores
-    
-    # 绘制雷达图
-    angles = [n / len(metric_labels) * 2 * pi for n in range(len(metric_labels))]
-    angles += angles[:1]
-    
-    fig, ax = plt.subplots(figsize=(10, 10), subplot_kw=dict(projection='polar'))
-    
-    for model, scores in model_scores.items():
-        scores += scores[:1]  # 闭合
-        ax.plot(angles, scores, 'o-', linewidth=2, label=model)
-        ax.fill(angles, scores, alpha=0.15)
-    
-    ax.set_xticks(angles[:-1])
-    ax.set_xticklabels(metric_labels, fontsize=12)
-    ax.set_ylim(0, 1)
-    ax.set_yticks([0.2, 0.4, 0.6, 0.8, 1.0])
-    ax.set_yticklabels(['0.2', '0.4', '0.6', '0.8', '1.0'], fontsize=10)
-    ax.grid(True)
-    
-    ax.set_title('综合能力雷达图', fontsize=14, fontweight='bold', pad=20)
-    ax.legend(loc='upper right', bbox_to_anchor=(1.3, 1.1), fontsize=10)
-    
-    plt.tight_layout()
-    
-    if save_path:
-        plt.savefig(save_path, dpi=300, bbox_inches='tight')
-    
-    plt.show()
-
-# 使用示例
-plot_radar_chart(df_clean, 
-                 save_path='results/experiments_5/figures/radar_chart.png')
-```
-
-
 
 ### 8.4 高级分析图表
 
 #### 8.4.1 热力图（模型 × 任务性能）
 
-```python
-def plot_performance_heatmap(df, metric='qe_ratio', save_path=None):
-    """
-    绘制性能热力图
-    """
-    # 计算平均指标
-    heatmap_data = df.groupby(['model', 'task_type'])[metric].mean().reset_index()
-    heatmap_pivot = heatmap_data.pivot(index='model', columns='task_type', values=metric)
-    
-    fig, ax = plt.subplots(figsize=(12, 8))
-    
-    sns.heatmap(heatmap_pivot, annot=True, fmt='.3f', cmap='YlGnBu', 
-                linewidths=0.5, cbar_kws={'label': metric}, ax=ax)
-    
-    ax.set_xlabel('任务类型', fontsize=12)
-    ax.set_ylabel('模型', fontsize=12)
-    ax.set_title(f'{metric} 热力图', fontsize=14, fontweight='bold')
-    
-    plt.tight_layout()
-    
-    if save_path:
-        plt.savefig(save_path, dpi=300, bbox_inches='tight')
-    
-    plt.show()
-
-# 使用示例
-plot_performance_heatmap(df_clean, metric='qe_ratio',
-                         save_path='results/experiments_5/figures/heatmap_qe_ratio.png')
-```
-
 #### 8.4.2 箱线图（稳定性分析）
 
-```python
-def plot_stability_boxplot(df, metric='latency_s', save_path=None):
-    """
-    绘制稳定性箱线图
-    """
-    fig, ax = plt.subplots(figsize=(12, 7))
-    
-    # 按模型分组
-    df_sorted = df.sort_values('model')
-    
-    sns.boxplot(data=df_sorted, x='model', y=metric, hue='task_type', ax=ax)
-    
-    ax.set_xlabel('模型', fontsize=12)
-    ax.set_ylabel(metric, fontsize=12)
-    ax.set_title(f'{metric} 稳定性分析（箱线图）', fontsize=14, fontweight='bold')
-    ax.legend(title='任务类型', fontsize=10, loc='upper right')
-    ax.grid(True, alpha=0.3, axis='y')
-    
-    plt.xticks(rotation=45, ha='right')
-    plt.tight_layout()
-    
-    if save_path:
-        plt.savefig(save_path, dpi=300, bbox_inches='tight')
-    
-    plt.show()
-
-# 使用示例
-plot_stability_boxplot(df_clean, metric='latency_s',
-                       save_path='results/experiments_5/figures/boxplot_latency.png')
-```
-
 #### 8.4.3 相关性矩阵
-
-```python
-def plot_correlation_matrix(df, save_path=None):
-    """
-    绘制指标相关性矩阵
-    """
-    # 选择数值列
-    numeric_cols = ['latency_s', 'throughput_tps', 'e_token_j', 
-                    'gpu_power_avg_w', 'quality_score', 'qe_ratio']
-    
-    corr_matrix = df[numeric_cols].corr()
-    
-    fig, ax = plt.subplots(figsize=(10, 8))
-    
-    sns.heatmap(corr_matrix, annot=True, fmt='.2f', cmap='coolwarm', 
-                center=0, linewidths=0.5, cbar_kws={'label': '相关系数'}, ax=ax)
-    
-    ax.set_title('指标相关性矩阵', fontsize=14, fontweight='bold')
-    
-    plt.tight_layout()
-    
-    if save_path:
-        plt.savefig(save_path, dpi=300, bbox_inches='tight')
-    
-    plt.show()
-
-# 使用示例
-plot_correlation_matrix(df_clean,
-                        save_path='results/experiments_5/figures/correlation_matrix.png')
-```
 
 ### 8.5 自动化报告生成
 
 #### 8.5.1 Markdown 报告模板
 
-```python
-def generate_markdown_report(df, summary_stats, output_path):
-    """
-    生成自动化 Markdown 报告
-    
-    Args:
-        df: 完整数据框
-        summary_stats: 汇总统计
-        output_path: 输出路径
-    """
-    report = []
-    
-    # 标题
-    report.append("# 实验结果分析报告\n")
-    report.append(f"**生成时间**: {pd.Timestamp.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
-    report.append("---\n")
-    
-    # 1. 实验概览
-    report.append("## 1. 实验概览\n")
-    report.append(f"- **模型数量**: {df['model'].nunique()}\n")
-    report.append(f"- **任务类型**: {df['task_type'].nunique()}\n")
-    report.append(f"- **总测试数**: {len(df)}\n")
-    report.append(f"- **测试模型**: {', '.join(df['model'].unique())}\n")
-    report.append("\n")
-    
-    # 2. 关键指标汇总
-    report.append("## 2. 关键指标汇总\n")
-    report.append("### 2.1 按模型汇总\n")
-    
-    model_summary = df.groupby('model').agg({
-        'latency_s': 'mean',
-        'throughput_tps': 'mean',
-        'e_token_j': 'mean',
-        'qe_ratio': 'mean'
-    }).round(3)
-    
-    report.append(model_summary.to_markdown())
-    report.append("\n")
-    
-    # 3. 性能排名
-    report.append("## 3. 性能排名\n")
-    
-    # 质效比排名
-    report.append("### 3.1 质效比排名（Top 5）\n")
-    top_qe = df.nlargest(5, 'qe_ratio')[['model', 'task_type', 'qe_ratio']]
-    report.append(top_qe.to_markdown(index=False))
-    report.append("\n")
-    
-    # 能效排名
-    report.append("### 3.2 能效排名（Top 5，能耗最低）\n")
-    top_energy = df.nsmallest(5, 'e_token_j')[['model', 'task_type', 'e_token_j']]
-    report.append(top_energy.to_markdown(index=False))
-    report.append("\n")
-    
-    # 4. 可视化图表
-    report.append("## 4. 可视化图表\n")
-    report.append("### 4.1 吞吐量 vs 延迟\n")
-    report.append("![吞吐量 vs 延迟](figures/throughput_vs_latency.png)\n")
-    report.append("\n")
-    
-    report.append("### 4.2 能耗 vs 质量\n")
-    report.append("![能耗 vs 质量](figures/energy_vs_quality.png)\n")
-    report.append("\n")
-    
-    report.append("### 4.3 质效比对比\n")
-    report.append("![质效比对比](figures/qe_ratio_bars.png)\n")
-    report.append("\n")
-    
-    report.append("### 4.4 综合能力雷达图\n")
-    report.append("![综合能力雷达图](figures/radar_chart.png)\n")
-    report.append("\n")
-    
-    # 5. 结论与建议
-    report.append("## 5. 结论与建议\n")
-    
-    # 找出最佳模型
-    best_qe_model = df.groupby('model')['qe_ratio'].mean().idxmax()
-    best_energy_model = df.groupby('model')['e_token_j'].mean().idxmin()
-    best_speed_model = df.groupby('model')['throughput_tps'].mean().idxmax()
-    
-    report.append(f"- **最佳质效比模型**: {best_qe_model}\n")
-    report.append(f"- **最佳能效模型**: {best_energy_model}\n")
-    report.append(f"- **最快速度模型**: {best_speed_model}\n")
-    report.append("\n")
-    
-    report.append("### 5.1 应用场景推荐\n")
-    report.append(f"- **能耗敏感场景**（边缘设备）: 推荐 {best_energy_model}\n")
-    report.append(f"- **吞吐优先场景**（批处理）: 推荐 {best_speed_model}\n")
-    report.append(f"- **综合平衡场景**: 推荐 {best_qe_model}\n")
-    report.append("\n")
-    
-    # 写入文件
-    with open(output_path, 'w', encoding='utf-8') as f:
-        f.writelines(report)
-    
-    print(f"报告已生成: {output_path}")
-
-# 使用示例
-generate_markdown_report(df_clean, summary_stats, 
-                         'results/experiments_5/report.md')
-```
-
 ### 8.6 完整分析管线
-
-```python
-def complete_analysis_pipeline(experiment_dir):
-    """
-    完整的数据分析管线
-    
-    Args:
-        experiment_dir: 实验目录路径
-    """
-    print("=" * 60)
-    print("开始数据分析管线")
-    print("=" * 60)
-    
-    # 1. 加载数据
-    print("\n[1/7] 加载实验数据...")
-    df = load_experiment_results(experiment_dir)
-    print(f"  加载 {len(df)} 条结果")
-    
-    # 2. 数据清洗
-    print("\n[2/7] 数据清洗...")
-    df_clean = clean_experiment_data(df)
-    
-    # 3. 生成汇总统计
-    print("\n[3/7] 生成汇总统计...")
-    summary_stats = generate_summary_statistics(df_clean)
-    summary_stats.to_csv(f'{experiment_dir}/summary/stats.csv', index=False)
-    print(f"  汇总统计已保存")
-    
-    # 4. 计算评估指标
-    print("\n[4/7] 计算评估指标...")
-    from section_6_metrics import complete_evaluation_pipeline
-    df_eval = complete_evaluation_pipeline(df_clean)
-    df_eval.to_csv(f'{experiment_dir}/summary/results.csv', index=False)
-    print(f"  评估结果已保存")
-    
-    # 5. 生成可视化图表
-    print("\n[5/7] 生成可视化图表...")
-    figures_dir = f'{experiment_dir}/figures'
-    os.makedirs(figures_dir, exist_ok=True)
-    
-    plot_throughput_vs_latency(df_eval, f'{figures_dir}/throughput_vs_latency.png')
-    plot_energy_vs_quality(df_eval, f'{figures_dir}/energy_vs_quality.png')
-    plot_qe_ratio_bars(df_eval, f'{figures_dir}/qe_ratio_bars.png')
-    plot_radar_chart(df_eval, f'{figures_dir}/radar_chart.png')
-    plot_performance_heatmap(df_eval, f'{figures_dir}/heatmap_qe_ratio.png')
-    plot_stability_boxplot(df_eval, f'{figures_dir}/boxplot_latency.png')
-    plot_correlation_matrix(df_eval, f'{figures_dir}/correlation_matrix.png')
-    
-    print(f"  生成 7 张图表")
-    
-    # 6. 生成报告
-    print("\n[6/7] 生成分析报告...")
-    generate_markdown_report(df_eval, summary_stats, f'{experiment_dir}/report.md')
-    
-    # 7. 数据质量检查
-    print("\n[7/7] 数据质量检查...")
-    issues = validate_experiment_data(experiment_dir)
-    if issues:
-        print("  发现问题:")
-        for issue in issues:
-            print(f"    - {issue}")
-    else:
-        print("  数据质量检查通过")
-    
-    print("\n" + "=" * 60)
-    print("分析管线完成！")
-    print("=" * 60)
-    print(f"\n结果位置:")
-    print(f"  - 汇总统计: {experiment_dir}/summary/stats.csv")
-    print(f"  - 评估结果: {experiment_dir}/summary/results.csv")
-    print(f"  - 可视化图表: {experiment_dir}/figures/")
-    print(f"  - 分析报告: {experiment_dir}/report.md")
-
-# 使用示例
-complete_analysis_pipeline('data/experiments_5')
-```
 
 ### 8.7 使用说明
 
 **运行完整分析**：
-
-```bash
-# 激活环境
-conda activate bartscore
-
-# 设置编码
-set PYTHONUTF8=1
-
-# 运行分析脚本
-python scripts/analyze_experiments.py --experiment-dir data/experiments_5
-```
 
 **输出文件结构**：
 
@@ -3167,21 +1289,6 @@ data/experiments_5/
 ```
 
 **自定义分析**：
-
-```python
-# 加载数据
-df = pd.read_csv('data/experiments_5/summary/results.csv')
-
-# 自定义筛选
-df_qwen = df[df['model'].str.contains('qwen')]
-
-# 自定义可视化
-plt.figure(figsize=(10, 6))
-sns.scatterplot(data=df_qwen, x='e_token_j', y='quality_score', hue='task_type')
-plt.title('Qwen 模型能耗 vs 质量')
-plt.show()
-```
-
 
 ## 9. 实验注意事项
 
@@ -3245,26 +1352,7 @@ Get-WmiObject Win32_Processor | Select-Object Name, CurrentClockSpeed, MaxClockS
    - 任务间冷却至少 30 秒
    - 模型间冷却至少 5 分钟
 
-**温度检查脚本**：
 
-```python
-import pynvml
-
-pynvml.nvmlInit()
-handle = pynvml.nvmlDeviceGetHandleByIndex(0)
-
-temp = pynvml.nvmlDeviceGetTemperature(handle, pynvml.NVML_TEMPERATURE_GPU)
-print(f"当前 GPU 温度: {temp}°C")
-
-if temp > 50:
-    print("警告：GPU 温度过高，建议等待冷却")
-elif temp > 85:
-    print("严重警告：GPU 温度过高，立即停止实验")
-else:
-    print("温度正常，可以开始实验")
-
-pynvml.nvmlShutdown()
-```
 
 
 ### 9.2 软件环境控制
@@ -3373,81 +1461,7 @@ python -c "import torch; print(f'CUDA available: {torch.cuda.is_available()}')"
 
 **时间同步验证**：
 
-```python
-import time
-import json
-
-# 记录事件
-event_time = time.time()
-print(f"事件时间戳: {event_time}")
-
-# 验证监控数据时间戳
-monitor_time = monitor.timestamps[-1] if monitor.timestamps else 0
-print(f"监控时间戳: {monitor_time}")
-
-# 时间差应小于 1 秒
-time_diff = abs(event_time - monitor_time)
-if time_diff > 1.0:
-    print(f"警告：时间戳不同步，差异 {time_diff:.3f} 秒")
-```
-
 #### 9.3.2 数据完整性检查
-
-**实验后验证**：
-
-```python
-def validate_experiment_data(experiment_id):
-    """验证实验数据完整性"""
-    issues = []
-    
-    # 1. 检查文件存在
-    required_files = [
-        f"logs/experiments_N/{experiment_id}_monitor.json",
-        f"logs/experiments_N/{experiment_id}_events.json",
-        f"data/experiments_N/raw/{model_name}/{experiment_id}_results.json"
-    ]
-    
-    for file in required_files:
-        if not os.path.exists(file):
-            issues.append(f"缺失文件: {file}")
-    
-    # 2. 检查监控数据
-    with open(f"logs/experiments_N/{experiment_id}_monitor.json") as f:
-        monitor_data = json.load(f)
-    
-    if len(monitor_data['timestamps']) < 10:
-        issues.append("监控采样点不足")
-    
-    if not monitor_data.get('gpu_power_w'):
-        issues.append("GPU 功耗数据缺失")
-    
-    # 3. 检查事件日志
-    with open(f"logs/experiments_N/{experiment_id}_events.json") as f:
-        events = json.load(f)
-    
-    required_events = ['experiment_start', 'monitoring_start', 'experiment_end']
-    for event_name in required_events:
-        if not any(e['event'] == event_name for e in events):
-            issues.append(f"缺失事件: {event_name}")
-    
-    # 4. 检查时间戳对齐
-    t_start = next(e['timestamp'] for e in events if e['event'] == 'experiment_start')
-    t_monitor_start = monitor_data['timestamps'][0]
-    
-    if abs(t_start - t_monitor_start) > 5.0:
-        issues.append(f"时间戳不对齐: 差异 {abs(t_start - t_monitor_start):.2f} 秒")
-    
-    return issues
-
-# 使用示例
-issues = validate_experiment_data(experiment_id)
-if issues:
-    print("数据完整性问题:")
-    for issue in issues:
-        print(f"  - {issue}")
-else:
-    print("数据完整性检查通过")
-```
 
 
 ### 9.4 异常处理与质量控制
@@ -3455,40 +1469,6 @@ else:
 #### 9.4.1 功耗异常检测
 
 **3σ 原则**：
-
-```python
-import numpy as np
-
-def detect_power_anomalies(monitor_data, threshold=3):
-    """检测功耗异常值"""
-    gpu_power = np.array(monitor_data['gpu_power_w'])
-    
-    mean_power = np.mean(gpu_power)
-    std_power = np.std(gpu_power)
-    
-    # 3σ 阈值
-    lower_bound = mean_power - threshold * std_power
-    upper_bound = mean_power + threshold * std_power
-    
-    anomalies = (gpu_power < lower_bound) | (gpu_power > upper_bound)
-    anomaly_ratio = np.sum(anomalies) / len(gpu_power)
-    
-    print(f"平均功耗: {mean_power:.2f} W")
-    print(f"标准差: {std_power:.2f} W")
-    print(f"异常点比例: {anomaly_ratio*100:.2f}%")
-    
-    if anomaly_ratio > 0.05:  # 超过 5% 异常
-        print("警告：功耗波动异常，建议重新运行实验")
-        return True
-    
-    return False
-
-# 使用示例
-with open(f"logs/experiments_N/{experiment_id}_monitor.json") as f:
-    monitor_data = json.load(f)
-
-is_anomalous = detect_power_anomalies(monitor_data)
-```
 
 #### 9.4.2 实验重跑策略
 
@@ -3500,82 +1480,10 @@ is_anomalous = detect_power_anomalies(monitor_data)
 4. **时间戳错误**：时间戳不对齐 > 5 秒
 5. **推理失败**：模型返回错误或空响应
 
-**重跑脚本**：
-
-```python
-def should_rerun_experiment(experiment_id, model_name):
-    """判断是否需要重跑实验"""
-    reasons = []
-    
-    # 加载数据
-    with open(f"logs/experiments_N/{experiment_id}_monitor.json") as f:
-        monitor_data = json.load(f)
-    
-    # 检查功耗异常
-    if detect_power_anomalies(monitor_data):
-        reasons.append("功耗波动异常")
-    
-    # 检查温度
-    summary = monitor_data.get('summary', {})
-    if summary.get('gpu_temp_peak_c', 0) > 90:
-        reasons.append(f"温度过高: {summary['gpu_temp_peak_c']:.1f}°C")
-    
-    # 检查数据完整性
-    issues = validate_experiment_data(experiment_id)
-    if issues:
-        reasons.extend(issues)
-    
-    if reasons:
-        print(f"\n实验 {experiment_id} 需要重跑:")
-        for reason in reasons:
-            print(f"  - {reason}")
-        return True
-    
-    print(f"\n实验 {experiment_id} 质量合格")
-    return False
-```
 
 #### 9.4.3 实验日志记录
 
 **详细日志**：
-
-```python
-import logging
-from datetime import datetime
-
-# 配置日志
-log_file = f"logs/experiments_N/experiment_{datetime.now().strftime('%Y%m%d_%H%M%S')}.log"
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(levelname)s - %(message)s',
-    handlers=[
-        logging.FileHandler(log_file, encoding='utf-8'),
-        logging.StreamHandler()
-    ]
-)
-
-logger = logging.getLogger(__name__)
-
-# 记录实验信息
-logger.info(f"开始实验: {experiment_id}")
-logger.info(f"模型: {model_name}")
-logger.info(f"GPU 温度: {initial_temp}°C")
-logger.info(f"空闲功耗: {p_idle:.2f} W")
-
-# 记录异常
-try:
-    # 实验代码
-    pass
-except Exception as e:
-    logger.error(f"实验失败: {str(e)}", exc_info=True)
-    raise
-
-# 记录完成
-logger.info(f"实验完成: {experiment_id}")
-logger.info(f"总时间: {total_time:.2f} s")
-logger.info(f"平均功耗: {avg_power:.2f} W")
-```
-
 
 ### 9.5 资源优化与实验规划
 
@@ -3608,69 +1516,10 @@ logger.info(f"平均功耗: {avg_power:.2f} W")
 
 **时间估算**：
 
-```python
-def estimate_experiment_time(n_models, n_tasks, n_repeats, avg_latency_s=5):
-    """估算实验总时间"""
-    # 任务时间
-    task_time = n_models * n_tasks * n_repeats * avg_latency_s
-    
-    # 冷却时间（任务间 30s，模型间 300s）
-    cooldown_time = n_models * n_tasks * n_repeats * 30 + n_models * 300
-    
-    # 预热和基线测量（每个模型 5 分钟）
-    warmup_time = n_models * 300
-    
-    total_time_s = task_time + cooldown_time + warmup_time
-    total_time_h = total_time_s / 3600
-    
-    print(f"估算实验时间:")
-    print(f"  任务执行: {task_time/3600:.2f} 小时")
-    print(f"  冷却等待: {cooldown_time/3600:.2f} 小时")
-    print(f"  预热基线: {warmup_time/3600:.2f} 小时")
-    print(f"  总计: {total_time_h:.2f} 小时 ({total_time_h/24:.2f} 天)")
-    
-    return total_time_h
-
-# 阶段 1 估算
-print("=== 阶段 1：基线实验 ===")
-estimate_experiment_time(n_models=4, n_tasks=8, n_repeats=3, avg_latency_s=5)
-
-# 阶段 2 估算
-print("\n=== 阶段 2：扩展实验 ===")
-estimate_experiment_time(n_models=3, n_tasks=4, n_repeats=3, avg_latency_s=5)
-```
-
 #### 9.5.2 磁盘空间管理
 
 **数据存储规划**：
 
-```python
-def estimate_storage_requirements(n_experiments, avg_response_tokens=200):
-    """估算存储需求"""
-    # 每个实验的数据量
-    monitor_json = 0.5  # MB（5Hz × 300s × 多字段）
-    events_json = 0.01  # MB
-    results_json = avg_response_tokens * 4 / 1024 / 1024  # MB（UTF-8 编码）
-    texts = avg_response_tokens * 4 / 1024 / 1024  # MB
-    
-    per_experiment_mb = monitor_json + events_json + results_json + texts
-    total_mb = per_experiment_mb * n_experiments
-    
-    print(f"单次实验数据量: {per_experiment_mb:.2f} MB")
-    print(f"总数据量（{n_experiments} 次实验）: {total_mb:.2f} MB ({total_mb/1024:.2f} GB)")
-    
-    # 加上汇总和图表
-    summary_mb = 10  # CSV + 图表
-    total_with_summary = total_mb + summary_mb
-    
-    print(f"包含汇总和图表: {total_with_summary:.2f} MB ({total_with_summary/1024:.2f} GB)")
-    
-    return total_with_summary
-
-# 估算阶段 1
-print("=== 阶段 1 存储需求 ===")
-estimate_storage_requirements(n_experiments=4*8*3)  # 96 次实验
-```
 
 **清理策略**：
 
@@ -3698,23 +1547,7 @@ rm -rf data/experiments_*/texts/*.txt  # 保留 JSON 即可
    - 关闭"电池保护模式"
    - 关闭"智能充电"
 
-3. **验证电源状态**：
-
-```python
-import psutil
-
-battery = psutil.sensors_battery()
-if battery:
-    if not battery.power_plugged:
-        print("错误：未连接电源适配器！")
-        print("请插入电源后再运行实验")
-        exit(1)
-    else:
-        print(f"电源已连接，电池电量: {battery.percent}%")
-else:
-    print("无法检测电池状态（可能是台式机）")
-```
-
+  
 #### 9.6.2 显卡切换（双显卡笔记本）
 
 **确保使用独立显卡**：
@@ -3727,87 +1560,14 @@ else:
 
 2. **验证当前 GPU**：
 
-```python
-import torch
-
-if torch.cuda.is_available():
-    print(f"CUDA 设备: {torch.cuda.get_device_name(0)}")
-    print(f"CUDA 版本: {torch.version.cuda}")
-else:
-    print("警告：CUDA 不可用，可能使用集成显卡")
-```
 
 #### 9.6.3 散热与节流监控
 
 **实时监控温度和频率**：
 
-```python
-import pynvml
-import time
-
-def monitor_thermal_throttling(duration=60):
-    """监控热节流"""
-    pynvml.nvmlInit()
-    handle = pynvml.nvmlDeviceGetHandleByIndex(0)
-    
-    print("监控热节流（60 秒）...")
-    throttle_detected = False
-    
-    for i in range(duration):
-        temp = pynvml.nvmlDeviceGetTemperature(handle, pynvml.NVML_TEMPERATURE_GPU)
-        clock = pynvml.nvmlDeviceGetClockInfo(handle, pynvml.NVML_CLOCK_GRAPHICS)
-        
-        # 检测降频（假设基础频率 1500 MHz）
-        if clock < 1200:
-            print(f"[{i}s] 警告：GPU 降频 {clock} MHz，温度 {temp}°C")
-            throttle_detected = True
-        
-        time.sleep(1)
-    
-    pynvml.nvmlShutdown()
-    
-    if throttle_detected:
-        print("\n检测到热节流，建议：")
-        print("  1. 改善散热（使用散热底座）")
-        print("  2. 降低环境温度")
-        print("  3. 延长任务间冷却时间")
-    else:
-        print("\n未检测到热节流，散热良好")
-
-# 实验前运行
-monitor_thermal_throttling(duration=60)
-```
-
 #### 9.6.4 内存管理
 
 **避免内存不足**：
-
-```python
-import psutil
-
-def check_memory_availability(required_gb=4):
-    """检查可用内存"""
-    mem = psutil.virtual_memory()
-    available_gb = mem.available / (1024**3)
-    
-    print(f"总内存: {mem.total / (1024**3):.2f} GB")
-    print(f"可用内存: {available_gb:.2f} GB")
-    print(f"内存使用率: {mem.percent}%")
-    
-    if available_gb < required_gb:
-        print(f"\n警告：可用内存不足 {required_gb} GB")
-        print("建议关闭其他应用程序")
-        return False
-    
-    return True
-
-# 实验前检查
-if not check_memory_availability(required_gb=4):
-    print("请释放内存后再运行实验")
-    exit(1)
-```
-
-
 
 ## 10. 预期输出与价值
 

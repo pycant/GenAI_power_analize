@@ -41,9 +41,22 @@
 - conda 环境：bartscore，Python 3.10
 - Python：3.8+
 - ollama信息：Ollama 0.13.2，服务运行中，API http://localhost:11434/，可用模型：deepseek-r1:8b（约5.2GB，Q4_K_M）、gemma3:4b（约3.3GB，Q4_K_M）、qwen3:8b（约5.2GB，Q4_K_M）、qwen3:4b（约2.5GB，Q4_K_M）
+- HuggingFace 模型信息：
+  - 存储位置：models/huggingface/
+  - 模型注册表：models/model_registry.json
+  - 推荐模型（按优先级）：
+    - 小型模型（4-8GB显存）：Qwen/Qwen2.5-3B-Instruct、microsoft/phi-3-mini-4k-instruct、google/gemma-2b-it
+    - 中型模型（6-8GB显存，4bit量化）：Qwen/Qwen2.5-7B-Instruct、meta-llama/Llama-3.2-7B-Instruct、mistralai/Mistral-7B-Instruct-v0.3
+    - 大型模型（12-16GB显存，4bit量化）：Qwen/Qwen2.5-14B-Instruct、meta-llama/Llama-3.1-13B-Instruct
+    - 专用模型：Qwen/Qwen2.5-Coder-7B-Instruct（代码生成）、deepseek-ai/deepseek-coder-6.7b-instruct（代码生成）
+  - 配置文件：configs/models_to_download.yaml
+  - 管理脚本：scripts/manage_models.py、scripts/download_hf_model.py、scripts/batch_download_models.py
+  - 加载器：src/model_deployment/hf_loader.py
+  - 环境变量：HF_TOKEN（访问受限模型）、HF_HOME（缓存目录）
 - 包依赖：
   - pandas、numpy、matplotlib、seaborn、tabulate
- 
+  - transformers、torch、accelerate、bitsandbytes（HuggingFace模型）
+
  - 字体与中文显示：
   - 脚本自动检测系统中文字体并优先使用 Microsoft YaHei，若缺失则回退英文标签
   - 终端中文输出采用 UTF-8，避免乱码

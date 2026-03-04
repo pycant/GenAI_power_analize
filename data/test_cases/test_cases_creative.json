@@ -1,0 +1,75 @@
+{
+  "metadata": {
+    "task_type": "creative",
+    "count": 6,
+    "created_date": "2026-03-02"
+  },
+  "tasks": [
+    {
+      "id": "creative_001",
+      "task_type": "creative",
+      "difficulty": "medium",
+      "language": "zh",
+      "prompt": "请续写以下故事开头（100-200 字）：\n\n夜幕降临，小镇的街道上空无一人。突然，一道刺眼的光芒从天而降...",
+      "temperature": 0.8,
+      "max_tokens": 300,
+      "repeat": 5,
+      "source": "manual"
+    },
+    {
+      "id": "creative_002",
+      "task_type": "creative",
+      "difficulty": "medium",
+      "language": "zh",
+      "prompt": "请以\"春天\"为主题，创作一首现代诗（4-8 行）。",
+      "temperature": 0.8,
+      "max_tokens": 200,
+      "repeat": 5,
+      "source": "manual"
+    },
+    {
+      "id": "creative_003",
+      "task_type": "creative",
+      "difficulty": "medium",
+      "language": "zh",
+      "prompt": "为一款新型智能手表撰写广告文案（50-100 字），突出其健康监测功能。",
+      "temperature": 0.8,
+      "max_tokens": 150,
+      "repeat": 5,
+      "source": "manual"
+    },
+    {
+      "id": "creative_004",
+      "task_type": "creative",
+      "difficulty": "easy",
+      "language": "zh",
+      "prompt": "用拟人的手法描写一朵花的一天（80-150 字）。",
+      "temperature": 0.8,
+      "max_tokens": 250,
+      "repeat": 5,
+      "source": "manual"
+    },
+    {
+      "id": "creative_005",
+      "task_type": "creative",
+      "difficulty": "hard",
+      "language": "zh",
+      "prompt": "以\"时间旅行者的困境\"为题，写一个微型科幻故事（150-250 字）。",
+      "temperature": 0.9,
+      "max_tokens": 400,
+      "repeat": 5,
+      "source": "manual"
+    },
+    {
+      "id": "creative_006",
+      "task_type": "creative",
+      "difficulty": "medium",
+      "language": "zh",
+      "prompt": "为一家咖啡店设计一句朗朗上口的宣传标语（10-20 字）。",
+      "temperature": 0.8,
+      "max_tokens": 100,
+      "repeat": 5,
+      "source": "manual"
+    }
+  ]
+}

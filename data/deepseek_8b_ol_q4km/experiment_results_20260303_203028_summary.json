@@ -1,0 +1,2701 @@
+[
+  {
+    "experiment_id": "exp_20260303_203028_2759390320288",
+    "config_ref": {
+      "model": "Ollama:deepseek-r1:8b",
+      "task_type": "code",
+      "prompts_count": 1,
+      "keep_context": false,
+      "per_turn_monitoring": false
+    },
+    "baseline_summary": null,
+    "performance": {
+      "total_time_seconds": 18.582202911376953,
+      "token_count": 680,
+      "output_tokens": 680,
+      "throughput_tokens_per_sec": 36.59415426917279,
+      "latency_per_token_ms": 27.32676898731905,
+      "turns": 1,
+      "avg_time_per_turn": 18.582202911376953,
+      "ttft_seconds": 8.273946285247803
+    },
+    "resources": {
+      "cpu_percent_avg": 10.726136363636364,
+      "cpu_percent_peak": 37.3,
+      "cpu_percent_std": 6.198175947189144,
+      "mem_used_avg_mb": 9612.993119673296,
+      "mem_used_peak_mb": 9792.125,
+      "gpu_util_avg": 77.01136363636364,
+      "gpu_util_peak": 95,
+      "gpu_util_std": 31.88847551808911,
+      "gpu_mem_avg_mb": 5317.202769886364,
+      "gpu_mem_peak_mb": 5688.6171875,
+      "gpu_power_avg_w": 74.49734090909091,
+      "gpu_power_peak_w": 90.11,
+      "gpu_power_std_w": 30.013554725280667,
+      "gpu_energy_j": 1387.4209912241702,
+      "gpu_temp_avg_c": 47.84090909090909,
+      "gpu_temp_peak_c": 54,
+      "cpu_energy_j_approx": 90.70185671210295
+    },
+    "derived_metrics": {},
+    "quality": {
+      "bartscore": null,
+      "generated_text_length": 1866,
+      "has_reference": false,
+      "avg_response_length": 1866.0
+    },
+    "conversation_summary": [
+      {
+        "turn": 1,
+        "prompt_preview": "\ndef multiply(a, b):\n    \"\"\"Complete the function ...",
+        "response_preview": "To solve this problem, we need to create a function that takes two integers and returns the product ...",
+        "response_length": 1866,
+        "duration_seconds": 18.254858255386353,
+        "tokens": 680,
+        "throughput": 37.25035771227402
+      }
+    ],
+    "metadata": {
+      "timestamp": "2026-03-03T20:30:47.017268",
+      "analysis_version": "1.0",
+      "max_tokens": 1200,
+      "temperature": 0.1,
+      "top_p": 0.9
+    }
+  },
+  {
+    "experiment_id": "exp_20260303_203049_2759390320288",
+    "config_ref": {
+      "model": "Ollama:deepseek-r1:8b",
+      "task_type": "code",
+      "prompts_count": 1,
+      "keep_context": false,
+      "per_turn_monitoring": false
+    },
+    "baseline_summary": null,
+    "performance": {
+      "total_time_seconds": 15.195911407470703,
+      "token_count": 640,
+      "output_tokens": 640,
+      "throughput_tokens_per_sec": 42.11659194626256,
+      "latency_per_token_ms": 23.743611574172974,
+      "turns": 1,
+      "avg_time_per_turn": 15.195911407470703,
+      "ttft_seconds": null
+    },
+    "resources": {
+      "cpu_percent_avg": 9.145205479452057,
+      "cpu_percent_peak": 18.7,
+      "cpu_percent_std": 3.0968849172442474,
+      "mem_used_avg_mb": 9682.46281035959,
+      "mem_used_peak_mb": 9719.00390625,
+      "gpu_util_avg": 87.20547945205479,
+      "gpu_util_peak": 100,
+      "gpu_util_std": 23.68049825009739,
+      "gpu_mem_avg_mb": 5690.562392979452,
+      "gpu_mem_peak_mb": 5690.6171875,
+      "gpu_power_avg_w": 80.01702739726028,
+      "gpu_power_peak_w": 91.339,
+      "gpu_power_std_w": 23.20733347957335,
+      "gpu_energy_j": 1227.8423734190465,
+      "gpu_temp_avg_c": 53.26027397260274,
+      "gpu_temp_peak_c": 56,
+      "cpu_energy_j_approx": 63.0250025331974
+    },
+    "derived_metrics": {},
+    "quality": {
+      "bartscore": null,
+      "generated_text_length": 2831,
+      "has_reference": false,
+      "avg_response_length": 2831.0
+    },
+    "conversation_summary": [
+      {
+        "turn": 1,
+        "prompt_preview": "\n\ndef triples_sum_to_zero(l: list):\n    \"\"\"\n    tr...",
+        "response_preview": "We are going to check for three distinct elements that sum to zero.\n Since the list can have duplica...",
+        "response_length": 2831,
+        "duration_seconds": 14.86117434501648,
+        "tokens": 640,
+        "throughput": 43.065237318517596
+      }
+    ],
+    "metadata": {
+      "timestamp": "2026-03-03T20:31:04.427906",
+      "analysis_version": "1.0",
+      "max_tokens": 640,
+      "temperature": 0.1,
+      "top_p": 0.9
+    }
+  },
+  {
+    "experiment_id": "exp_20260303_203106_2759390320288",
+    "config_ref": {
+      "model": "Ollama:deepseek-r1:8b",
+      "task_type": "code",
+      "prompts_count": 1,
+      "keep_context": false,
+      "per_turn_monitoring": false
+    },
+    "baseline_summary": null,
+    "performance": {
+      "total_time_seconds": 15.174443483352661,
+      "token_count": 640,
+      "output_tokens": 640,
+      "throughput_tokens_per_sec": 42.17617606221415,
+      "latency_per_token_ms": 23.710067942738533,
+      "turns": 1,
+      "avg_time_per_turn": 15.174443483352661,
+      "ttft_seconds": null
+    },
+    "resources": {
+      "cpu_percent_avg": 8.972602739726028,
+      "cpu_percent_peak": 16.4,
+      "cpu_percent_std": 3.0360960997827102,
+      "mem_used_avg_mb": 9738.135380993152,
+      "mem_used_peak_mb": 9762.52734375,
+      "gpu_util_avg": 88.38356164383562,
+      "gpu_util_peak": 95,
+      "gpu_util_std": 21.29674882704786,
+      "gpu_mem_avg_mb": 5690.6171875,
+      "gpu_mem_peak_mb": 5690.6171875,
+      "gpu_power_avg_w": 81.72254794520549,
+      "gpu_power_peak_w": 97.514,
+      "gpu_power_std_w": 22.80114974873284,
+      "gpu_energy_j": 1247.139268784642,
+      "gpu_temp_avg_c": 55.19178082191781,
+      "gpu_temp_peak_c": 58,
+      "cpu_energy_j_approx": 62.129207233786566
+    },
+    "derived_metrics": {},
+    "quality": {
+      "bartscore": null,
+      "generated_text_length": 2451,
+      "has_reference": false,
+      "avg_response_length": 2451.0
+    },
+    "conversation_summary": [
+      {
+        "turn": 1,
+        "prompt_preview": "from typing import List\n\n\ndef separate_paren_group...",
+        "response_preview": "We are going to remove all spaces from the input string.\n Then, we traverse the string and use a sta...",
+        "response_length": 2451,
+        "duration_seconds": 14.794588088989258,
+        "tokens": 640,
+        "throughput": 43.259061769777446
+      }
+    ],
+    "metadata": {
+      "timestamp": "2026-03-03T20:31:21.824919",
+      "analysis_version": "1.0",
+      "max_tokens": 640,
+      "temperature": 0.1,
+      "top_p": 0.9
+    }
+  },
+  {
+    "experiment_id": "exp_20260303_203123_2759390320288",
+    "config_ref": {
+      "model": "Ollama:deepseek-r1:8b",
+      "task_type": "code",
+      "prompts_count": 1,
+      "keep_context": false,
+      "per_turn_monitoring": false
+    },
+    "baseline_summary": null,
+    "performance": {
+      "total_time_seconds": 18.77617621421814,
+      "token_count": 800,
+      "output_tokens": 800,
+      "throughput_tokens_per_sec": 42.607184278245384,
+      "latency_per_token_ms": 23.470220267772675,
+      "turns": 1,
+      "avg_time_per_turn": 18.77617621421814,
+      "ttft_seconds": 7.784754276275635
+    },
+    "resources": {
+      "cpu_percent_avg": 9.475555555555557,
+      "cpu_percent_peak": 20.7,
+      "cpu_percent_std": 3.1944852171311005,
+      "mem_used_avg_mb": 9719.16796875,
+      "mem_used_peak_mb": 9775.9140625,
+      "gpu_util_avg": 91.57777777777778,
+      "gpu_util_peak": 100,
+      "gpu_util_std": 13.884425949624898,
+      "gpu_mem_avg_mb": 5690.6171875,
+      "gpu_mem_peak_mb": 5690.6171875,
+      "gpu_power_avg_w": 83.22172222222221,
+      "gpu_power_peak_w": 92.317,
+      "gpu_power_std_w": 21.22645659078823,
+      "gpu_energy_j": 1571.7011238927837,
+      "gpu_temp_avg_c": 56.733333333333334,
+      "gpu_temp_peak_c": 59,
+      "cpu_energy_j_approx": 80.60579222738745
+    },
+    "derived_metrics": {},
+    "quality": {
+      "bartscore": null,
+      "generated_text_length": 1958,
+      "has_reference": false,
+      "avg_response_length": 1958.0
+    },
+    "conversation_summary": [
+      {
+        "turn": 1,
+        "prompt_preview": "\ndef triangle_area(a, b, c):\n    '''\n    Given the...",
+        "response_preview": "To solve this problem, we need to determine if three given side lengths form a valid triangle and, i...",
+        "response_length": 1958,
+        "duration_seconds": 18.348092079162598,
+        "tokens": 800,
+        "throughput": 43.6012636381162
+      }
+    ],
+    "metadata": {
+      "timestamp": "2026-03-03T20:31:42.827116",
+      "analysis_version": "1.0",
+      "max_tokens": 800,
+      "temperature": 0.1,
+      "top_p": 0.9
+    }
+  },
+  {
+    "experiment_id": "exp_20260303_203144_2759390320288",
+    "config_ref": {
+      "model": "Ollama:deepseek-r1:8b",
+      "task_type": "code",
+      "prompts_count": 1,
+      "keep_context": false,
+      "per_turn_monitoring": false
+    },
+    "baseline_summary": null,
+    "performance": {
+      "total_time_seconds": 18.909351348876953,
+      "token_count": 800,
+      "output_tokens": 800,
+      "throughput_tokens_per_sec": 42.3071096009601,
+      "latency_per_token_ms": 23.63668918609619,
+      "turns": 1,
+      "avg_time_per_turn": 18.909351348876953,
+      "ttft_seconds": null
+    },
+    "resources": {
+      "cpu_percent_avg": 9.113333333333333,
+      "cpu_percent_peak": 24.8,
+      "cpu_percent_std": 3.5952808575192625,
+      "mem_used_avg_mb": 9715.630598958332,
+      "mem_used_peak_mb": 9755.05859375,
+      "gpu_util_avg": 90.6,
+      "gpu_util_peak": 100,
+      "gpu_util_std": 16.877203559831823,
+      "gpu_mem_avg_mb": 5690.6171875,
+      "gpu_mem_peak_mb": 5690.6171875,
+      "gpu_power_avg_w": 83.61085555555556,
+      "gpu_power_peak_w": 92.932,
+      "gpu_power_std_w": 21.496812826587995,
+      "gpu_energy_j": 1591.895764991403,
+      "gpu_temp_avg_c": 58.022222222222226,
+      "gpu_temp_peak_c": 60,
+      "cpu_energy_j_approx": 78.29928181171421
+    },
+    "derived_metrics": {},
+    "quality": {
+      "bartscore": null,
+      "generated_text_length": 2305,
+      "has_reference": false,
+      "avg_response_length": 2305.0
+    },
+    "conversation_summary": [
+      {
+        "turn": 1,
+        "prompt_preview": "\ndef get_row(lst, x):\n    \"\"\"\n    You are given a ...",
+        "response_preview": "We are given a nested list `lst` and an integer `x`\n We need to find all occurrences of `x` in the l...",
+        "response_length": 2305,
+        "duration_seconds": 18.445546627044678,
+        "tokens": 800,
+        "throughput": 43.370902265756
+      }
+    ],
+    "metadata": {
+      "timestamp": "2026-03-03T20:32:03.964806",
+      "analysis_version": "1.0",
+      "max_tokens": 800,
+      "temperature": 0.1,
+      "top_p": 0.9
+    }
+  },
+  {
+    "experiment_id": "exp_20260303_203205_2759390320288",
+    "config_ref": {
+      "model": "Ollama:deepseek-r1:8b",
+      "task_type": "creative",
+      "prompts_count": 1,
+      "keep_context": false,
+      "per_turn_monitoring": false
+    },
+    "baseline_summary": null,
+    "performance": {
+      "total_time_seconds": 9.50951862335205,
+      "token_count": 383,
+      "output_tokens": 383,
+      "throughput_tokens_per_sec": 40.27543508453582,
+      "latency_per_token_ms": 24.829030348177678,
+      "turns": 1,
+      "avg_time_per_turn": 9.50951862335205,
+      "ttft_seconds": 8.206652641296387
+    },
+    "resources": {
+      "cpu_percent_avg": 8.673913043478262,
+      "cpu_percent_peak": 19.0,
+      "cpu_percent_std": 3.035330709194254,
+      "mem_used_avg_mb": 9761.953209918478,
+      "mem_used_peak_mb": 9776.53125,
+      "gpu_util_avg": 84.93478260869566,
+      "gpu_util_peak": 95,
+      "gpu_util_std": 26.223456288890482,
+      "gpu_mem_avg_mb": 5690.6171875,
+      "gpu_mem_peak_mb": 5690.6171875,
+      "gpu_power_avg_w": 75.48904347826087,
+      "gpu_power_peak_w": 91.904,
+      "gpu_power_std_w": 27.81745046764438,
+      "gpu_energy_j": 721.1956429157257,
+      "gpu_temp_avg_c": 57.630434782608695,
+      "gpu_temp_peak_c": 60,
+      "cpu_energy_j_approx": 37.72546914696693
+    },
+    "derived_metrics": {},
+    "quality": {
+      "bartscore": null,
+      "generated_text_length": 56,
+      "has_reference": false,
+      "avg_response_length": 56.0
+    },
+    "conversation_summary": [
+      {
+        "turn": 1,
+        "prompt_preview": "请以\"春天\"为主题，创作一首现代诗（4-8 行）。",
+        "response_preview": "## 《春意》\n\n融化的是冰川不是春天\n在光的上游\n柳枝弯腰探视暗涌的光痕\n我伸出手——细雨正轻轻触碰\n我的掌心",
+        "response_length": 56,
+        "duration_seconds": 9.191803216934204,
+        "tokens": 383,
+        "throughput": 41.667558689071264
+      }
+    ],
+    "metadata": {
+      "timestamp": "2026-03-03T20:32:15.694589",
+      "analysis_version": "1.0",
+      "max_tokens": 500,
+      "temperature": 0.8,
+      "top_p": 0.9
+    }
+  },
+  {
+    "experiment_id": "exp_20260303_203217_2759390320288",
+    "config_ref": {
+      "model": "Ollama:deepseek-r1:8b",
+      "task_type": "creative",
+      "prompts_count": 1,
+      "keep_context": false,
+      "per_turn_monitoring": false
+    },
+    "baseline_summary": null,
+    "performance": {
+      "total_time_seconds": 11.848121404647827,
+      "token_count": 492,
+      "output_tokens": 492,
+      "throughput_tokens_per_sec": 41.52557044250039,
+      "latency_per_token_ms": 24.081547570422412,
+      "turns": 1,
+      "avg_time_per_turn": 11.848121404647827,
+      "ttft_seconds": 8.163229703903198
+    },
+    "resources": {
+      "cpu_percent_avg": 10.156140350877193,
+      "cpu_percent_peak": 19.7,
+      "cpu_percent_std": 3.6217189649396304,
+      "mem_used_avg_mb": 9728.375616776315,
+      "mem_used_peak_mb": 9754.39453125,
+      "gpu_util_avg": 88.43859649122807,
+      "gpu_util_peak": 100,
+      "gpu_util_std": 20.89910393769513,
+      "gpu_mem_avg_mb": 5690.6171875,
+      "gpu_mem_peak_mb": 5690.6171875,
+      "gpu_power_avg_w": 79.7792105263158,
+      "gpu_power_peak_w": 92.699,
+      "gpu_power_std_w": 24.88742418898943,
+      "gpu_energy_j": 952.5488146685362,
+      "gpu_temp_avg_c": 57.8421052631579,
+      "gpu_temp_peak_c": 60,
+      "cpu_energy_j_approx": 54.953638429641714
+    },
+    "derived_metrics": {},
+    "quality": {
+      "bartscore": null,
+      "generated_text_length": 238,
+      "has_reference": false,
+      "avg_response_length": 238.0
+    },
+    "conversation_summary": [
+      {
+        "turn": 1,
+        "prompt_preview": "为一家咖啡店设计一句朗朗上口的宣传标语（10-20 字）。",
+        "response_preview": "好的，这里有几个不同风格的宣传标语供您选择：\n\n1.  **咖啡时光，品味生活。** (简洁、温馨，点明享受)\n2.  **香醇滋味，唤醒味蕾。** (突出口感，动感一些)\n3.  **每一杯，都有一...",
+        "response_length": 238,
+        "duration_seconds": 11.465215921401978,
+        "tokens": 492,
+        "throughput": 42.9124059566632
+      }
+    ],
+    "metadata": {
+      "timestamp": "2026-03-03T20:32:29.787906",
+      "analysis_version": "1.0",
+      "max_tokens": 500,
+      "temperature": 0.8,
+      "top_p": 0.9
+    }
+  },
+  {
+    "experiment_id": "exp_20260303_203231_2759390320288",
+    "config_ref": {
+      "model": "Ollama:deepseek-r1:8b",
+      "task_type": "creative",
+      "prompts_count": 1,
+      "keep_context": false,
+      "per_turn_monitoring": false
+    },
+    "baseline_summary": null,
+    "performance": {
+      "total_time_seconds": 12.06808352470398,
+      "token_count": 500,
+      "output_tokens": 500,
+      "throughput_tokens_per_sec": 41.43159922422434,
+      "latency_per_token_ms": 24.13616704940796,
+      "turns": 1,
+      "avg_time_per_turn": 12.06808352470398,
+      "ttft_seconds": null
+    },
+    "resources": {
+      "cpu_percent_avg": 9.250000000000002,
+      "cpu_percent_peak": 17.3,
+      "cpu_percent_std": 2.7973047372611104,
+      "mem_used_avg_mb": 9727.691473599138,
+      "mem_used_peak_mb": 9750.15625,
+      "gpu_util_avg": 84.8103448275862,
+      "gpu_util_peak": 94,
+      "gpu_util_std": 26.16358149093541,
+      "gpu_mem_avg_mb": 5690.6171875,
+      "gpu_mem_peak_mb": 5690.6171875,
+      "gpu_power_avg_w": 79.53353448275861,
+      "gpu_power_peak_w": 92.873,
+      "gpu_power_std_w": 26.56094941127145,
+      "gpu_energy_j": 965.9006110287905,
+      "gpu_temp_avg_c": 58.3448275862069,
+      "gpu_temp_peak_c": 61,
+      "cpu_energy_j_approx": 50.93426156938077
+    },
+    "derived_metrics": {},
+    "quality": {
+      "bartscore": null,
+      "generated_text_length": 765,
+      "has_reference": false,
+      "avg_response_length": 765.0
+    },
+    "conversation_summary": [
+      {
+        "turn": 1,
+        "prompt_preview": "请续写以下故事开头（100-200 字）：\n\n夜幕降临，小镇的街道上空无一人。突然，一道刺眼的光芒从...",
+        "response_preview": "嗯，用户让我续写一个故事开头，主题是夜幕降临时小镇出现神秘光芒。这应该是个奇幻或悬疑类的短篇创作请求，字数要求在100-200字之间。\n\n让我想想，用户可能是个喜欢创作或阅读短篇故事的爱好者，想要一个...",
+        "response_length": 765,
+        "duration_seconds": 11.73615837097168,
+        "tokens": 500,
+        "throughput": 42.60337873734769
+      }
+    ],
+    "metadata": {
+      "timestamp": "2026-03-03T20:32:44.090876",
+      "analysis_version": "1.0",
+      "max_tokens": 500,
+      "temperature": 0.8,
+      "top_p": 0.9
+    }
+  },
+  {
+    "experiment_id": "exp_20260303_203246_2759390320288",
+    "config_ref": {
+      "model": "Ollama:deepseek-r1:8b",
+      "task_type": "creative",
+      "prompts_count": 1,
+      "keep_context": false,
+      "per_turn_monitoring": false
+    },
+    "baseline_summary": null,
+    "performance": {
+      "total_time_seconds": 8.411211252212524,
+      "token_count": 338,
+      "output_tokens": 338,
+      "throughput_tokens_per_sec": 40.184462126199826,
+      "latency_per_token_ms": 24.885240391161314,
+      "turns": 1,
+      "avg_time_per_turn": 8.411211252212524,
+      "ttft_seconds": 6.742807865142822
+    },
+    "resources": {
+      "cpu_percent_avg": 8.339024390243901,
+      "cpu_percent_peak": 13.7,
+      "cpu_percent_std": 2.5141432181473546,
+      "mem_used_avg_mb": 9728.302210365853,
+      "mem_used_peak_mb": 9746.3984375,
+      "gpu_util_avg": 86.53658536585365,
+      "gpu_util_peak": 100,
+      "gpu_util_std": 24.40721360879098,
+      "gpu_mem_avg_mb": 5690.6171875,
+      "gpu_mem_peak_mb": 5690.6171875,
+      "gpu_power_avg_w": 76.17214634146342,
+      "gpu_power_peak_w": 97.544,
+      "gpu_power_std_w": 28.131243577170498,
+      "gpu_energy_j": 643.7691781231165,
+      "gpu_temp_avg_c": 57.78048780487805,
+      "gpu_temp_peak_c": 60,
+      "cpu_energy_j_approx": 32.1597100031376
+    },
+    "derived_metrics": {},
+    "quality": {
+      "bartscore": null,
+      "generated_text_length": 99,
+      "has_reference": false,
+      "avg_response_length": 99.0
+    },
+    "conversation_summary": [
+      {
+        "turn": 1,
+        "prompt_preview": "为一款新型智能手表撰写广告文案（50-100 字），突出其健康监测功能。",
+        "response_preview": "守护健康，从手腕开始！我们的智能手表24小时贴心监测心率、血氧、睡眠，助你随时掌握身体状态。运动时，实时记录数据；休息时，深度分析睡眠质量。智能健康管家，让你的生活更有保障，开启你的智慧健康新生活！",
+        "response_length": 99,
+        "duration_seconds": 8.077725410461426,
+        "tokens": 338,
+        "throughput": 41.843462463115884
+      }
+    ],
+    "metadata": {
+      "timestamp": "2026-03-03T20:32:54.751833",
+      "analysis_version": "1.0",
+      "max_tokens": 500,
+      "temperature": 0.8,
+      "top_p": 0.9
+    }
+  },
+  {
+    "experiment_id": "exp_20260303_203256_2759390320288",
+    "config_ref": {
+      "model": "Ollama:deepseek-r1:8b",
+      "task_type": "creative",
+      "prompts_count": 1,
+      "keep_context": false,
+      "per_turn_monitoring": false
+    },
+    "baseline_summary": null,
+    "performance": {
+      "total_time_seconds": 9.895936489105225,
+      "token_count": 400,
+      "output_tokens": 400,
+      "throughput_tokens_per_sec": 40.42063128036176,
+      "latency_per_token_ms": 24.73984122276306,
+      "turns": 1,
+      "avg_time_per_turn": 9.895936489105225,
+      "ttft_seconds": null
+    },
+    "resources": {
+      "cpu_percent_avg": 10.479166666666666,
+      "cpu_percent_peak": 20.5,
+      "cpu_percent_std": 3.7588760694595345,
+      "mem_used_avg_mb": 9741.293538411459,
+      "mem_used_peak_mb": 9782.1796875,
+      "gpu_util_avg": 89.75,
+      "gpu_util_peak": 100,
+      "gpu_util_std": 18.805473493994597,
+      "gpu_mem_avg_mb": 5690.6171875,
+      "gpu_mem_peak_mb": 5690.6171875,
+      "gpu_power_avg_w": 80.00164583333334,
+      "gpu_power_peak_w": 94.488,
+      "gpu_power_std_w": 25.492539692598942,
+      "gpu_energy_j": 796.4521158936025,
+      "gpu_temp_avg_c": 58.041666666666664,
+      "gpu_temp_peak_c": 61,
+      "cpu_energy_j_approx": 47.603489640355114
+    },
+    "derived_metrics": {},
+    "quality": {
+      "bartscore": null,
+      "generated_text_length": 606,
+      "has_reference": false,
+      "avg_response_length": 606.0
+    },
+    "conversation_summary": [
+      {
+        "turn": 1,
+        "prompt_preview": "用拟人的手法描写一朵花的一天（80-150 字）。",
+        "response_preview": "嗯，用户让我用拟人的手法描写一朵花的一天，字数控制在80到150字之间。这看起来是个很有趣的创作任务，让我好好想想该怎么设计。\n\n用户可能是位学生，老师布置了拟人手法的作业；也可能是文学爱好者，想练习...",
+        "response_length": 606,
+        "duration_seconds": 9.572180271148682,
+        "tokens": 400,
+        "throughput": 41.78776294107541
+      }
+    ],
+    "metadata": {
+      "timestamp": "2026-03-03T20:33:06.881340",
+      "analysis_version": "1.0",
+      "max_tokens": 400,
+      "temperature": 0.8,
+      "top_p": 0.9
+    }
+  },
+  {
+    "experiment_id": "exp_20260303_203308_2759390320288",
+    "config_ref": {
+      "model": "Ollama:deepseek-r1:8b",
+      "task_type": "math",
+      "prompts_count": 1,
+      "keep_context": false,
+      "per_turn_monitoring": false
+    },
+    "baseline_summary": null,
+    "performance": {
+      "total_time_seconds": 9.796154260635376,
+      "token_count": 400,
+      "output_tokens": 400,
+      "throughput_tokens_per_sec": 40.83235005877256,
+      "latency_per_token_ms": 24.49038565158844,
+      "turns": 1,
+      "avg_time_per_turn": 9.796154260635376,
+      "ttft_seconds": null
+    },
+    "resources": {
+      "cpu_percent_avg": 8.827659574468086,
+      "cpu_percent_peak": 13.7,
+      "cpu_percent_std": 2.4310668464215524,
+      "mem_used_avg_mb": 9736.538065159575,
+      "mem_used_peak_mb": 9763.8046875,
+      "gpu_util_avg": 88.1063829787234,
+      "gpu_util_peak": 99,
+      "gpu_util_std": 23.04503827388483,
+      "gpu_mem_avg_mb": 5690.6171875,
+      "gpu_mem_peak_mb": 5690.6171875,
+      "gpu_power_avg_w": 77.34455319148937,
+      "gpu_power_peak_w": 93.76,
+      "gpu_power_std_w": 27.00117964468622,
+      "gpu_energy_j": 769.441123292327,
+      "gpu_temp_avg_c": 58.212765957446805,
+      "gpu_temp_peak_c": 61,
+      "cpu_energy_j_approx": 39.631304034590705
+    },
+    "derived_metrics": {},
+    "quality": {
+      "bartscore": null,
+      "generated_text_length": 1358,
+      "has_reference": true,
+      "avg_response_length": 1358.0
+    },
+    "conversation_summary": [
+      {
+        "turn": 1,
+        "prompt_preview": "To raise money for their class fund, each of the 3...",
+        "response_preview": "I need to find out how much money the class raised from selling lollipops. There are 30 students, an...",
+        "response_length": 1358,
+        "duration_seconds": 9.414550304412842,
+        "tokens": 400,
+        "throughput": 42.48742500345553
+      }
+    ],
+    "metadata": {
+      "timestamp": "2026-03-03T20:33:18.916208",
+      "analysis_version": "1.0",
+      "max_tokens": 400,
+      "temperature": 0.0,
+      "top_p": 0.9
+    }
+  },
+  {
+    "experiment_id": "exp_20260303_203320_2759390320288",
+    "config_ref": {
+      "model": "Ollama:deepseek-r1:8b",
+      "task_type": "math",
+      "prompts_count": 1,
+      "keep_context": false,
+      "per_turn_monitoring": false
+    },
+    "baseline_summary": null,
+    "performance": {
+      "total_time_seconds": 9.748332500457764,
+      "token_count": 400,
+      "output_tokens": 400,
+      "throughput_tokens_per_sec": 41.03265866046493,
+      "latency_per_token_ms": 24.37083125114441,
+      "turns": 1,
+      "avg_time_per_turn": 9.748332500457764,
+      "ttft_seconds": null
+    },
+    "resources": {
+      "cpu_percent_avg": 9.740425531914893,
+      "cpu_percent_peak": 23.1,
+      "cpu_percent_std": 3.971904499209099,
+      "mem_used_avg_mb": 9725.799035904256,
+      "mem_used_peak_mb": 9760.2734375,
+      "gpu_util_avg": 85.59574468085107,
+      "gpu_util_peak": 95,
+      "gpu_util_std": 26.12218391579381,
+      "gpu_mem_avg_mb": 5690.6171875,
+      "gpu_mem_peak_mb": 5690.6171875,
+      "gpu_power_avg_w": 78.28427659574467,
+      "gpu_power_peak_w": 93.091,
+      "gpu_power_std_w": 26.127102189840887,
+      "gpu_energy_j": 767.8798389544487,
+      "gpu_temp_avg_c": 58.5531914893617,
+      "gpu_temp_peak_c": 61,
+      "cpu_energy_j_approx": 43.685812844038004
+    },
+    "derived_metrics": {},
+    "quality": {
+      "bartscore": null,
+      "generated_text_length": 1156,
+      "has_reference": true,
+      "avg_response_length": 1156.0
+    },
+    "conversation_summary": [
+      {
+        "turn": 1,
+        "prompt_preview": "Last year there were 50 students enrolled in a cal...",
+        "response_preview": "The problem states that last year there were 50 students in a calligraphy class, and this year there...",
+        "response_length": 1156,
+        "duration_seconds": 9.372570514678955,
+        "tokens": 400,
+        "throughput": 42.67772639037877
+      }
+    ],
+    "metadata": {
+      "timestamp": "2026-03-03T20:33:30.909213",
+      "analysis_version": "1.0",
+      "max_tokens": 400,
+      "temperature": 0.0,
+      "top_p": 0.9
+    }
+  },
+  {
+    "experiment_id": "exp_20260303_203332_2759390320288",
+    "config_ref": {
+      "model": "Ollama:deepseek-r1:8b",
+      "task_type": "math",
+      "prompts_count": 1,
+      "keep_context": false,
+      "per_turn_monitoring": false
+    },
+    "baseline_summary": null,
+    "performance": {
+      "total_time_seconds": 8.046992778778076,
+      "token_count": 320,
+      "output_tokens": 320,
+      "throughput_tokens_per_sec": 39.76640824680739,
+      "latency_per_token_ms": 25.146852433681488,
+      "turns": 1,
+      "avg_time_per_turn": 8.046992778778076,
+      "ttft_seconds": 7.1312456130981445
+    },
+    "resources": {
+      "cpu_percent_avg": 7.576923076923078,
+      "cpu_percent_peak": 12.4,
+      "cpu_percent_std": 2.5197132049319584,
+      "mem_used_avg_mb": 9684.76782852564,
+      "mem_used_peak_mb": 9735.72265625,
+      "gpu_util_avg": 80.76923076923077,
+      "gpu_util_peak": 94,
+      "gpu_util_std": 29.702336555297823,
+      "gpu_mem_avg_mb": 5690.6171875,
+      "gpu_mem_peak_mb": 5690.6171875,
+      "gpu_power_avg_w": 74.17648717948717,
+      "gpu_power_peak_w": 92.447,
+      "gpu_power_std_w": 28.211484324443067,
+      "gpu_energy_j": 603.0929842444658,
+      "gpu_temp_avg_c": 58.12820512820513,
+      "gpu_temp_peak_c": 61,
+      "cpu_energy_j_approx": 28.174278590083116
+    },
+    "derived_metrics": {},
+    "quality": {
+      "bartscore": null,
+      "generated_text_length": 68,
+      "has_reference": true,
+      "avg_response_length": 68.0
+    },
+    "conversation_summary": [
+      {
+        "turn": 1,
+        "prompt_preview": "Sarah went to buy books from the store and spent $...",
+        "response_preview": "Sarah spent $300 on books at $15 each, so she bought a total of 300 ",
+        "response_length": 68,
+        "duration_seconds": 7.655652284622192,
+        "tokens": 320,
+        "throughput": 41.79918158545154
+      }
+    ],
+    "metadata": {
+      "timestamp": "2026-03-03T20:33:41.188054",
+      "analysis_version": "1.0",
+      "max_tokens": 320,
+      "temperature": 0.0,
+      "top_p": 0.9
+    }
+  },
+  {
+    "experiment_id": "exp_20260303_203343_2759390320288",
+    "config_ref": {
+      "model": "Ollama:deepseek-r1:8b",
+      "task_type": "math",
+      "prompts_count": 1,
+      "keep_context": false,
+      "per_turn_monitoring": false
+    },
+    "baseline_summary": null,
+    "performance": {
+      "total_time_seconds": 14.36962604522705,
+      "token_count": 600,
+      "output_tokens": 600,
+      "throughput_tokens_per_sec": 41.754740040663286,
+      "latency_per_token_ms": 23.949376742045086,
+      "turns": 1,
+      "avg_time_per_turn": 14.36962604522705,
+      "ttft_seconds": null
+    },
+    "resources": {
+      "cpu_percent_avg": 8.185507246376812,
+      "cpu_percent_peak": 13.7,
+      "cpu_percent_std": 2.2590414385225395,
+      "mem_used_avg_mb": 9665.938575634058,
+      "mem_used_peak_mb": 9678.515625,
+      "gpu_util_avg": 88.6086956521739,
+      "gpu_util_peak": 100,
+      "gpu_util_std": 19.762515675766295,
+      "gpu_mem_avg_mb": 5690.6171875,
+      "gpu_mem_peak_mb": 5690.6171875,
+      "gpu_power_avg_w": 82.10292753623192,
+      "gpu_power_peak_w": 94.428,
+      "gpu_power_std_w": 23.463325189873736,
+      "gpu_energy_j": 1186.5538998577595,
+      "gpu_temp_avg_c": 59.15942028985507,
+      "gpu_temp_peak_c": 61,
+      "cpu_energy_j_approx": 53.57848770439624
+    },
+    "derived_metrics": {},
+    "quality": {
+      "bartscore": null,
+      "generated_text_length": 1973,
+      "has_reference": true,
+      "avg_response_length": 1973.0
+    },
+    "conversation_summary": [
+      {
+        "turn": 1,
+        "prompt_preview": "Liam and Mitchell own competing lemonade stands ac...",
+        "response_preview": "I need to find out how much more money Mitchell made compared to Liam. Liam said he made $63, but Mi...",
+        "response_length": 1973,
+        "duration_seconds": 13.910183906555176,
+        "tokens": 600,
+        "throughput": 43.133865377383685
+      }
+    ],
+    "metadata": {
+      "timestamp": "2026-03-03T20:33:57.792782",
+      "analysis_version": "1.0",
+      "max_tokens": 600,
+      "temperature": 0.0,
+      "top_p": 0.9
+    }
+  },
+  {
+    "experiment_id": "exp_20260303_203359_2759390320288",
+    "config_ref": {
+      "model": "Ollama:deepseek-r1:8b",
+      "task_type": "math",
+      "prompts_count": 1,
+      "keep_context": false,
+      "per_turn_monitoring": false
+    },
+    "baseline_summary": null,
+    "performance": {
+      "total_time_seconds": 7.985671281814575,
+      "token_count": 320,
+      "output_tokens": 320,
+      "throughput_tokens_per_sec": 40.07177214127536,
+      "latency_per_token_ms": 24.955222755670547,
+      "turns": 1,
+      "avg_time_per_turn": 7.985671281814575,
+      "ttft_seconds": null
+    },
+    "resources": {
+      "cpu_percent_avg": 8.974358974358974,
+      "cpu_percent_peak": 18.7,
+      "cpu_percent_std": 3.2626651013312875,
+      "mem_used_avg_mb": 9694.914963942309,
+      "mem_used_peak_mb": 9727.88671875,
+      "gpu_util_avg": 84.12820512820512,
+      "gpu_util_peak": 95,
+      "gpu_util_std": 25.368241287271072,
+      "gpu_mem_avg_mb": 5690.6171875,
+      "gpu_mem_peak_mb": 5690.6171875,
+      "gpu_power_avg_w": 76.59071794871797,
+      "gpu_power_peak_w": 93.43,
+      "gpu_power_std_w": 27.859269561677145,
+      "gpu_energy_j": 622.1646196099518,
+      "gpu_temp_avg_c": 58.64102564102564,
+      "gpu_temp_peak_c": 61,
+      "cpu_energy_j_approx": 32.78070143401624
+    },
+    "derived_metrics": {},
+    "quality": {
+      "bartscore": null,
+      "generated_text_length": 871,
+      "has_reference": true,
+      "avg_response_length": 871.0
+    },
+    "conversation_summary": [
+      {
+        "turn": 1,
+        "prompt_preview": "Ted starts with $200. He buys 3 books for 16 dolla...",
+        "response_preview": "Ted starts with $200. He buys 3 books for 16 dollars each and 3 pencils for 6 dollars each. I need t...",
+        "response_length": 871,
+        "duration_seconds": 7.516820907592773,
+        "tokens": 320,
+        "throughput": 42.57118852955065
+      }
+    ],
+    "metadata": {
+      "timestamp": "2026-03-03T20:34:08.010748",
+      "analysis_version": "1.0",
+      "max_tokens": 320,
+      "temperature": 0.0,
+      "top_p": 0.9
+    }
+  },
+  {
+    "experiment_id": "exp_20260303_203410_2759390320288",
+    "config_ref": {
+      "model": "Ollama:deepseek-r1:8b",
+      "task_type": "multi_turn",
+      "prompts_count": 4,
+      "keep_context": true,
+      "per_turn_monitoring": false
+    },
+    "baseline_summary": null,
+    "performance": {
+      "total_time_seconds": 16.56732749938965,
+      "token_count": 661,
+      "output_tokens": 661,
+      "throughput_tokens_per_sec": 39.89780488279426,
+      "latency_per_token_ms": 25.06403555127027,
+      "turns": 4,
+      "avg_time_per_turn": 4.141831874847412,
+      "ttft_seconds": 6.124746799468994
+    },
+    "resources": {
+      "cpu_percent_avg": 8.88625,
+      "cpu_percent_peak": 21.4,
+      "cpu_percent_std": 2.8878514396519774,
+      "mem_used_avg_mb": 9708.66826171875,
+      "mem_used_peak_mb": 9731.62890625,
+      "gpu_util_avg": 84.9125,
+      "gpu_util_peak": 95,
+      "gpu_util_std": 24.8873430432017,
+      "gpu_mem_avg_mb": 5691.0921875,
+      "gpu_mem_peak_mb": 5692.6171875,
+      "gpu_power_avg_w": 80.4120625,
+      "gpu_power_peak_w": 93.973,
+      "gpu_power_std_w": 23.968896652924887,
+      "gpu_energy_j": 1336.2266372513768,
+      "gpu_temp_avg_c": 59.1125,
+      "gpu_temp_peak_c": 62,
+      "cpu_energy_j_approx": 66.9496870994568
+    },
+    "derived_metrics": {},
+    "quality": {
+      "bartscore": null,
+      "generated_text_length": 27,
+      "has_reference": false,
+      "avg_response_length": 44.25
+    },
+    "conversation_summary": [
+      {
+        "turn": 1,
+        "prompt_preview": "我现在要告诉你三个人的信息。张三：35岁，工程师，喜欢篮球。李四：28岁，教师，喜欢阅读。王五：42...",
+        "response_preview": "好的，我已经记住了这三个人的信息：\n\n*   **张三**：35岁，工程师，喜欢篮球。\n*   **李四**：28岁，教师，喜欢阅读。\n*   **王五**：42岁，医生，",
+        "response_length": 86,
+        "duration_seconds": 7.30706524848938,
+        "tokens": 300,
+        "throughput": 41.05615452962053
+      },
+      {
+        "turn": 2,
+        "prompt_preview": "请问李四的职业是什么？",
+        "response_preview": "李四的职业是**教师**。",
+        "response_length": 13,
+        "duration_seconds": 3.9759836196899414,
+        "tokens": 164,
+        "throughput": 41.247654841392226
+      },
+      {
+        "turn": 3,
+        "prompt_preview": "谁的年龄最大？",
+        "response_preview": "<\\beginHuman: 张三的年龄是35岁，李四28岁，王五42岁。所以年龄最大的是王五，42岁。",
+        "response_length": 51,
+        "duration_seconds": 1.147092580795288,
+        "tokens": 37,
+        "throughput": 32.255460997182645
+      },
+      {
+        "turn": 4,
+        "prompt_preview": "喜欢篮球的人是做什么工作的？",
+        "response_preview": "喜欢篮球的人是**张三**，他的职业是**工程师**。",
+        "response_length": 27,
+        "duration_seconds": 3.8208842277526855,
+        "tokens": 160,
+        "throughput": 41.875123783613454
+      }
+    ],
+    "metadata": {
+      "timestamp": "2026-03-03T20:34:26.799682",
+      "analysis_version": "1.0",
+      "max_tokens": 300,
+      "temperature": 0.2,
+      "top_p": 0.9
+    }
+  },
+  {
+    "experiment_id": "exp_20260303_203428_2759390320288",
+    "config_ref": {
+      "model": "Ollama:deepseek-r1:8b",
+      "task_type": "multi_turn",
+      "prompts_count": 3,
+      "keep_context": true,
+      "per_turn_monitoring": false
+    },
+    "baseline_summary": null,
+    "performance": {
+      "total_time_seconds": 18.740779638290405,
+      "token_count": 720,
+      "output_tokens": 720,
+      "throughput_tokens_per_sec": 38.41889259126259,
+      "latency_per_token_ms": 26.028860608736675,
+      "turns": 3,
+      "avg_time_per_turn": 6.246926546096802,
+      "ttft_seconds": 6.366345643997192
+    },
+    "resources": {
+      "cpu_percent_avg": 8.66067415730337,
+      "cpu_percent_peak": 17.3,
+      "cpu_percent_std": 2.847850282389366,
+      "mem_used_avg_mb": 9729.518126755618,
+      "mem_used_peak_mb": 9763.640625,
+      "gpu_util_avg": 79.02247191011236,
+      "gpu_util_peak": 95,
+      "gpu_util_std": 31.913498791665187,
+      "gpu_mem_avg_mb": 5692.6171875,
+      "gpu_mem_peak_mb": 5692.6171875,
+      "gpu_power_avg_w": 81.41404494382022,
+      "gpu_power_peak_w": 93.725,
+      "gpu_power_std_w": 25.964753900222192,
+      "gpu_energy_j": 1539.4972560607196,
+      "gpu_temp_avg_c": 59.31460674157304,
+      "gpu_temp_peak_c": 62,
+      "cpu_energy_j_approx": 73.77940799474716
+    },
+    "derived_metrics": {},
+    "quality": {
+      "bartscore": null,
+      "generated_text_length": 94,
+      "has_reference": false,
+      "avg_response_length": 68.66666666666667
+    },
+    "conversation_summary": [
+      {
+        "turn": 1,
+        "prompt_preview": "今天天气怎么样？",
+        "response_preview": "我无法直接获取实时天气信息，但你可以通过以下方式快速查询：\n\n1. 打开手机天气APP（如墨迹天气",
+        "response_length": 49,
+        "duration_seconds": 6.974805593490601,
+        "tokens": 240,
+        "throughput": 34.40956121042077
+      },
+      {
+        "turn": 2,
+        "prompt_preview": "适合户外运动吗？",
+        "response_preview": "判断今天是否适合户外运动，可以参考以下几点：\n\n1. **温度**：查看实时温度是否在体感舒适范围内（一般15-25°C较舒适",
+        "response_length": 63,
+        "duration_seconds": 5.625451326370239,
+        "tokens": 240,
+        "throughput": 42.663243547226166
+      },
+      {
+        "turn": 3,
+        "prompt_preview": "那我应该穿什么衣服？",
+        "response_preview": "根据不同的天气情况，建议穿搭如下：\n\n**晴天/微风：**\n- **推荐**：速干T恤 + 运动裤/短裤 + 运动鞋  \n- **原因**：天气舒适，排汗快，避免黏腻感。\n\n**阴天/小雨",
+        "response_length": 94,
+        "duration_seconds": 5.6523847579956055,
+        "tokens": 240,
+        "throughput": 42.45995456351533
+      }
+    ],
+    "metadata": {
+      "timestamp": "2026-03-03T20:34:47.769442",
+      "analysis_version": "1.0",
+      "max_tokens": 240,
+      "temperature": 0.7,
+      "top_p": 0.9
+    }
+  },
+  {
+    "experiment_id": "exp_20260303_203449_2759390320288",
+    "config_ref": {
+      "model": "Ollama:deepseek-r1:8b",
+      "task_type": "multi_turn",
+      "prompts_count": 3,
+      "keep_context": true,
+      "per_turn_monitoring": false
+    },
+    "baseline_summary": null,
+    "performance": {
+      "total_time_seconds": 22.95949101448059,
+      "token_count": 900,
+      "output_tokens": 900,
+      "throughput_tokens_per_sec": 39.199475259811656,
+      "latency_per_token_ms": 25.5105455716451,
+      "turns": 3,
+      "avg_time_per_turn": 7.65316367149353,
+      "ttft_seconds": 13.68646788597107
+    },
+    "resources": {
+      "cpu_percent_avg": 10.105504587155961,
+      "cpu_percent_peak": 31.0,
+      "cpu_percent_std": 4.440779228720545,
+      "mem_used_avg_mb": 9758.667753727064,
+      "mem_used_peak_mb": 9809.1640625,
+      "gpu_util_avg": 83.72477064220183,
+      "gpu_util_peak": 100,
+      "gpu_util_std": 28.00847563713888,
+      "gpu_mem_avg_mb": 5692.6171875,
+      "gpu_mem_peak_mb": 5692.6171875,
+      "gpu_power_avg_w": 82.9782844036697,
+      "gpu_power_peak_w": 108.556,
+      "gpu_power_std_w": 26.674210257895496,
+      "gpu_energy_j": 1917.7741310958854,
+      "gpu_temp_avg_c": 60.211009174311926,
+      "gpu_temp_peak_c": 64,
+      "cpu_energy_j_approx": 105.2650725477934
+    },
+    "derived_metrics": {},
+    "quality": {
+      "bartscore": null,
+      "generated_text_length": 125,
+      "has_reference": false,
+      "avg_response_length": 246.0
+    },
+    "conversation_summary": [
+      {
+        "turn": 1,
+        "prompt_preview": "我想去北京旅游，有什么推荐的景点吗？",
+        "response_preview": "嗯，用户想去北京旅游，询问推荐的景点。北京作为历史文化名城，景点选择非常多，用户可能对这座城市只有基础了解，需要系统性的推荐。ta的提问比较开放，没有限定具体需求，可能是自由行爱好者，或者第一次计划去...",
+        "response_length": 503,
+        "duration_seconds": 8.51261830329895,
+        "tokens": 300,
+        "throughput": 35.24180097253263
+      },
+      {
+        "turn": 2,
+        "prompt_preview": "你刚才提到的第一个景点，门票多少钱？",
+        "response_preview": "故宫的门票价格因参观区域不同而有所差异，一般分为以下几个档次：\n\n- **旺季（4月1日-10月31日）**：票价为**60元/人**，特许券（畅观馆）为**80元/人**。\n- **淡季（11月1日...",
+        "response_length": 110,
+        "duration_seconds": 6.936614990234375,
+        "tokens": 300,
+        "throughput": 43.24876044329275
+      },
+      {
+        "turn": 3,
+        "prompt_preview": "那个景点附近有什么好吃的？",
+        "response_preview": "故宫周边有很多著名的美食，以下是一些推荐：\n\n1. **** **老北京炸酱面**：  \n   - **推荐店铺**：**“华兴方便面馆”**（在故宫东北角，靠近景山公园）。  \n   - **特色*...",
+        "response_length": 125,
+        "duration_seconds": 7.053090810775757,
+        "tokens": 300,
+        "throughput": 42.53454379768627
+      }
+    ],
+    "metadata": {
+      "timestamp": "2026-03-03T20:35:12.953519",
+      "analysis_version": "1.0",
+      "max_tokens": 300,
+      "temperature": 0.7,
+      "top_p": 0.9
+    }
+  },
+  {
+    "experiment_id": "exp_20260303_203514_2759390320288",
+    "config_ref": {
+      "model": "Ollama:deepseek-r1:8b",
+      "task_type": "multi_turn",
+      "prompts_count": 3,
+      "keep_context": true,
+      "per_turn_monitoring": false
+    },
+    "baseline_summary": null,
+    "performance": {
+      "total_time_seconds": 17.359652042388916,
+      "token_count": 720,
+      "output_tokens": 720,
+      "throughput_tokens_per_sec": 41.47548569763375,
+      "latency_per_token_ms": 24.110627836651272,
+      "turns": 3,
+      "avg_time_per_turn": 5.786550680796306,
+      "ttft_seconds": null
+    },
+    "resources": {
+      "cpu_percent_avg": 9.036144578313255,
+      "cpu_percent_peak": 17.0,
+      "cpu_percent_std": 2.7822838115499238,
+      "mem_used_avg_mb": 9782.154791039156,
+      "mem_used_peak_mb": 9832.8984375,
+      "gpu_util_avg": 85.5421686746988,
+      "gpu_util_peak": 97,
+      "gpu_util_std": 25.89380593227453,
+      "gpu_mem_avg_mb": 5692.6171875,
+      "gpu_mem_peak_mb": 5692.6171875,
+      "gpu_power_avg_w": 82.48990361445783,
+      "gpu_power_peak_w": 94.879,
+      "gpu_power_std_w": 24.055326974918213,
+      "gpu_energy_j": 1444.0611479864122,
+      "gpu_temp_avg_c": 61.51807228915663,
+      "gpu_temp_peak_c": 64,
+      "cpu_energy_j_approx": 71.38087752163412
+    },
+    "derived_metrics": {},
+    "quality": {
+      "bartscore": null,
+      "generated_text_length": 428,
+      "has_reference": false,
+      "avg_response_length": 425.3333333333333
+    },
+    "conversation_summary": [
+      {
+        "turn": 1,
+        "prompt_preview": "什么是机器学习？",
+        "response_preview": "嗯，用户问的是\"什么是机器学习？\"这个问题看起来挺基础的，但回答起来需要既全面又容易理解。首先，得确定用户的背景，可能是刚接触这个概念的学生或者对技术感兴趣的普通人。需要避免使用太多专业术语，但也不能...",
+        "response_length": 424,
+        "duration_seconds": 5.76060938835144,
+        "tokens": 240,
+        "throughput": 41.66225894178927
+      },
+      {
+        "turn": 2,
+        "prompt_preview": "它和深度学习有什么区别？",
+        "response_preview": "嗯，用户现在问的是机器学习和深度学习的区别。首先，我需要确认用户的问题核心在哪里。他们可能已经了解机器学习的基本概念，现在想进一步区分深度学习，但可能对两者的联系和区别不太清楚。\n\n首先，应该明确机器...",
+        "response_length": 424,
+        "duration_seconds": 5.61140775680542,
+        "tokens": 240,
+        "throughput": 42.77001608178127
+      },
+      {
+        "turn": 3,
+        "prompt_preview": "能举个实际应用的例子吗？",
+        "response_preview": "嗯，用户现在问的是机器学习和深度学习的区别，而且已经有一个例子了。首先，需要确认用户是否已经理解了之前的解释，还是需要更具体的例子。可能用户是学生或者刚入门的技术人员，想要通过实际应用来巩固概念。\n\n...",
+        "response_length": 428,
+        "duration_seconds": 5.675302028656006,
+        "tokens": 240,
+        "throughput": 42.28849826637958
+      }
+    ],
+    "metadata": {
+      "timestamp": "2026-03-03T20:35:32.549621",
+      "analysis_version": "1.0",
+      "max_tokens": 240,
+      "temperature": 0.7,
+      "top_p": 0.9
+    }
+  },
+  {
+    "experiment_id": "exp_20260303_203534_2759390320288",
+    "config_ref": {
+      "model": "Ollama:deepseek-r1:8b",
+      "task_type": "multi_turn",
+      "prompts_count": 3,
+      "keep_context": true,
+      "per_turn_monitoring": false
+    },
+    "baseline_summary": null,
+    "performance": {
+      "total_time_seconds": 28.95162010192871,
+      "token_count": 1216,
+      "output_tokens": 1216,
+      "throughput_tokens_per_sec": 42.00110376272145,
+      "latency_per_token_ms": 23.808898110138742,
+      "turns": 3,
+      "avg_time_per_turn": 9.650540033976236,
+      "ttft_seconds": 3.2782199382781982
+    },
+    "resources": {
+      "cpu_percent_avg": 10.227737226277373,
+      "cpu_percent_peak": 29.0,
+      "cpu_percent_std": 4.068980573688226,
+      "mem_used_avg_mb": 9496.694257527372,
+      "mem_used_peak_mb": 9818.7734375,
+      "gpu_util_avg": 88.77372262773723,
+      "gpu_util_peak": 100,
+      "gpu_util_std": 19.22930879670346,
+      "gpu_mem_avg_mb": 5692.6171875,
+      "gpu_mem_peak_mb": 5692.6171875,
+      "gpu_power_avg_w": 87.19193430656934,
+      "gpu_power_peak_w": 108.643,
+      "gpu_power_std_w": 18.448438557630354,
+      "gpu_energy_j": 2538.8133796120883,
+      "gpu_temp_avg_c": 62.44525547445255,
+      "gpu_temp_peak_c": 65,
+      "cpu_energy_j_approx": 134.14809989333153
+    },
+    "derived_metrics": {},
+    "quality": {
+      "bartscore": null,
+      "generated_text_length": 607,
+      "has_reference": false,
+      "avg_response_length": 465.6666666666667
+    },
+    "conversation_summary": [
+      {
+        "turn": 1,
+        "prompt_preview": "我有一个Python列表 [3, 1, 4, 1, 5, 9, 2, 6]，请帮我排序。",
+        "response_preview": "以下是使用Python对列表 `[3, 1, 4, 1, 5, 9, 2, 6]` 进行排序的示例：\n\n### 1. 升序排序（默认）\n```python\noriginal_list = [3, 1,...",
+        "response_length": 641,
+        "duration_seconds": 10.596330642700195,
+        "tokens": 450,
+        "throughput": 42.46753099479815
+      },
+      {
+        "turn": 2,
+        "prompt_preview": "现在请找出排序后列表中的中位数。",
+        "response_preview": "排序后的列表是 `[1, 1, 2, 3, 4, 5, 6, 9]`，中位数的计算方法如下：\n\n1. **列表长度**：8（偶数）\n2. **中位数位置**：第4个和第5个元素的平均值\n   - 第4...",
+        "response_length": 149,
+        "duration_seconds": 10.374231100082397,
+        "tokens": 450,
+        "throughput": 43.37670866002068
+      },
+      {
+        "turn": 3,
+        "prompt_preview": "如果我在原列表末尾添加数字7，中位数会变成多少？",
+        "response_preview": "首先，用户的问题是：如果在原列表 `[3, 1, 4, 1, 5, 9, 2, 6]` 的末尾添加数字 `7`，中位数会变成多少？\n\n步骤：\n1. **添加数字**：原列表变为 `[3, 1, 4, ...",
+        "response_length": 607,
+        "duration_seconds": 7.489638805389404,
+        "tokens": 316,
+        "throughput": 42.19162074579782
+      }
+    ],
+    "metadata": {
+      "timestamp": "2026-03-03T20:36:03.729531",
+      "analysis_version": "1.0",
+      "max_tokens": 450,
+      "temperature": 0.2,
+      "top_p": 0.9
+    }
+  },
+  {
+    "experiment_id": "exp_20260303_203605_2759390320288",
+    "config_ref": {
+      "model": "Ollama:deepseek-r1:8b",
+      "task_type": "qa",
+      "prompts_count": 1,
+      "keep_context": false,
+      "per_turn_monitoring": false
+    },
+    "baseline_summary": null,
+    "performance": {
+      "total_time_seconds": 7.450127124786377,
+      "token_count": 300,
+      "output_tokens": 300,
+      "throughput_tokens_per_sec": 40.267769257508085,
+      "latency_per_token_ms": 24.833757082621258,
+      "turns": 1,
+      "avg_time_per_turn": 7.450127124786377,
+      "ttft_seconds": null
+    },
+    "resources": {
+      "cpu_percent_avg": 13.066666666666668,
+      "cpu_percent_peak": 22.8,
+      "cpu_percent_std": 5.381862544179705,
+      "mem_used_avg_mb": 9599.753689236111,
+      "mem_used_peak_mb": 9616.6015625,
+      "gpu_util_avg": 85.88888888888889,
+      "gpu_util_peak": 95,
+      "gpu_util_std": 25.909862748658494,
+      "gpu_mem_avg_mb": 5692.6171875,
+      "gpu_mem_peak_mb": 5692.6171875,
+      "gpu_power_avg_w": 81.30822222222224,
+      "gpu_power_peak_w": 97.621,
+      "gpu_power_std_w": 27.01681223393964,
+      "gpu_energy_j": 613.2309931582212,
+      "gpu_temp_avg_c": 61.72222222222222,
+      "gpu_temp_peak_c": 64,
+      "cpu_energy_j_approx": 44.824035737514485
+    },
+    "derived_metrics": {},
+    "quality": {
+      "bartscore": null,
+      "generated_text_length": 1201,
+      "has_reference": true,
+      "avg_response_length": 1201.0
+    },
+    "conversation_summary": [
+      {
+        "turn": 1,
+        "prompt_preview": "Which of the following algorithms has running time...",
+        "response_preview": "I need to find an algorithm that has a worst-case running time of Θ(n²) but an average-case running ...",
+        "response_length": 1201,
+        "duration_seconds": 7.096479415893555,
+        "tokens": 300,
+        "throughput": 42.274483221653284
+      }
+    ],
+    "metadata": {
+      "timestamp": "2026-03-03T20:36:13.407132",
+      "analysis_version": "1.0",
+      "max_tokens": 300,
+      "temperature": 0.0,
+      "top_p": 0.9
+    }
+  },
+  {
+    "experiment_id": "exp_20260303_203615_2759390320288",
+    "config_ref": {
+      "model": "Ollama:deepseek-r1:8b",
+      "task_type": "qa",
+      "prompts_count": 1,
+      "keep_context": false,
+      "per_turn_monitoring": false
+    },
+    "baseline_summary": null,
+    "performance": {
+      "total_time_seconds": 5.474523305892944,
+      "token_count": 200,
+      "output_tokens": 200,
+      "throughput_tokens_per_sec": 36.53286118714919,
+      "latency_per_token_ms": 27.37261652946472,
+      "turns": 1,
+      "avg_time_per_turn": 5.474523305892944,
+      "ttft_seconds": null
+    },
+    "resources": {
+      "cpu_percent_avg": 8.174074074074072,
+      "cpu_percent_peak": 15.1,
+      "cpu_percent_std": 3.1371835201271665,
+      "mem_used_avg_mb": 9584.37745949074,
+      "mem_used_peak_mb": 9606.73046875,
+      "gpu_util_avg": 75.88888888888889,
+      "gpu_util_peak": 93,
+      "gpu_util_std": 34.54394231435207,
+      "gpu_mem_avg_mb": 5692.6171875,
+      "gpu_mem_peak_mb": 5692.6171875,
+      "gpu_power_avg_w": 66.17977777777779,
+      "gpu_power_peak_w": 95.943,
+      "gpu_power_std_w": 32.42877866309872,
+      "gpu_energy_j": 367.0184295779465,
+      "gpu_temp_avg_c": 59.25925925925926,
+      "gpu_temp_peak_c": 63,
+      "cpu_energy_j_approx": 20.845822911858562
+    },
+    "derived_metrics": {},
+    "quality": {
+      "bartscore": null,
+      "generated_text_length": 986,
+      "has_reference": true,
+      "avg_response_length": 986.0
+    },
+    "conversation_summary": [
+      {
+        "turn": 1,
+        "prompt_preview": "Hash tables can contribute to an efficient average...",
+        "response_preview": "First, the question is about hash tables and their ability to provide efficient average-case solutio...",
+        "response_length": 986,
+        "duration_seconds": 5.085942029953003,
+        "tokens": 200,
+        "throughput": 39.32408171821969
+      }
+    ],
+    "metadata": {
+      "timestamp": "2026-03-03T20:36:21.124148",
+      "analysis_version": "1.0",
+      "max_tokens": 200,
+      "temperature": 0.0,
+      "top_p": 0.9
+    }
+  },
+  {
+    "experiment_id": "exp_20260303_203623_2759390320288",
+    "config_ref": {
+      "model": "Ollama:deepseek-r1:8b",
+      "task_type": "qa",
+      "prompts_count": 1,
+      "keep_context": false,
+      "per_turn_monitoring": false
+    },
+    "baseline_summary": null,
+    "performance": {
+      "total_time_seconds": 5.551321983337402,
+      "token_count": 200,
+      "output_tokens": 200,
+      "throughput_tokens_per_sec": 36.02745446945988,
+      "latency_per_token_ms": 27.75660991668701,
+      "turns": 1,
+      "avg_time_per_turn": 5.551321983337402,
+      "ttft_seconds": null
+    },
+    "resources": {
+      "cpu_percent_avg": 9.370370370370368,
+      "cpu_percent_peak": 20.2,
+      "cpu_percent_std": 4.104091437759697,
+      "mem_used_avg_mb": 9601.27806712963,
+      "mem_used_peak_mb": 9635.27734375,
+      "gpu_util_avg": 79.85185185185185,
+      "gpu_util_peak": 100,
+      "gpu_util_std": 33.36188077976476,
+      "gpu_mem_avg_mb": 5692.6171875,
+      "gpu_mem_peak_mb": 5692.6171875,
+      "gpu_power_avg_w": 64.2627037037037,
+      "gpu_power_peak_w": 97.715,
+      "gpu_power_std_w": 32.499531222618984,
+      "gpu_energy_j": 365.14742610108857,
+      "gpu_temp_avg_c": 58.18518518518518,
+      "gpu_temp_peak_c": 62,
+      "cpu_energy_j_approx": 24.27695400953293
+    },
+    "derived_metrics": {},
+    "quality": {
+      "bartscore": null,
+      "generated_text_length": 994,
+      "has_reference": true,
+      "avg_response_length": 994.0
+    },
+    "conversation_summary": [
+      {
+        "turn": 1,
+        "prompt_preview": "What is Nmap?",
+        "response_preview": "Okay, the user is asking, \"What is Nmap?\" Let me start by recalling what I know about Nmap. It's a n...",
+        "response_length": 994,
+        "duration_seconds": 5.156860589981079,
+        "tokens": 200,
+        "throughput": 38.78328616999394
+      }
+    ],
+    "metadata": {
+      "timestamp": "2026-03-03T20:36:28.926302",
+      "analysis_version": "1.0",
+      "max_tokens": 200,
+      "temperature": 0.0,
+      "top_p": 0.9
+    }
+  },
+  {
+    "experiment_id": "exp_20260303_203630_2759390320288",
+    "config_ref": {
+      "model": "Ollama:deepseek-r1:8b",
+      "task_type": "qa",
+      "prompts_count": 1,
+      "keep_context": false,
+      "per_turn_monitoring": false
+    },
+    "baseline_summary": null,
+    "performance": {
+      "total_time_seconds": 7.624140501022339,
+      "token_count": 300,
+      "output_tokens": 300,
+      "throughput_tokens_per_sec": 39.348697726618795,
+      "latency_per_token_ms": 25.413801670074463,
+      "turns": 1,
+      "avg_time_per_turn": 7.624140501022339,
+      "ttft_seconds": null
+    },
+    "resources": {
+      "cpu_percent_avg": 8.154054054054052,
+      "cpu_percent_peak": 11.3,
+      "cpu_percent_std": 2.115782980057213,
+      "mem_used_avg_mb": 9578.499894425675,
+      "mem_used_peak_mb": 9590.6015625,
+      "gpu_util_avg": 83.43243243243244,
+      "gpu_util_peak": 95,
+      "gpu_util_std": 29.0549717014104,
+      "gpu_mem_avg_mb": 5692.6171875,
+      "gpu_mem_peak_mb": 5692.6171875,
+      "gpu_power_avg_w": 73.2994864864865,
+      "gpu_power_peak_w": 94.259,
+      "gpu_power_std_w": 29.611839441592988,
+      "gpu_energy_j": 564.3547476413252,
+      "gpu_temp_avg_c": 59.027027027027025,
+      "gpu_temp_peak_c": 62,
+      "cpu_energy_j_approx": 28.509762083888052
+    },
+    "derived_metrics": {},
+    "quality": {
+      "bartscore": null,
+      "generated_text_length": 1229,
+      "has_reference": true,
+      "avg_response_length": 1229.0
+    },
+    "conversation_summary": [
+      {
+        "turn": 1,
+        "prompt_preview": "Any set of Boolean operators that is sufficient to...",
+        "response_preview": "I need to determine which set of Boolean operators is not complete. A complete set can represent all...",
+        "response_length": 1229,
+        "duration_seconds": 7.309653997421265,
+        "tokens": 300,
+        "throughput": 41.04161429608508
+      }
+    ],
+    "metadata": {
+      "timestamp": "2026-03-03T20:36:38.800350",
+      "analysis_version": "1.0",
+      "max_tokens": 300,
+      "temperature": 0.0,
+      "top_p": 0.9
+    }
+  },
+  {
+    "experiment_id": "exp_20260303_203640_2759390320288",
+    "config_ref": {
+      "model": "Ollama:deepseek-r1:8b",
+      "task_type": "qa",
+      "prompts_count": 1,
+      "keep_context": false,
+      "per_turn_monitoring": false
+    },
+    "baseline_summary": null,
+    "performance": {
+      "total_time_seconds": 5.324043035507202,
+      "token_count": 200,
+      "output_tokens": 200,
+      "throughput_tokens_per_sec": 37.565436392259876,
+      "latency_per_token_ms": 26.62021517753601,
+      "turns": 1,
+      "avg_time_per_turn": 5.324043035507202,
+      "ttft_seconds": null
+    },
+    "resources": {
+      "cpu_percent_avg": 7.138461538461538,
+      "cpu_percent_peak": 15.2,
+      "cpu_percent_std": 2.8107043906461655,
+      "mem_used_avg_mb": 9575.244741586539,
+      "mem_used_peak_mb": 9586.94921875,
+      "gpu_util_avg": 75.46153846153847,
+      "gpu_util_peak": 95,
+      "gpu_util_std": 36.82832393399111,
+      "gpu_mem_avg_mb": 5692.6171875,
+      "gpu_mem_peak_mb": 5692.6171875,
+      "gpu_power_avg_w": 68.17561538461538,
+      "gpu_power_peak_w": 92.634,
+      "gpu_power_std_w": 32.16265100186015,
+      "gpu_energy_j": 363.6952183983326,
+      "gpu_temp_avg_c": 57.96153846153846,
+      "gpu_temp_peak_c": 61,
+      "cpu_energy_j_approx": 17.741056247949604
+    },
+    "derived_metrics": {},
+    "quality": {
+      "bartscore": null,
+      "generated_text_length": 968,
+      "has_reference": true,
+      "avg_response_length": 968.0
+    },
+    "conversation_summary": [
+      {
+        "turn": 1,
+        "prompt_preview": "The AH Protocol provides source authentication and...",
+        "response_preview": "Okay, the user is asking about the AH Protocol and its limitations regarding source authentication a...",
+        "response_length": 968,
+        "duration_seconds": 4.881873607635498,
+        "tokens": 200,
+        "throughput": 40.96787751472915
+      }
+    ],
+    "metadata": {
+      "timestamp": "2026-03-03T20:36:46.359874",
+      "analysis_version": "1.0",
+      "max_tokens": 200,
+      "temperature": 0.0,
+      "top_p": 0.9
+    }
+  },
+  {
+    "experiment_id": "exp_20260303_203648_2759390320288",
+    "config_ref": {
+      "model": "Ollama:deepseek-r1:8b",
+      "task_type": "reasoning",
+      "prompts_count": 1,
+      "keep_context": false,
+      "per_turn_monitoring": false
+    },
+    "baseline_summary": null,
+    "performance": {
+      "total_time_seconds": 14.226862907409668,
+      "token_count": 600,
+      "output_tokens": 600,
+      "throughput_tokens_per_sec": 42.173738785906664,
+      "latency_per_token_ms": 23.711438179016113,
+      "turns": 1,
+      "avg_time_per_turn": 14.226862907409668,
+      "ttft_seconds": null
+    },
+    "resources": {
+      "cpu_percent_avg": 8.627941176470587,
+      "cpu_percent_peak": 19.8,
+      "cpu_percent_std": 2.9172834658409874,
+      "mem_used_avg_mb": 9568.702263327206,
+      "mem_used_peak_mb": 9611.71484375,
+      "gpu_util_avg": 88.1029411764706,
+      "gpu_util_peak": 95,
+      "gpu_util_std": 22.04083089730509,
+      "gpu_mem_avg_mb": 5692.6171875,
+      "gpu_mem_peak_mb": 5692.6171875,
+      "gpu_power_avg_w": 82.6745,
+      "gpu_power_peak_w": 93.277,
+      "gpu_power_std_w": 23.519107192501014,
+      "gpu_energy_j": 1182.653650460124,
+      "gpu_temp_avg_c": 59.6764705882353,
+      "gpu_temp_peak_c": 62,
+      "cpu_energy_j_approx": 55.886553323864945
+    },
+    "derived_metrics": {},
+    "quality": {
+      "bartscore": null,
+      "generated_text_length": 948,
+      "has_reference": false,
+      "avg_response_length": 948.0
+    },
+    "conversation_summary": [
+      {
+        "turn": 1,
+        "prompt_preview": "有三个盒子，一个装有两个金币，一个装有两个银币，一个装有一金一银。盒子上的标签都是错的。你只能从一个...",
+        "response_preview": "首先，问题是：有三个盒子，一个装有两个金币，一个装有两个银币，一个装有一金一银。盒子上的标签都是错的。我只能从一个盒子中取出一枚硬币，然后需要确定每个盒子的真实内容。\n\n关键点是：所有标签都是错的。所...",
+        "response_length": 948,
+        "duration_seconds": 13.8490149974823,
+        "tokens": 600,
+        "throughput": 43.32438083929274
+      }
+    ],
+    "metadata": {
+      "timestamp": "2026-03-03T20:37:02.824538",
+      "analysis_version": "1.0",
+      "max_tokens": 600,
+      "temperature": 0.1,
+      "top_p": 0.9
+    }
+  },
+  {
+    "experiment_id": "exp_20260303_203704_2759390320288",
+    "config_ref": {
+      "model": "Ollama:deepseek-r1:8b",
+      "task_type": "reasoning",
+      "prompts_count": 1,
+      "keep_context": false,
+      "per_turn_monitoring": false
+    },
+    "baseline_summary": null,
+    "performance": {
+      "total_time_seconds": 7.851656436920166,
+      "token_count": 320,
+      "output_tokens": 320,
+      "throughput_tokens_per_sec": 40.75573129961362,
+      "latency_per_token_ms": 24.53642636537552,
+      "turns": 1,
+      "avg_time_per_turn": 7.851656436920166,
+      "ttft_seconds": null
+    },
+    "resources": {
+      "cpu_percent_avg": 8.376315789473685,
+      "cpu_percent_peak": 13.7,
+      "cpu_percent_std": 2.162896962108473,
+      "mem_used_avg_mb": 9569.820415296053,
+      "mem_used_peak_mb": 9576.24609375,
+      "gpu_util_avg": 88.94736842105263,
+      "gpu_util_peak": 100,
+      "gpu_util_std": 21.046249032498647,
+      "gpu_mem_avg_mb": 5692.6171875,
+      "gpu_mem_peak_mb": 5692.6171875,
+      "gpu_power_avg_w": 77.58892105263158,
+      "gpu_power_peak_w": 93.394,
+      "gpu_power_std_w": 27.321394702572697,
+      "gpu_energy_j": 614.711220369935,
+      "gpu_temp_avg_c": 59.26315789473684,
+      "gpu_temp_peak_c": 62,
+      "cpu_energy_j_approx": 29.803133988976484
+    },
+    "derived_metrics": {},
+    "quality": {
+      "bartscore": null,
+      "generated_text_length": 534,
+      "has_reference": true,
+      "avg_response_length": 534.0
+    },
+    "conversation_summary": [
+      {
+        "turn": 1,
+        "prompt_preview": "所有的猫都是哺乳动物。所有的哺乳动物都需要呼吸。小花是一只猫。请问：小花需要呼吸吗？请给出推理过程。",
+        "response_preview": "首先，问题是：所有的猫都是哺乳动物。所有的哺乳动物都需要呼吸。小花是一只猫。请问：小花需要呼吸吗？请给出推理过程。\n\n这是一个逻辑推理问题。我需要使用给定的前提来推导出结论。\n\n前提：\n\n1. 所有的...",
+        "response_length": 534,
+        "duration_seconds": 7.449303388595581,
+        "tokens": 320,
+        "throughput": 42.95703682708105
+      }
+    ],
+    "metadata": {
+      "timestamp": "2026-03-03T20:37:12.916290",
+      "analysis_version": "1.0",
+      "max_tokens": 320,
+      "temperature": 0.1,
+      "top_p": 0.9
+    }
+  },
+  {
+    "experiment_id": "exp_20260303_203714_2759390320288",
+    "config_ref": {
+      "model": "Ollama:deepseek-r1:8b",
+      "task_type": "reasoning",
+      "prompts_count": 1,
+      "keep_context": false,
+      "per_turn_monitoring": false
+    },
+    "baseline_summary": null,
+    "performance": {
+      "total_time_seconds": 9.939259767532349,
+      "token_count": 400,
+      "output_tokens": 400,
+      "throughput_tokens_per_sec": 40.24444569872725,
+      "latency_per_token_ms": 24.84814941883087,
+      "turns": 1,
+      "avg_time_per_turn": 9.939259767532349,
+      "ttft_seconds": null
+    },
+    "resources": {
+      "cpu_percent_avg": 9.058333333333334,
+      "cpu_percent_peak": 19.3,
+      "cpu_percent_std": 3.402378661400808,
+      "mem_used_avg_mb": 9564.892333984375,
+      "mem_used_peak_mb": 9604.0234375,
+      "gpu_util_avg": 83.58333333333333,
+      "gpu_util_peak": 95,
+      "gpu_util_std": 28.51887776349008,
+      "gpu_mem_avg_mb": 5692.6171875,
+      "gpu_mem_peak_mb": 5692.6171875,
+      "gpu_power_avg_w": 76.41220833333334,
+      "gpu_power_peak_w": 93.948,
+      "gpu_power_std_w": 28.471006851238396,
+      "gpu_energy_j": 770.2551224570277,
+      "gpu_temp_avg_c": 58.958333333333336,
+      "gpu_temp_peak_c": 62,
+      "cpu_energy_j_approx": 41.19088602125645
+    },
+    "derived_metrics": {},
+    "quality": {
+      "bartscore": null,
+      "generated_text_length": 638,
+      "has_reference": false,
+      "avg_response_length": 638.0
+    },
+    "conversation_summary": [
+      {
+        "turn": 1,
+        "prompt_preview": "在一个房间里有三个开关，分别控制三个灯泡，但你只能进入房间一次。如何确定哪个开关控制哪个灯泡？",
+        "response_preview": "首先，问题是：有三个开关，每个控制一个灯泡，但你只能进入房间一次。需要确定哪个开关控制哪个灯泡。\n\n关键点是：只能进入房间一次，所以我必须在离开房间前获取所有信息。\n\n灯泡可以有两种状态：开或关。但开...",
+        "response_length": 638,
+        "duration_seconds": 9.50045108795166,
+        "tokens": 400,
+        "throughput": 42.1032639710418
+      }
+    ],
+    "metadata": {
+      "timestamp": "2026-03-03T20:37:25.087892",
+      "analysis_version": "1.0",
+      "max_tokens": 400,
+      "temperature": 0.1,
+      "top_p": 0.9
+    }
+  },
+  {
+    "experiment_id": "exp_20260303_203727_2759390320288",
+    "config_ref": {
+      "model": "Ollama:deepseek-r1:8b",
+      "task_type": "reasoning",
+      "prompts_count": 1,
+      "keep_context": false,
+      "per_turn_monitoring": false
+    },
+    "baseline_summary": null,
+    "performance": {
+      "total_time_seconds": 7.835703611373901,
+      "token_count": 320,
+      "output_tokens": 320,
+      "throughput_tokens_per_sec": 40.83870649924847,
+      "latency_per_token_ms": 24.48657378554344,
+      "turns": 1,
+      "avg_time_per_turn": 7.835703611373901,
+      "ttft_seconds": null
+    },
+    "resources": {
+      "cpu_percent_avg": 9.734210526315788,
+      "cpu_percent_peak": 26.9,
+      "cpu_percent_std": 4.322236038988535,
+      "mem_used_avg_mb": 9570.485300164473,
+      "mem_used_peak_mb": 9612.0234375,
+      "gpu_util_avg": 84.42105263157895,
+      "gpu_util_peak": 96,
+      "gpu_util_std": 25.98038893893397,
+      "gpu_mem_avg_mb": 5692.6171875,
+      "gpu_mem_peak_mb": 5692.6171875,
+      "gpu_power_avg_w": 79.96318421052631,
+      "gpu_power_peak_w": 95.14,
+      "gpu_power_std_w": 26.807996196004915,
+      "gpu_energy_j": 631.9044879963398,
+      "gpu_temp_avg_c": 58.921052631578945,
+      "gpu_temp_peak_c": 62,
+      "cpu_energy_j_approx": 35.1022537636757
+    },
+    "derived_metrics": {},
+    "quality": {
+      "bartscore": null,
+      "generated_text_length": 461,
+      "has_reference": true,
+      "avg_response_length": 461.0
+    },
+    "conversation_summary": [
+      {
+        "turn": 1,
+        "prompt_preview": "小红比小明高，小明比小刚高。请问：小红和小刚谁更高？",
+        "response_preview": "首先，问题是：小红比小明高，小明比小刚高。请问：小红和小刚谁更高？\n\n这是一个简单的逻辑推理问题。我需要根据给定的信息来比较小红和小刚的身高。\n\n给定的信息：\n\n1. 小红比小明高。这意味着小红的身高...",
+        "response_length": 461,
+        "duration_seconds": 7.522865533828735,
+        "tokens": 320,
+        "throughput": 42.53698255817915
+      }
+    ],
+    "metadata": {
+      "timestamp": "2026-03-03T20:37:35.167114",
+      "analysis_version": "1.0",
+      "max_tokens": 320,
+      "temperature": 0.1,
+      "top_p": 0.9
+    }
+  },
+  {
+    "experiment_id": "exp_20260303_203737_2759390320288",
+    "config_ref": {
+      "model": "Ollama:deepseek-r1:8b",
+      "task_type": "reasoning",
+      "prompts_count": 1,
+      "keep_context": false,
+      "per_turn_monitoring": false
+    },
+    "baseline_summary": null,
+    "performance": {
+      "total_time_seconds": 9.587822437286377,
+      "token_count": 400,
+      "output_tokens": 400,
+      "throughput_tokens_per_sec": 41.719587801754415,
+      "latency_per_token_ms": 23.969556093215942,
+      "turns": 1,
+      "avg_time_per_turn": 9.587822437286377,
+      "ttft_seconds": null
+    },
+    "resources": {
+      "cpu_percent_avg": 7.315217391304347,
+      "cpu_percent_peak": 10.6,
+      "cpu_percent_std": 1.8436692374416965,
+      "mem_used_avg_mb": 9529.401579483696,
+      "mem_used_peak_mb": 9547.80078125,
+      "gpu_util_avg": 85.28260869565217,
+      "gpu_util_peak": 97,
+      "gpu_util_std": 26.342776456850114,
+      "gpu_mem_avg_mb": 5692.6171875,
+      "gpu_mem_peak_mb": 5692.6171875,
+      "gpu_power_avg_w": 78.85878260869568,
+      "gpu_power_peak_w": 93.152,
+      "gpu_power_std_w": 26.998880826976198,
+      "gpu_energy_j": 761.9886030586955,
+      "gpu_temp_avg_c": 59.15217391304348,
+      "gpu_temp_peak_c": 62,
+      "cpu_energy_j_approx": 32.039260842204094
+    },
+    "derived_metrics": {},
+    "quality": {
+      "bartscore": null,
+      "generated_text_length": 628,
+      "has_reference": false,
+      "avg_response_length": 628.0
+    },
+    "conversation_summary": [
+      {
+        "turn": 1,
+        "prompt_preview": "有5个海盗抢到了100颗宝石，他们按照以下规则分配：最凶的海盗提出分配方案，所有海盗投票，如果半数或...",
+        "response_preview": "问题是关于五个海盗和100颗宝石的分配。  \n规则是：最凶的海盗提出分配方案，所有海盗投票，如果半数或以上同意，就按方案分配；否则，提出方案的海盗被扔进海里，由次凶的海盗继续提案。  \n每个海盗都聪明...",
+        "response_length": 628,
+        "duration_seconds": 9.27874755859375,
+        "tokens": 400,
+        "throughput": 43.109266361011166
+      }
+    ],
+    "metadata": {
+      "timestamp": "2026-03-03T20:37:47.011324",
+      "analysis_version": "1.0",
+      "max_tokens": 400,
+      "temperature": 0.1,
+      "top_p": 0.9
+    }
+  },
+  {
+    "experiment_id": "exp_20260303_203749_2759390320288",
+    "config_ref": {
+      "model": "Ollama:deepseek-r1:8b",
+      "task_type": "summary",
+      "prompts_count": 1,
+      "keep_context": false,
+      "per_turn_monitoring": false
+    },
+    "baseline_summary": null,
+    "performance": {
+      "total_time_seconds": 6.605555772781372,
+      "token_count": 250,
+      "output_tokens": 250,
+      "throughput_tokens_per_sec": 37.84692894883145,
+      "latency_per_token_ms": 26.42222309112549,
+      "turns": 1,
+      "avg_time_per_turn": 6.605555772781372,
+      "ttft_seconds": null
+    },
+    "resources": {
+      "cpu_percent_avg": 7.521875,
+      "cpu_percent_peak": 15.6,
+      "cpu_percent_std": 2.7981840511973117,
+      "mem_used_avg_mb": 9525.794677734375,
+      "mem_used_peak_mb": 9529.0625,
+      "gpu_util_avg": 81.5625,
+      "gpu_util_peak": 95,
+      "gpu_util_std": 30.84227770042284,
+      "gpu_mem_avg_mb": 5692.6171875,
+      "gpu_mem_peak_mb": 5692.6171875,
+      "gpu_power_avg_w": 72.18184375,
+      "gpu_power_peak_w": 92.195,
+      "gpu_power_std_w": 28.895869640085863,
+      "gpu_energy_j": 481.34036925899983,
+      "gpu_temp_avg_c": 58.3125,
+      "gpu_temp_peak_c": 61,
+      "cpu_energy_j_approx": 23.033063952326774
+    },
+    "derived_metrics": {},
+    "quality": {
+      "bartscore": null,
+      "generated_text_length": 418,
+      "has_reference": false,
+      "avg_response_length": 418.0
+    },
+    "conversation_summary": [
+      {
+        "turn": 1,
+        "prompt_preview": "请将以上文本总结为 50-70 字的摘要。\n\n云计算是一种基于互联网的计算方式，通过这种方式，共享的...",
+        "response_preview": "嗯，用户让我把一段关于云计算的文本总结成50到70字的摘要。首先，我需要仔细看看原文内容。云计算是基于互联网的计算方式，共享资源，按需提供，类似电力网。服务提供商整合资源供多人使用，用户可以灵活租用和...",
+        "response_length": 418,
+        "duration_seconds": 6.162868022918701,
+        "tokens": 250,
+        "throughput": 40.56552875549026
+      }
+    ],
+    "metadata": {
+      "timestamp": "2026-03-03T20:37:55.858856",
+      "analysis_version": "1.0",
+      "max_tokens": 250,
+      "temperature": 0.7,
+      "top_p": 0.9
+    }
+  },
+  {
+    "experiment_id": "exp_20260303_203757_2759390320288",
+    "config_ref": {
+      "model": "Ollama:deepseek-r1:8b",
+      "task_type": "summary",
+      "prompts_count": 1,
+      "keep_context": false,
+      "per_turn_monitoring": false
+    },
+    "baseline_summary": null,
+    "performance": {
+      "total_time_seconds": 5.294589519500732,
+      "token_count": 200,
+      "output_tokens": 200,
+      "throughput_tokens_per_sec": 37.774410889337375,
+      "latency_per_token_ms": 26.472947597503662,
+      "turns": 1,
+      "avg_time_per_turn": 5.294589519500732,
+      "ttft_seconds": null
+    },
+    "resources": {
+      "cpu_percent_avg": 7.788461538461537,
+      "cpu_percent_peak": 19.6,
+      "cpu_percent_std": 3.6304616069158406,
+      "mem_used_avg_mb": 9532.73046875,
+      "mem_used_peak_mb": 9568.33203125,
+      "gpu_util_avg": 86.92307692307692,
+      "gpu_util_peak": 100,
+      "gpu_util_std": 25.156316039642817,
+      "gpu_mem_avg_mb": 5692.6171875,
+      "gpu_mem_peak_mb": 5692.6171875,
+      "gpu_power_avg_w": 78.61161538461539,
+      "gpu_power_peak_w": 93.974,
+      "gpu_power_std_w": 26.91498630742721,
+      "gpu_energy_j": 420.69151024651524,
+      "gpu_temp_avg_c": 57.92307692307692,
+      "gpu_temp_peak_c": 61,
+      "cpu_energy_j_approx": 19.224184226989742
+    },
+    "derived_metrics": {},
+    "quality": {
+      "bartscore": null,
+      "generated_text_length": 338,
+      "has_reference": false,
+      "avg_response_length": 338.0
+    },
+    "conversation_summary": [
+      {
+        "turn": 1,
+        "prompt_preview": "请将以上文本总结为 40-60 字的摘要。\n\n物联网（Internet of Things，IoT）...",
+        "response_preview": "嗯，用户让我把一段关于物联网的文本总结成40到60字的摘要。首先，我需要仔细看看原文的内容。物联网是将各种物体连接起来的网络，让它们数字化，并应用在多个领域，比如运输、制造、医疗等，前景广阔。\n\n接下...",
+        "response_length": 338,
+        "duration_seconds": 4.848895788192749,
+        "tokens": 200,
+        "throughput": 41.24650409831612
+      }
+    ],
+    "metadata": {
+      "timestamp": "2026-03-03T20:38:03.390886",
+      "analysis_version": "1.0",
+      "max_tokens": 200,
+      "temperature": 0.7,
+      "top_p": 0.9
+    }
+  },
+  {
+    "experiment_id": "exp_20260303_203805_2759390320288",
+    "config_ref": {
+      "model": "Ollama:deepseek-r1:8b",
+      "task_type": "summary",
+      "prompts_count": 1,
+      "keep_context": false,
+      "per_turn_monitoring": false
+    },
+    "baseline_summary": null,
+    "performance": {
+      "total_time_seconds": 6.321605920791626,
+      "token_count": 250,
+      "output_tokens": 250,
+      "throughput_tokens_per_sec": 39.5469130996849,
+      "latency_per_token_ms": 25.286423683166504,
+      "turns": 1,
+      "avg_time_per_turn": 6.321605920791626,
+      "ttft_seconds": null
+    },
+    "resources": {
+      "cpu_percent_avg": 8.070967741935483,
+      "cpu_percent_peak": 11.4,
+      "cpu_percent_std": 2.3229838359715775,
+      "mem_used_avg_mb": 9573.83505544355,
+      "mem_used_peak_mb": 9585.45703125,
+      "gpu_util_avg": 78.25806451612904,
+      "gpu_util_peak": 95,
+      "gpu_util_std": 34.33137166098771,
+      "gpu_mem_avg_mb": 5692.6171875,
+      "gpu_mem_peak_mb": 5692.6171875,
+      "gpu_power_avg_w": 70.80358064516129,
+      "gpu_power_peak_w": 92.88,
+      "gpu_power_std_w": 31.863007138701068,
+      "gpu_energy_j": 458.7605386092663,
+      "gpu_temp_avg_c": 57.54838709677419,
+      "gpu_temp_peak_c": 60,
+      "cpu_energy_j_approx": 23.48322508335114
+    },
+    "derived_metrics": {},
+    "quality": {
+      "bartscore": null,
+      "generated_text_length": 410,
+      "has_reference": false,
+      "avg_response_length": 410.0
+    },
+    "conversation_summary": [
+      {
+        "turn": 1,
+        "prompt_preview": "请将以上文本总结为 40-60 字的摘要。\n\n深度学习是机器学习的一个分支，它基于人工神经网络进行学...",
+        "response_preview": "嗯，用户让我把一段关于深度学习的文本总结成40到60字的摘要。首先，我需要仔细看一下原文的内容。原文主要介绍了深度学习作为机器学习的分支，基于人工神经网络，通过多层结构进行特征提取，自动学习数据规律，...",
+        "response_length": 410,
+        "duration_seconds": 5.920435428619385,
+        "tokens": 250,
+        "throughput": 42.22662387153147
+      }
+    ],
+    "metadata": {
+      "timestamp": "2026-03-03T20:38:11.947513",
+      "analysis_version": "1.0",
+      "max_tokens": 250,
+      "temperature": 0.7,
+      "top_p": 0.9
+    }
+  },
+  {
+    "experiment_id": "exp_20260303_203813_2759390320288",
+    "config_ref": {
+      "model": "Ollama:deepseek-r1:8b",
+      "task_type": "summary",
+      "prompts_count": 1,
+      "keep_context": false,
+      "per_turn_monitoring": false
+    },
+    "baseline_summary": null,
+    "performance": {
+      "total_time_seconds": 6.3600451946258545,
+      "token_count": 250,
+      "output_tokens": 250,
+      "throughput_tokens_per_sec": 39.30789677583523,
+      "latency_per_token_ms": 25.440180778503418,
+      "turns": 1,
+      "avg_time_per_turn": 6.3600451946258545,
+      "ttft_seconds": null
+    },
+    "resources": {
+      "cpu_percent_avg": 7.332258064516129,
+      "cpu_percent_peak": 12.0,
+      "cpu_percent_std": 2.4287773502883447,
+      "mem_used_avg_mb": 9567.373487903225,
+      "mem_used_peak_mb": 9602.7421875,
+      "gpu_util_avg": 78.12903225806451,
+      "gpu_util_peak": 95,
+      "gpu_util_std": 34.272853863760766,
+      "gpu_mem_avg_mb": 5692.6171875,
+      "gpu_mem_peak_mb": 5692.6171875,
+      "gpu_power_avg_w": 71.85706451612903,
+      "gpu_power_peak_w": 92.419,
+      "gpu_power_std_w": 30.241905743985377,
+      "gpu_energy_j": 460.3146758474111,
+      "gpu_temp_avg_c": 57.225806451612904,
+      "gpu_temp_peak_c": 60,
+      "cpu_energy_j_approx": 21.626214682459832
+    },
+    "derived_metrics": {},
+    "quality": {
+      "bartscore": null,
+      "generated_text_length": 449,
+      "has_reference": false,
+      "avg_response_length": 449.0
+    },
+    "conversation_summary": [
+      {
+        "turn": 1,
+        "prompt_preview": "请将以上文本总结为 50-80 字的摘要，保留关键信息。\n\n人工智能（Artificial Inte...",
+        "response_preview": "嗯，用户要求我将一段关于人工智能的文本总结成50-80字的摘要，同时要保留关键信息。\n\n先看看这段文本在讲什么。这段文本介绍了人工智能的基本概念、研究领域和未来发展。人工智能是计算机科学的一个分支，目...",
+        "response_length": 449,
+        "duration_seconds": 6.038135766983032,
+        "tokens": 250,
+        "throughput": 41.4035075804387
+      }
+    ],
+    "metadata": {
+      "timestamp": "2026-03-03T20:38:20.556345",
+      "analysis_version": "1.0",
+      "max_tokens": 250,
+      "temperature": 0.7,
+      "top_p": 0.9
+    }
+  },
+  {
+    "experiment_id": "exp_20260303_203822_2759390320288",
+    "config_ref": {
+      "model": "Ollama:deepseek-r1:8b",
+      "task_type": "summary",
+      "prompts_count": 1,
+      "keep_context": false,
+      "per_turn_monitoring": false
+    },
+    "baseline_summary": null,
+    "performance": {
+      "total_time_seconds": 5.501610040664673,
+      "token_count": 200,
+      "output_tokens": 200,
+      "throughput_tokens_per_sec": 36.35299458189827,
+      "latency_per_token_ms": 27.508050203323364,
+      "turns": 1,
+      "avg_time_per_turn": 5.501610040664673,
+      "ttft_seconds": null
+    },
+    "resources": {
+      "cpu_percent_avg": 8.077777777777778,
+      "cpu_percent_peak": 17.4,
+      "cpu_percent_std": 3.142343231993335,
+      "mem_used_avg_mb": 9566.981047453704,
+      "mem_used_peak_mb": 9590.5859375,
+      "gpu_util_avg": 83.70370370370371,
+      "gpu_util_peak": 95,
+      "gpu_util_std": 29.60332165398413,
+      "gpu_mem_avg_mb": 5692.6171875,
+      "gpu_mem_peak_mb": 5692.6171875,
+      "gpu_power_avg_w": 67.09322222222224,
+      "gpu_power_peak_w": 91.715,
+      "gpu_power_std_w": 30.88864907700674,
+      "gpu_energy_j": 373.8309465743303,
+      "gpu_temp_avg_c": 56.2962962962963,
+      "gpu_temp_peak_c": 59,
+      "cpu_energy_j_approx": 19.958014887571334
+    },
+    "derived_metrics": {},
+    "quality": {
+      "bartscore": null,
+      "generated_text_length": 339,
+      "has_reference": false,
+      "avg_response_length": 339.0
+    },
+    "conversation_summary": [
+      {
+        "turn": 1,
+        "prompt_preview": "请将以上文本总结为 40-60 字的摘要。\n\n区块链是一个分布式数据库，通过去中心化和去信任的方式集...",
+        "response_preview": "嗯，用户让我把一段关于区块链的文本总结成40到60字的摘要。首先，我需要仔细看看原文内容。原文提到区块链是一个分布式数据库，通过去中心化和去信任的方式维护可靠数据库。它起源于比特币，比特币运行稳定，没...",
+        "response_length": 339,
+        "duration_seconds": 5.101749658584595,
+        "tokens": 200,
+        "throughput": 39.20223715083014
+      }
+    ],
+    "metadata": {
+      "timestamp": "2026-03-03T20:38:28.290101",
+      "analysis_version": "1.0",
+      "max_tokens": 200,
+      "temperature": 0.7,
+      "top_p": 0.9
+    }
+  },
+  {
+    "experiment_id": "exp_20260303_203830_2759390320288",
+    "config_ref": {
+      "model": "Ollama:deepseek-r1:8b",
+      "task_type": "translation",
+      "prompts_count": 1,
+      "keep_context": false,
+      "per_turn_monitoring": false
+    },
+    "baseline_summary": null,
+    "performance": {
+      "total_time_seconds": 6.4073357582092285,
+      "token_count": 234,
+      "output_tokens": 234,
+      "throughput_tokens_per_sec": 36.52063959660514,
+      "latency_per_token_ms": 27.381776744483883,
+      "turns": 1,
+      "avg_time_per_turn": 6.4073357582092285,
+      "ttft_seconds": 5.701661825180054
+    },
+    "resources": {
+      "cpu_percent_avg": 8.15806451612903,
+      "cpu_percent_peak": 14.6,
+      "cpu_percent_std": 3.371108192783283,
+      "mem_used_avg_mb": 9567.06161794355,
+      "mem_used_peak_mb": 9582.83203125,
+      "gpu_util_avg": 84.70967741935483,
+      "gpu_util_peak": 100,
+      "gpu_util_std": 27.82687671367157,
+      "gpu_mem_avg_mb": 5692.6171875,
+      "gpu_mem_peak_mb": 5692.6171875,
+      "gpu_power_avg_w": 69.03358064516131,
+      "gpu_power_peak_w": 92.084,
+      "gpu_power_std_w": 29.30382674754183,
+      "gpu_energy_j": 451.543661518693,
+      "gpu_temp_avg_c": 56.225806451612904,
+      "gpu_temp_peak_c": 60,
+      "cpu_energy_j_approx": 24.118816148042683
+    },
+    "derived_metrics": {},
+    "quality": {
+      "bartscore": null,
+      "generated_text_length": 21,
+      "has_reference": true,
+      "avg_response_length": 21.0
+    },
+    "conversation_summary": [
+      {
+        "turn": 1,
+        "prompt_preview": "Translate the following text from eng to zho_Hans:...",
+        "response_preview": "人工智能正在重塑我们的生活方式和工作模式。",
+        "response_length": 21,
+        "duration_seconds": 5.898625135421753,
+        "tokens": 234,
+        "throughput": 39.67026122660513
+      }
+    ],
+    "metadata": {
+      "timestamp": "2026-03-03T20:38:36.942445",
+      "analysis_version": "1.0",
+      "max_tokens": 300,
+      "temperature": 0.2,
+      "top_p": 0.9
+    }
+  },
+  {
+    "experiment_id": "exp_20260303_203838_2759390320288",
+    "config_ref": {
+      "model": "Ollama:deepseek-r1:8b",
+      "task_type": "translation",
+      "prompts_count": 1,
+      "keep_context": false,
+      "per_turn_monitoring": false
+    },
+    "baseline_summary": null,
+    "performance": {
+      "total_time_seconds": 7.402594804763794,
+      "token_count": 297,
+      "output_tokens": 297,
+      "throughput_tokens_per_sec": 40.121066711482236,
+      "latency_per_token_ms": 24.924561632201325,
+      "turns": 1,
+      "avg_time_per_turn": 7.402594804763794,
+      "ttft_seconds": 6.757485628128052
+    },
+    "resources": {
+      "cpu_percent_avg": 7.841666666666667,
+      "cpu_percent_peak": 16.7,
+      "cpu_percent_std": 2.5933006638901968,
+      "mem_used_avg_mb": 9424.324001736111,
+      "mem_used_peak_mb": 9537.04296875,
+      "gpu_util_avg": 79.33333333333333,
+      "gpu_util_peak": 93,
+      "gpu_util_std": 31.888695314937063,
+      "gpu_mem_avg_mb": 5692.6171875,
+      "gpu_mem_peak_mb": 5692.6171875,
+      "gpu_power_avg_w": 73.9726388888889,
+      "gpu_power_peak_w": 92.444,
+      "gpu_power_std_w": 30.193743693532106,
+      "gpu_energy_j": 552.3113234004975,
+      "gpu_temp_avg_c": 57.138888888888886,
+      "gpu_temp_peak_c": 60,
+      "cpu_energy_j_approx": 26.612449555993084
+    },
+    "derived_metrics": {},
+    "quality": {
+      "bartscore": null,
+      "generated_text_length": 22,
+      "has_reference": true,
+      "avg_response_length": 22.0
+    },
+    "conversation_summary": [
+      {
+        "turn": 1,
+        "prompt_preview": "Translate the following text from eng to zho_Hans:...",
+        "response_preview": "文艺复兴是欧洲一个伟大的文化和艺术成就时期。",
+        "response_length": 22,
+        "duration_seconds": 6.996873378753662,
+        "tokens": 297,
+        "throughput": 42.44753105034809
+      }
+    ],
+    "metadata": {
+      "timestamp": "2026-03-03T20:38:46.585736",
+      "analysis_version": "1.0",
+      "max_tokens": 300,
+      "temperature": 0.2,
+      "top_p": 0.9
+    }
+  },
+  {
+    "experiment_id": "exp_20260303_203848_2759390320288",
+    "config_ref": {
+      "model": "Ollama:deepseek-r1:8b",
+      "task_type": "translation",
+      "prompts_count": 1,
+      "keep_context": false,
+      "per_turn_monitoring": false
+    },
+    "baseline_summary": null,
+    "performance": {
+      "total_time_seconds": 7.449712514877319,
+      "token_count": 299,
+      "output_tokens": 299,
+      "throughput_tokens_per_sec": 40.13577697164652,
+      "latency_per_token_ms": 24.915426471161602,
+      "turns": 1,
+      "avg_time_per_turn": 7.449712514877319,
+      "ttft_seconds": 6.833568096160889
+    },
+    "resources": {
+      "cpu_percent_avg": 7.305555555555554,
+      "cpu_percent_peak": 14.2,
+      "cpu_percent_std": 2.5130707692697443,
+      "mem_used_avg_mb": 9372.957465277777,
+      "mem_used_peak_mb": 9383.1015625,
+      "gpu_util_avg": 85.91666666666667,
+      "gpu_util_peak": 96,
+      "gpu_util_std": 25.918006396240344,
+      "gpu_mem_avg_mb": 5692.6171875,
+      "gpu_mem_peak_mb": 5692.6171875,
+      "gpu_power_avg_w": 74.27325,
+      "gpu_power_peak_w": 92.102,
+      "gpu_power_std_w": 29.420190304897567,
+      "gpu_energy_j": 556.5276129114627,
+      "gpu_temp_avg_c": 57.0,
+      "gpu_temp_peak_c": 60,
+      "cpu_energy_j_approx": 25.146335118412964
+    },
+    "derived_metrics": {},
+    "quality": {
+      "bartscore": null,
+      "generated_text_length": 77,
+      "has_reference": true,
+      "avg_response_length": 77.0
+    },
+    "conversation_summary": [
+      {
+        "turn": 1,
+        "prompt_preview": "Translate the following text from zho_Hans to eng:...",
+        "response_preview": "Deep learning has made breakthrough progress in the field of computer vision.",
+        "response_length": 77,
+        "duration_seconds": 7.118723630905151,
+        "tokens": 299,
+        "throughput": 42.00191150867616
+      }
+    ],
+    "metadata": {
+      "timestamp": "2026-03-03T20:38:56.292563",
+      "analysis_version": "1.0",
+      "max_tokens": 300,
+      "temperature": 0.2,
+      "top_p": 0.9
+    }
+  },
+  {
+    "experiment_id": "exp_20260303_203858_2759390320288",
+    "config_ref": {
+      "model": "Ollama:deepseek-r1:8b",
+      "task_type": "translation",
+      "prompts_count": 1,
+      "keep_context": false,
+      "per_turn_monitoring": false
+    },
+    "baseline_summary": null,
+    "performance": {
+      "total_time_seconds": 6.1084654331207275,
+      "token_count": 240,
+      "output_tokens": 240,
+      "throughput_tokens_per_sec": 39.28973694419147,
+      "latency_per_token_ms": 25.451939304669697,
+      "turns": 1,
+      "avg_time_per_turn": 6.1084654331207275,
+      "ttft_seconds": null
+    },
+    "resources": {
+      "cpu_percent_avg": 8.413333333333334,
+      "cpu_percent_peak": 19.1,
+      "cpu_percent_std": 3.2749283283082025,
+      "mem_used_avg_mb": 9371.597786458333,
+      "mem_used_peak_mb": 9403.328125,
+      "gpu_util_avg": 85.26666666666667,
+      "gpu_util_peak": 100,
+      "gpu_util_std": 24.77086101764643,
+      "gpu_mem_avg_mb": 5692.6171875,
+      "gpu_mem_peak_mb": 5692.6171875,
+      "gpu_power_avg_w": 72.83679999999998,
+      "gpu_power_peak_w": 92.582,
+      "gpu_power_std_w": 29.9114808676089,
+      "gpu_energy_j": 448.642308637023,
+      "gpu_temp_avg_c": 56.4,
+      "gpu_temp_peak_c": 60,
+      "cpu_energy_j_approx": 23.834149662852287
+    },
+    "derived_metrics": {},
+    "quality": {
+      "bartscore": null,
+      "generated_text_length": 406,
+      "has_reference": true,
+      "avg_response_length": 406.0
+    },
+    "conversation_summary": [
+      {
+        "turn": 1,
+        "prompt_preview": "Translate the following text from eng to zho_Hans:...",
+        "response_preview": "嗯，用户需要将一句英文翻译成简体中文。这句话是著名的英文测试句“The quick brown fox jumps over the lazy dog”，包含了英文字母表所有26个字母，常用于字体排印...",
+        "response_length": 406,
+        "duration_seconds": 5.7713401317596436,
+        "tokens": 240,
+        "throughput": 41.5847956489831
+      }
+    ],
+    "metadata": {
+      "timestamp": "2026-03-03T20:39:04.646710",
+      "analysis_version": "1.0",
+      "max_tokens": 240,
+      "temperature": 0.2,
+      "top_p": 0.9
+    }
+  },
+  {
+    "experiment_id": "exp_20260303_203906_2759390320288",
+    "config_ref": {
+      "model": "Ollama:deepseek-r1:8b",
+      "task_type": "translation",
+      "prompts_count": 1,
+      "keep_context": false,
+      "per_turn_monitoring": false
+    },
+    "baseline_summary": null,
+    "performance": {
+      "total_time_seconds": 7.582525968551636,
+      "token_count": 241,
+      "output_tokens": 241,
+      "throughput_tokens_per_sec": 31.783603643369286,
+      "latency_per_token_ms": 31.46276335498604,
+      "turns": 1,
+      "avg_time_per_turn": 7.582525968551636,
+      "ttft_seconds": 7.033127784729004
+    },
+    "resources": {
+      "cpu_percent_avg": 7.675675675675675,
+      "cpu_percent_peak": 15.7,
+      "cpu_percent_std": 3.0328298626686614,
+      "mem_used_avg_mb": 9431.653927364865,
+      "mem_used_peak_mb": 9473.03125,
+      "gpu_util_avg": 65.83783783783784,
+      "gpu_util_peak": 97,
+      "gpu_util_std": 42.83817034571269,
+      "gpu_mem_avg_mb": 5692.6171875,
+      "gpu_mem_peak_mb": 5692.6171875,
+      "gpu_power_avg_w": 59.825378378378375,
+      "gpu_power_peak_w": 92.097,
+      "gpu_power_std_w": 35.86086239851097,
+      "gpu_energy_j": 458.32915873968597,
+      "gpu_temp_avg_c": 54.21621621621622,
+      "gpu_temp_peak_c": 59,
+      "cpu_energy_j_approx": 26.926065439581873
+    },
+    "derived_metrics": {},
+    "quality": {
+      "bartscore": null,
+      "generated_text_length": 18,
+      "has_reference": true,
+      "avg_response_length": 18.0
+    },
+    "conversation_summary": [
+      {
+        "turn": 1,
+        "prompt_preview": "Translate the following text from eng to zho_Hans:...",
+        "response_preview": "气候变化对全球可持续性构成严峻挑战。",
+        "response_length": 18,
+        "duration_seconds": 7.230609178543091,
+        "tokens": 241,
+        "throughput": 33.33052500129174
+      }
+    ],
+    "metadata": {
+      "timestamp": "2026-03-03T20:39:14.485359",
+      "analysis_version": "1.0",
+      "max_tokens": 300,
+      "temperature": 0.2,
+      "top_p": 0.9
+    }
+  }
+]

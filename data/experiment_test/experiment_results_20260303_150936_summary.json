@@ -1,0 +1,192 @@
+[
+  {
+    "experiment_id": "exp_20260303_150936_2373340547248",
+    "config_ref": {
+      "model": "HF:google--gemma-2b-it:8bit",
+      "task_type": "qa",
+      "prompts_count": 1,
+      "keep_context": false,
+      "per_turn_monitoring": false
+    },
+    "baseline_summary": {
+      "duration_seconds": 0,
+      "gpu_power_avg_w": 23.647755102040815,
+      "gpu_power_peak_w": 31.427,
+      "gpu_power_std_w": 4.986035812516639,
+      "gpu_energy_j": 249.28132020962232,
+      "cpu_percent_avg": 18.16734693877551,
+      "cpu_percent_peak": 50.3,
+      "gpu_util_avg": 29.489795918367346,
+      "gpu_util_peak": 62,
+      "gpu_mem_avg_mb": 3555.8218271683672,
+      "gpu_mem_peak_mb": 3561.14453125,
+      "gpu_temp_avg_c": 60.183673469387756,
+      "gpu_temp_peak_c": 61
+    },
+    "performance": {
+      "total_time_seconds": 20.055761098861694,
+      "token_count": 49,
+      "output_tokens": 49,
+      "throughput_tokens_per_sec": 2.4431882569034538,
+      "latency_per_token_ms": 409.30124691554477,
+      "turns": 1,
+      "avg_time_per_turn": 20.055761098861694,
+      "ttft_seconds": null
+    },
+    "resources": {
+      "cpu_percent_avg": 37.01176470588235,
+      "cpu_percent_peak": 79.4,
+      "cpu_percent_std": 15.6775629240885,
+      "mem_used_avg_mb": 13421.66112132353,
+      "mem_used_peak_mb": 15997.39453125,
+      "gpu_util_avg": 41.21176470588235,
+      "gpu_util_peak": 70,
+      "gpu_util_std": 10.277438588706657,
+      "gpu_mem_avg_mb": 6492.383318014706,
+      "gpu_mem_peak_mb": 7725.40625,
+      "gpu_power_avg_w": 31.134400000000007,
+      "gpu_power_peak_w": 41.736,
+      "gpu_power_std_w": 8.126587645355649,
+      "gpu_energy_j": 606.65472480762,
+      "gpu_temp_avg_c": 61.65882352941176,
+      "gpu_temp_peak_c": 64,
+      "cpu_energy_j_approx": 329.48822495162494
+    },
+    "derived_metrics": {
+      "P_idle": 23.647755102040815,
+      "P_inc": 7.4866448979591915,
+      "E_inc": 132.38099795670172,
+      "E_token": 2.701653019524525,
+      "PPW": 0.07847230898631267,
+      "TPJ": 0.08077082069300406
+    },
+    "quality": {
+      "bartscore": -5.52699613571167,
+      "generated_text_length": 268,
+      "has_reference": true,
+      "avg_response_length": 268.0
+    },
+    "conversation_summary": [
+      {
+        "turn": 1,
+        "prompt_preview": "Statement 1| In a Bayesian network, the inference ...",
+        "response_preview": "\n\n**A. True, True**\n\nThe inference results of the junction tree algorithm are the same as the infere...",
+        "response_length": 268,
+        "duration_seconds": 19.646084547042847,
+        "tokens": 49,
+        "throughput": 2.4941356575489
+      }
+    ],
+    "metadata": {
+      "timestamp": "2026-03-03T15:10:07.605710",
+      "analysis_version": "1.0",
+      "max_tokens": 400,
+      "temperature": 0.1,
+      "top_p": 0.9
+    }
+  },
+  {
+    "experiment_id": "exp_20260303_151009_2373340547248",
+    "config_ref": {
+      "model": "HF:google--gemma-2b-it:8bit",
+      "task_type": "multi_turn",
+      "prompts_count": 3,
+      "keep_context": true,
+      "per_turn_monitoring": false
+    },
+    "baseline_summary": {
+      "duration_seconds": 0,
+      "gpu_power_avg_w": 17.792583333333333,
+      "gpu_power_peak_w": 21.255,
+      "gpu_power_std_w": 1.466359648263534,
+      "gpu_energy_j": 185.8363845204115,
+      "cpu_percent_avg": 34.268750000000004,
+      "cpu_percent_peak": 97.7,
+      "gpu_util_avg": 31.520833333333332,
+      "gpu_util_peak": 38,
+      "gpu_mem_avg_mb": 7752.384114583333,
+      "gpu_mem_peak_mb": 7773.46875,
+      "gpu_temp_avg_c": 61.104166666666664,
+      "gpu_temp_peak_c": 62
+    },
+    "performance": {
+      "total_time_seconds": 100.941885471344,
+      "token_count": 568,
+      "output_tokens": 568,
+      "throughput_tokens_per_sec": 5.627000103552131,
+      "latency_per_token_ms": 177.7145870974366,
+      "turns": 3,
+      "avg_time_per_turn": 33.64729515711466,
+      "ttft_seconds": null
+    },
+    "resources": {
+      "cpu_percent_avg": 28.76451612903226,
+      "cpu_percent_peak": 59.9,
+      "cpu_percent_std": 7.326288578520598,
+      "mem_used_avg_mb": 12777.10731686828,
+      "mem_used_peak_mb": 12853.21875,
+      "gpu_util_avg": 48.58494623655914,
+      "gpu_util_peak": 59,
+      "gpu_util_std": 4.970211181696194,
+      "gpu_mem_avg_mb": 7783.089255712365,
+      "gpu_mem_peak_mb": 7849.234375,
+      "gpu_power_avg_w": 39.068483870967746,
+      "gpu_power_peak_w": 44.078,
+      "gpu_power_std_w": 2.724277875761485,
+      "gpu_energy_j": 3945.4851838698414,
+      "gpu_temp_avg_c": 65.45376344086021,
+      "gpu_temp_peak_c": 67,
+      "cpu_energy_j_approx": 1308.7660981750496
+    },
+    "derived_metrics": {
+      "P_idle": 17.792583333333333,
+      "P_inc": 21.275900537634413,
+      "E_inc": 2149.468274797164,
+      "E_token": 3.784275131685148,
+      "PPW": 0.1440291392452427,
+      "TPJ": 0.14396201570395706
+    },
+    "quality": {
+      "bartscore": null,
+      "generated_text_length": 328,
+      "has_reference": false,
+      "avg_response_length": 320.0
+    },
+    "conversation_summary": [
+      {
+        "turn": 1,
+        "prompt_preview": "今天天气怎么样？",
+        "response_preview": "\n\nCan I ask a question about the current weather conditions?\n\nSure, I can answer your question about...",
+        "response_length": 162,
+        "duration_seconds": 5.808629512786865,
+        "tokens": 34,
+        "throughput": 5.853360061121797
+      },
+      {
+        "turn": 2,
+        "prompt_preview": "适合户外运动吗？",
+        "response_preview": "\n\n**耐力：**\n\n* 跑步：每周至少跑步 3 次，每次 30-45 分钟。\n* 游泳：每周至少游泳 3 次，每次 30-45 分钟。\n* 高强度运动：每周至少进行 2 次，每次 20-30 分钟。...",
+        "response_length": 470,
+        "duration_seconds": 51.08920884132385,
+        "tokens": 321,
+        "throughput": 6.283127245070137
+      },
+      {
+        "turn": 3,
+        "prompt_preview": "那我应该穿什么衣服？",
+        "response_preview": "\n\n穿舒适的衣服是最好的选择。舒适性是指衣服能让你感到舒适，即使在长时间穿着的情况下也不感到不舒服。衣服的材质、颜色和图案也要根据你的个人喜好进行选择。\n\n以下是一些推荐的衣服材料和颜色：\n\n* **...",
+        "response_length": 328,
+        "duration_seconds": 43.70975732803345,
+        "tokens": 213,
+        "throughput": 4.873053821861223
+      }
+    ],
+    "metadata": {
+      "timestamp": "2026-03-03T15:12:01.582578",
+      "analysis_version": "1.0",
+      "max_tokens": 400,
+      "temperature": 0.7,
+      "top_p": 0.9
+    }
+  }
+]

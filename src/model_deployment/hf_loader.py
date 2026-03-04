@@ -96,43 +96,82 @@ class HuggingFaceModelLoader:
         # 配置量化
         quantization_config = None
         if quantize == "4bit":
-            print("⚙️  配置4bit量化（启用 CPU offload）...")
+            print("⚙️  配置4bit量化...")
             quantization_config = BitsAndBytesConfig(
                 load_in_4bit=True,
                 bnb_4bit_compute_dtype=torch.float16,
                 bnb_4bit_use_double_quant=True,
                 bnb_4bit_quant_type="nf4",
-                llm_int8_enable_fp32_cpu_offload=True,  # 启用 CPU offload
-                bnb_4bit_quant_storage=torch.float16  # 使用 float16 存储量化权重
+                llm_int8_enable_fp32_cpu_offload=True  # 允许 CPU offload
             )
         elif quantize == "8bit":
-            print("⚙️  配置8bit量化（启用 CPU offload）...")
+            print("⚙️  配置8bit量化...")
             quantization_config = BitsAndBytesConfig(
                 load_in_8bit=True,
-                llm_int8_enable_fp32_cpu_offload=True,  # 启用 CPU offload
-                llm_int8_threshold=6.0
+                llm_int8_threshold=6.0,
+                llm_int8_enable_fp32_cpu_offload=True  # 允许 CPU offload
             )
         
         # 配置 device_map
-        # 对于量化模型，使用 "auto" 让 transformers 自动分配
-        # 这会在 GPU 显存不足时自动使用 CPU
+        # 策略：优先尝试完全加载到 GPU，失败时才使用 CPU offload
         if quantize:
-            device_map_config = "auto"
-            print(f"   使用自动设备映射（GPU + CPU offload）")
+            # 第一次尝试：完全加载到 GPU
+            device_map_config = {"": 0}  # 将所有层放在 GPU 0
+            print(f"   尝试完全加载到 GPU...")
         else:
             device_map_config = device
         
         # 加载模型
         print("🤖 加载模型...")
-        model = AutoModelForCausalLM.from_pretrained(
-            model_path_str,
-            quantization_config=quantization_config,
-            device_map=device_map_config,
-            trust_remote_code=trust_remote_code,
-            torch_dtype=torch.float16 if quantize is None else None,
-            low_cpu_mem_usage=True,  # 减少 CPU 内存使用
-            **kwargs
-        )
+        try:
+            model = AutoModelForCausalLM.from_pretrained(
+                model_path_str,
+                quantization_config=quantization_config,
+                device_map=device_map_config,
+                trust_remote_code=trust_remote_code,
+                torch_dtype=torch.float16 if quantize is None else None,
+                low_cpu_mem_usage=True,  # 减少 CPU 内存使用
+                **kwargs
+            )
+            if quantize:
+                print(f"   ✓ 模型已完全加载到 GPU")
+        except (RuntimeError, ValueError) as e:
+            # 如果显存不足，尝试使用 CPU offload
+            if quantize and ("out of memory" in str(e).lower() or "cuda" in str(e).lower()):
+                print(f"   ⚠️  GPU 显存不足，尝试使用 CPU offload...")
+                device_map_config = "auto"
+                model = AutoModelForCausalLM.from_pretrained(
+                    model_path_str,
+                    quantization_config=quantization_config,
+                    device_map=device_map_config,
+                    trust_remote_code=trust_remote_code,
+                    torch_dtype=torch.float16 if quantize is None else None,
+                    low_cpu_mem_usage=True,
+                    **kwargs
+                )
+                print(f"   ✓ 模型已加载（使用 CPU offload）")
+                print(f"   ⚠️  注意：使用 CPU offload 可能影响推理速度和结果可比性")
+            else:
+                raise
+        
+        # 对于 4-bit 量化模型，确保所有层都正确初始化
+        if quantize == "4bit":
+            print("   初始化 4-bit 量化状态...")
+            try:
+                # 确保模型在 CUDA 上
+                if torch.cuda.is_available():
+                    # 触发量化状态初始化
+                    model.eval()
+                    # 运行一个小的前向传播来初始化所有层
+                    with torch.no_grad():
+                        dummy_input = torch.tensor([[1]], device='cuda')
+                        try:
+                            _ = model(dummy_input)
+                        except:
+                            pass  # 忽略可能的错误，只是为了初始化
+                print("   ✓ 量化状态初始化完成")
+            except Exception as e:
+                print(f"   ⚠️  量化状态初始化警告: {e}")
         
         print(f"   ✓ 模型加载完成")
         
@@ -203,8 +242,14 @@ class HuggingFaceModelLoader:
         
         # 只在采样时添加 temperature 和 top_p
         if do_sample:
-            generation_config["temperature"] = temperature
+            # 确保 temperature 不会太低，避免数值不稳定
+            safe_temperature = max(temperature, 0.1)
+            if safe_temperature != temperature:
+                print(f"   [INFO] Temperature 调整: {temperature} -> {safe_temperature} (避免数值不稳定)")
+            generation_config["temperature"] = safe_temperature
             generation_config["top_p"] = top_p
+            # 添加 top_k 以提高稳定性
+            generation_config["top_k"] = 50
         
         # 合并额外参数
         generation_config.update(kwargs)
@@ -314,7 +359,21 @@ class HuggingFaceModelLoader:
         
         # 显示设备信息
         if hasattr(model, 'hf_device_map'):
-            print(f"   设备映射: {model.hf_device_map}")
+            device_map = model.hf_device_map
+            print(f"   设备映射: {device_map}")
+            
+            # 检查是否使用了 CPU offload
+            uses_cpu = any(
+                isinstance(v, str) and v == 'cpu' or v == 'cpu'
+                for v in device_map.values()
+            )
+            if uses_cpu:
+                cpu_layers = sum(1 for v in device_map.values() if v == 'cpu')
+                total_layers = len(device_map)
+                print(f"   ⚠️  CPU Offload: 是 ({cpu_layers}/{total_layers} 层在 CPU)")
+                print(f"   ⚠️  注意: 使用 CPU offload 会影响推理速度和能耗测量")
+            else:
+                print(f"   ✓ 完全在 GPU 上运行")
         
         # 估算显存占用
         if torch.cuda.is_available():

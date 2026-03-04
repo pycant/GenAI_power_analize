@@ -1,0 +1,43 @@
+[
+  {
+    "model": "hf:models/huggingface/Qwen--Qwen2.5-7B-Instruct:4bit",
+    "prompts": [
+      "什么是Python？",
+      "它有哪些主要特点？",
+      "请给我一个简单的代码示例。"
+    ],
+    "task_type": "qa",
+    "keep_context": true,
+    "max_tokens": 150,
+    "temperature": 0.5,
+    "top_p": 0.9,
+    "idle_measurement_duration": 10,
+    "per_turn_monitoring": false
+  },
+  {
+    "model": "ollama:qwen3:4b",
+    "prompts": [
+      "解释一下机器学习的基本概念。"
+    ],
+    "task_type": "qa",
+    "keep_context": false,
+    "max_tokens": 200,
+    "temperature": 0.7,
+    "top_p": 0.9,
+    "idle_measurement_duration": 5,
+    "per_turn_monitoring": false
+  },
+  {
+    "model": "hf:models/huggingface/Qwen--Qwen2.5-7B-Instruct:4bit",
+    "prompts": [
+      "写一首关于春天的诗。"
+    ],
+    "task_type": "creative",
+    "keep_context": false,
+    "max_tokens": 150,
+    "temperature": 0.8,
+    "top_p": 0.95,
+    "idle_measurement_duration": 10,
+    "per_turn_monitoring": false
+  }
+]

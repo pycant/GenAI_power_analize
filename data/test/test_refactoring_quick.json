@@ -1,0 +1,23 @@
+[
+  {
+    "model": "ollama:qwen3:4b",
+    "prompts": ["什么是Python？请用一句话回答。"],
+    "task_type": "qa",
+    "max_tokens": 50,
+    "temperature": 0.7,
+    "idle_measurement_duration": 3
+  },
+  {
+    "model": "ollama:qwen3:4b",
+    "prompts": [
+      "什么是机器学习？",
+      "它有哪些应用？"
+    ],
+    "task_type": "qa",
+    "max_tokens": 50,
+    "temperature": 0.7,
+    "keep_context": true,
+    "per_turn_monitoring": true,
+    "idle_measurement_duration": 3
+  }
+]

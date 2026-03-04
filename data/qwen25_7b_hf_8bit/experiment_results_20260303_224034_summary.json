@@ -1,0 +1,392 @@
+[
+  {
+    "experiment_id": "exp_20260303_224034_2093745559200",
+    "config_ref": {
+      "model": "HF:Qwen--Qwen2.5-7B-Instruct:8bit",
+      "task_type": "code",
+      "prompts_count": 1,
+      "keep_context": false,
+      "per_turn_monitoring": false
+    },
+    "baseline_summary": null,
+    "performance": {
+      "total_time_seconds": 360.9933183193207,
+      "token_count": 1198,
+      "output_tokens": 1198,
+      "throughput_tokens_per_sec": 3.31862098051437,
+      "latency_per_token_ms": 301.3299819026049,
+      "turns": 1,
+      "avg_time_per_turn": 360.9933183193207,
+      "ttft_seconds": null
+    },
+    "resources": {
+      "cpu_percent_avg": 9.612871853546908,
+      "cpu_percent_peak": 48.5,
+      "cpu_percent_std": 3.657761909588952,
+      "mem_used_avg_mb": 11398.688673215818,
+      "mem_used_peak_mb": 13345.35546875,
+      "gpu_util_avg": 70.43192219679634,
+      "gpu_util_peak": 99,
+      "gpu_util_std": 22.352707548507304,
+      "gpu_mem_avg_mb": 7934.056971360126,
+      "gpu_mem_peak_mb": 8176.6171875,
+      "gpu_power_avg_w": 32.23811956521739,
+      "gpu_power_peak_w": 590.006,
+      "gpu_power_std_w": 19.526990749062307,
+      "gpu_energy_j": 11724.040240764143,
+      "gpu_temp_avg_c": 40.609267734553775,
+      "gpu_temp_peak_c": 43,
+      "cpu_energy_j_approx": 1562.8518562120184
+    },
+    "derived_metrics": {},
+    "quality": {
+      "bartscore": null,
+      "generated_text_length": 4019,
+      "has_reference": false,
+      "avg_response_length": 4019.0
+    },
+    "conversation_summary": [
+      {
+        "turn": 1,
+        "prompt_preview": "\ndef multiply(a, b):\n    \"\"\"Complete the function ...",
+        "response_preview": "    # Extract the unit digit of each number\n    a_unit = a % 10\n    b_unit = b % 10\n    \n    # Multi...",
+        "response_length": 4019,
+        "duration_seconds": 360.5175712108612,
+        "tokens": 1198,
+        "throughput": 3.3230003075198464
+      }
+    ],
+    "metadata": {
+      "timestamp": "2026-03-03T22:46:36.004804",
+      "analysis_version": "1.0",
+      "max_tokens": 1200,
+      "temperature": 0.1,
+      "top_p": 0.9
+    }
+  },
+  {
+    "experiment_id": "exp_20260303_224638_2093745559200",
+    "config_ref": {
+      "model": "HF:Qwen--Qwen2.5-7B-Instruct:8bit",
+      "task_type": "code",
+      "prompts_count": 1,
+      "keep_context": false,
+      "per_turn_monitoring": false
+    },
+    "baseline_summary": null,
+    "performance": {
+      "total_time_seconds": 191.8530650138855,
+      "token_count": 640,
+      "output_tokens": 640,
+      "throughput_tokens_per_sec": 3.3358862416593635,
+      "latency_per_token_ms": 299.7704140841961,
+      "turns": 1,
+      "avg_time_per_turn": 191.8530650138855,
+      "ttft_seconds": null
+    },
+    "resources": {
+      "cpu_percent_avg": 9.090557939914165,
+      "cpu_percent_peak": 35.4,
+      "cpu_percent_std": 3.3198254953542876,
+      "mem_used_avg_mb": 11399.041325777896,
+      "mem_used_peak_mb": 11583.84765625,
+      "gpu_util_avg": 74.87231759656652,
+      "gpu_util_peak": 100,
+      "gpu_util_std": 16.911274580393613,
+      "gpu_mem_avg_mb": 8170.636500804721,
+      "gpu_mem_peak_mb": 8176.6171875,
+      "gpu_power_avg_w": 31.884048283261798,
+      "gpu_power_peak_w": 42.76,
+      "gpu_power_std_w": 2.312296275871934,
+      "gpu_energy_j": 6118.694564748165,
+      "gpu_temp_avg_c": 40.141630901287556,
+      "gpu_temp_peak_c": 41,
+      "cpu_energy_j_approx": 786.5621859169003
+    },
+    "derived_metrics": {},
+    "quality": {
+      "bartscore": null,
+      "generated_text_length": 2354,
+      "has_reference": false,
+      "avg_response_length": 2354.0
+    },
+    "conversation_summary": [
+      {
+        "turn": 1,
+        "prompt_preview": "\n\ndef triples_sum_to_zero(l: list):\n    \"\"\"\n    tr...",
+        "response_preview": "    for i in range(len(l) - 2):\n        for j in range(i + 1, len(l) - 1):\n            for k in rang...",
+        "response_length": 2354,
+        "duration_seconds": 191.47889733314514,
+        "tokens": 640,
+        "throughput": 3.3424048754912876
+      }
+    ],
+    "metadata": {
+      "timestamp": "2026-03-03T22:49:50.109218",
+      "analysis_version": "1.0",
+      "max_tokens": 640,
+      "temperature": 0.1,
+      "top_p": 0.9
+    }
+  },
+  {
+    "experiment_id": "exp_20260303_224952_2093745559200",
+    "config_ref": {
+      "model": "HF:Qwen--Qwen2.5-7B-Instruct:8bit",
+      "task_type": "code",
+      "prompts_count": 1,
+      "keep_context": false,
+      "per_turn_monitoring": false
+    },
+    "baseline_summary": null,
+    "performance": {
+      "total_time_seconds": 190.63422870635986,
+      "token_count": 628,
+      "output_tokens": 628,
+      "throughput_tokens_per_sec": 3.294266744548425,
+      "latency_per_token_ms": 303.55768902286604,
+      "turns": 1,
+      "avg_time_per_turn": 190.63422870635986,
+      "ttft_seconds": null
+    },
+    "resources": {
+      "cpu_percent_avg": 9.108864864864866,
+      "cpu_percent_peak": 22.2,
+      "cpu_percent_std": 3.047538183803198,
+      "mem_used_avg_mb": 10900.595333614865,
+      "mem_used_peak_mb": 11151.8359375,
+      "gpu_util_avg": 76.17945945945947,
+      "gpu_util_peak": 100,
+      "gpu_util_std": 16.140672470994634,
+      "gpu_mem_avg_mb": 8170.6171875,
+      "gpu_mem_peak_mb": 8170.6171875,
+      "gpu_power_avg_w": 31.864104864864863,
+      "gpu_power_peak_w": 48.659,
+      "gpu_power_std_w": 2.6908460256707785,
+      "gpu_energy_j": 6076.580181244853,
+      "gpu_temp_avg_c": 40.10378378378378,
+      "gpu_temp_peak_c": 41,
+      "cpu_energy_j_approx": 782.0638359582427
+    },
+    "derived_metrics": {},
+    "quality": {
+      "bartscore": null,
+      "generated_text_length": 2160,
+      "has_reference": false,
+      "avg_response_length": 2160.0
+    },
+    "conversation_summary": [
+      {
+        "turn": 1,
+        "prompt_preview": "from typing import List\n\n\ndef separate_paren_group...",
+        "response_preview": "    paren_string = paren_string.replace(\" \", \"\")\n    stack = []\n    result = []\n    for char in pare...",
+        "response_length": 2160,
+        "duration_seconds": 190.14230132102966,
+        "tokens": 628,
+        "throughput": 3.30278951941213
+      }
+    ],
+    "metadata": {
+      "timestamp": "2026-03-03T22:53:02.988869",
+      "analysis_version": "1.0",
+      "max_tokens": 640,
+      "temperature": 0.1,
+      "top_p": 0.9
+    }
+  },
+  {
+    "experiment_id": "exp_20260303_225305_2093745559200",
+    "config_ref": {
+      "model": "HF:Qwen--Qwen2.5-7B-Instruct:8bit",
+      "task_type": "code",
+      "prompts_count": 1,
+      "keep_context": false,
+      "per_turn_monitoring": false
+    },
+    "baseline_summary": null,
+    "performance": {
+      "total_time_seconds": 239.63147926330566,
+      "token_count": 800,
+      "output_tokens": 800,
+      "throughput_tokens_per_sec": 3.3384595482172217,
+      "latency_per_token_ms": 299.5393490791321,
+      "turns": 1,
+      "avg_time_per_turn": 239.63147926330566,
+      "ttft_seconds": null
+    },
+    "resources": {
+      "cpu_percent_avg": 10.265603448275863,
+      "cpu_percent_peak": 43.6,
+      "cpu_percent_std": 4.203949044277851,
+      "mem_used_avg_mb": 11021.464651804958,
+      "mem_used_peak_mb": 11240.7578125,
+      "gpu_util_avg": 76.86724137931034,
+      "gpu_util_peak": 100,
+      "gpu_util_std": 15.769283629357274,
+      "gpu_mem_avg_mb": 8170.623316271552,
+      "gpu_mem_peak_mb": 8177.7265625,
+      "gpu_power_avg_w": 32.059575,
+      "gpu_power_peak_w": 45.862,
+      "gpu_power_std_w": 3.397400919805056,
+      "gpu_energy_j": 7684.258745899083,
+      "gpu_temp_avg_c": 40.50689655172414,
+      "gpu_temp_peak_c": 42,
+      "cpu_energy_j_approx": 1109.6091050916916
+    },
+    "derived_metrics": {},
+    "quality": {
+      "bartscore": null,
+      "generated_text_length": 3185,
+      "has_reference": false,
+      "avg_response_length": 3185.0
+    },
+    "conversation_summary": [
+      {
+        "turn": 1,
+        "prompt_preview": "\ndef triangle_area(a, b, c):\n    '''\n    Given the...",
+        "response_preview": "    # Check if the sides form a valid triangle\n    if (a + b > c) and (b + c > a) and (c + a > b):\n ...",
+        "response_length": 3185,
+        "duration_seconds": 239.28799510002136,
+        "tokens": 800,
+        "throughput": 3.3432517150122947
+      }
+    ],
+    "metadata": {
+      "timestamp": "2026-03-03T22:57:04.872506",
+      "analysis_version": "1.0",
+      "max_tokens": 800,
+      "temperature": 0.1,
+      "top_p": 0.9
+    }
+  },
+  {
+    "experiment_id": "exp_20260303_225707_2093745559200",
+    "config_ref": {
+      "model": "HF:Qwen--Qwen2.5-7B-Instruct:8bit",
+      "task_type": "code",
+      "prompts_count": 1,
+      "keep_context": false,
+      "per_turn_monitoring": false
+    },
+    "baseline_summary": null,
+    "performance": {
+      "total_time_seconds": 249.55954933166504,
+      "token_count": 800,
+      "output_tokens": 800,
+      "throughput_tokens_per_sec": 3.205647718720628,
+      "latency_per_token_ms": 311.9494366645813,
+      "turns": 1,
+      "avg_time_per_turn": 249.55954933166504,
+      "ttft_seconds": null
+    },
+    "resources": {
+      "cpu_percent_avg": 9.470743801652894,
+      "cpu_percent_peak": 30.3,
+      "cpu_percent_std": 3.3028392907683837,
+      "mem_used_avg_mb": 11060.768356146695,
+      "mem_used_peak_mb": 11376.13671875,
+      "gpu_util_avg": 77.50330578512397,
+      "gpu_util_peak": 99,
+      "gpu_util_std": 15.05226395692055,
+      "gpu_mem_avg_mb": 8170.6171875,
+      "gpu_mem_peak_mb": 8170.6171875,
+      "gpu_power_avg_w": 31.79230578512396,
+      "gpu_power_peak_w": 48.972,
+      "gpu_power_std_w": 2.6972661213969884,
+      "gpu_energy_j": 7934.689214921468,
+      "gpu_temp_avg_c": 40.13636363636363,
+      "gpu_temp_peak_c": 41,
+      "cpu_energy_j_approx": 1065.2869566339248
+    },
+    "derived_metrics": {},
+    "quality": {
+      "bartscore": null,
+      "generated_text_length": 2590,
+      "has_reference": false,
+      "avg_response_length": 2590.0
+    },
+    "conversation_summary": [
+      {
+        "turn": 1,
+        "prompt_preview": "\ndef get_row(lst, x):\n    \"\"\"\n    You are given a ...",
+        "response_preview": "    # Your code here\n\n# Test cases\nprint(get_row([[1,2,3,4,5,6],[1,2,3,4,1,6],[1,2,3,4,5,1]], 1))\npr...",
+        "response_length": 2590,
+        "duration_seconds": 249.06128525733948,
+        "tokens": 800,
+        "throughput": 3.2120608354422084
+      }
+    ],
+    "metadata": {
+      "timestamp": "2026-03-03T23:01:16.781136",
+      "analysis_version": "1.0",
+      "max_tokens": 800,
+      "temperature": 0.1,
+      "top_p": 0.9
+    }
+  },
+  {
+    "experiment_id": "exp_20260303_230118_2093745559200",
+    "config_ref": {
+      "model": "HF:Qwen--Qwen2.5-7B-Instruct:8bit",
+      "task_type": "creative",
+      "prompts_count": 1,
+      "keep_context": false,
+      "per_turn_monitoring": false
+    },
+    "baseline_summary": null,
+    "performance": {
+      "total_time_seconds": 146.0580334663391,
+      "token_count": 500,
+      "output_tokens": 500,
+      "throughput_tokens_per_sec": 3.4232968097248224,
+      "latency_per_token_ms": 292.1160669326782,
+      "turns": 1,
+      "avg_time_per_turn": 146.0580334663391,
+      "ttft_seconds": null
+    },
+    "resources": {
+      "cpu_percent_avg": 8.8688293370945,
+      "cpu_percent_peak": 24.1,
+      "cpu_percent_std": 2.8870170764872833,
+      "mem_used_avg_mb": 10654.205400431947,
+      "mem_used_peak_mb": 11021.06640625,
+      "gpu_util_avg": 74.4132581100141,
+      "gpu_util_peak": 95,
+      "gpu_util_std": 17.06487725675471,
+      "gpu_mem_avg_mb": 8170.6171875,
+      "gpu_mem_peak_mb": 8170.6171875,
+      "gpu_power_avg_w": 31.719225669957684,
+      "gpu_power_peak_w": 41.597,
+      "gpu_power_std_w": 2.871597073830647,
+      "gpu_energy_j": 4634.558855821847,
+      "gpu_temp_avg_c": 39.92242595204513,
+      "gpu_temp_peak_c": 41,
+      "cpu_energy_j_approx": 583.7603664046526
+    },
+    "derived_metrics": {},
+    "quality": {
+      "bartscore": null,
+      "generated_text_length": 725,
+      "has_reference": false,
+      "avg_response_length": 725.0
+    },
+    "conversation_summary": [
+      {
+        "turn": 1,
+        "prompt_preview": "请以\"春天\"为主题，创作一首现代诗（4-8 行）。",
+        "response_preview": " 春天，是大地的乐章，  \n万物复苏，绿意盎然。  \n微风轻拂，花瓣飘落，  \n心灵沐浴，春暖花开。 梦随风舞，诗意盎然。 \n\n（注：根据您的要求创作了一首四行的现代诗，如果需要更长的诗歌，请告知。）...",
+        "response_length": 725,
+        "duration_seconds": 145.70848989486694,
+        "tokens": 500,
+        "throughput": 3.431509038085324
+      }
+    ],
+    "metadata": {
+      "timestamp": "2026-03-03T23:03:45.212769",
+      "analysis_version": "1.0",
+      "max_tokens": 500,
+      "temperature": 0.8,
+      "top_p": 0.9
+    }
+  }
+]

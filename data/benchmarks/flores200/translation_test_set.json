@@ -1,0 +1,92 @@
+[
+  {
+    "id": 1,
+    "source": "The quick brown fox jumps over the lazy dog.",
+    "target": "敏捷的棕色狐狸跳过懒狗。",
+    "source_lang": "eng",
+    "target_lang": "zho_Hans",
+    "difficulty": "easy",
+    "domain": "general"
+  },
+  {
+    "id": 2,
+    "source": "Artificial intelligence is transforming the way we live and work.",
+    "target": "人工智能正在改变我们的生活和工作方式。",
+    "source_lang": "eng",
+    "target_lang": "zho_Hans",
+    "difficulty": "medium",
+    "domain": "technology"
+  },
+  {
+    "id": 3,
+    "source": "Climate change poses significant challenges to global sustainability.",
+    "target": "气候变化对全球可持续发展构成重大挑战。",
+    "source_lang": "eng",
+    "target_lang": "zho_Hans",
+    "difficulty": "medium",
+    "domain": "environment"
+  },
+  {
+    "id": 4,
+    "source": "The implementation of quantum computing algorithms requires careful consideration of decoherence effects.",
+    "target": "量子计算算法的实现需要仔细考虑退相干效应。",
+    "source_lang": "eng",
+    "target_lang": "zho_Hans",
+    "difficulty": "hard",
+    "domain": "science"
+  },
+  {
+    "id": 5,
+    "source": "Machine learning models can achieve remarkable performance when trained on large-scale datasets.",
+    "target": "机器学习模型在大规模数据集上训练时可以实现卓越的性能。",
+    "source_lang": "eng",
+    "target_lang": "zho_Hans",
+    "difficulty": "medium",
+    "domain": "technology"
+  },
+  {
+    "id": 6,
+    "source": "今天天气很好，适合出去散步。",
+    "target": "The weather is nice today, perfect for going out for a walk.",
+    "source_lang": "zho_Hans",
+    "target_lang": "eng",
+    "difficulty": "easy",
+    "domain": "general"
+  },
+  {
+    "id": 7,
+    "source": "深度学习在计算机视觉领域取得了突破性进展。",
+    "target": "Deep learning has made breakthrough progress in the field of computer vision.",
+    "source_lang": "zho_Hans",
+    "target_lang": "eng",
+    "difficulty": "medium",
+    "domain": "technology"
+  },
+  {
+    "id": 8,
+    "source": "可持续发展需要平衡经济增长、社会公平和环境保护。",
+    "target": "Sustainable development requires balancing economic growth, social equity, and environmental protection.",
+    "source_lang": "zho_Hans",
+    "target_lang": "eng",
+    "difficulty": "medium",
+    "domain": "environment"
+  },
+  {
+    "id": 9,
+    "source": "神经网络的训练过程涉及反向传播算法和梯度下降优化。",
+    "target": "The training process of neural networks involves backpropagation algorithms and gradient descent optimization.",
+    "source_lang": "zho_Hans",
+    "target_lang": "eng",
+    "difficulty": "hard",
+    "domain": "technology"
+  },
+  {
+    "id": 10,
+    "source": "The Renaissance was a period of great cultural and artistic achievement in Europe.",
+    "target": "文艺复兴是欧洲文化和艺术成就辉煌的时期。",
+    "source_lang": "eng",
+    "target_lang": "zho_Hans",
+    "difficulty": "medium",
+    "domain": "history"
+  }
+]

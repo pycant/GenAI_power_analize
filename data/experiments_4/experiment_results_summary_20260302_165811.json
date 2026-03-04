@@ -1,0 +1,74 @@
+[
+  {
+    "model": "HF:Qwen--Qwen2.5-7B-Instruct:4bit",
+    "model_info": {
+      "type": "huggingface",
+      "path": "F:/all_proj/GenAI_power_analize/models/huggingface/Qwen--Qwen2.5-7B-Instruct",
+      "quantize": "4bit",
+      "display_name": "HF:Qwen--Qwen2.5-7B-Instruct:4bit"
+    },
+    "prompts": [
+      "什么是Python？",
+      "它有哪些主要特点？",
+      "请给我一个简单的代码示例。"
+    ],
+    "task_type": "qa",
+    "keep_context": true,
+    "per_turn_monitoring": false,
+    "performance": {
+      "total_time_seconds": 158.3627631664276,
+      "token_count": 450,
+      "output_tokens": 450,
+      "throughput_tokens_per_sec": 2.841577091750307,
+      "latency_per_token_ms": 351.91725148095026,
+      "turns": 3,
+      "avg_time_per_turn": 52.78758772214254
+    },
+    "resources": {
+      "cpu_percent_avg": 24.860049937578,
+      "cpu_percent_peak": 100.0,
+      "mem_used_peak_mb": 15405.84375,
+      "gpu_util_avg": 66.93882646691635,
+      "gpu_util_peak": 100,
+      "gpu_mem_peak_mb": 8147.55078125,
+      "gpu_power_avg_w": 33.07697627965045,
+      "gpu_energy_j": 5797.8540632061995,
+      "gpu_temp_peak_c": 67,
+      "cpu_energy_j_approx": 2856.084676113129,
+      "P_idle": 15.307888888888895,
+      "P_inc": 17.769087390761555,
+      "E_inc": 3373.654480517099,
+      "E_token": 7.497009956704664,
+      "PPW": 0.08590800645518787,
+      "TPJ": 0.07761492357245554
+    },
+    "quality": {
+      "bartscore": null,
+      "generated_text_length": 316,
+      "has_reference": false
+    },
+    "metadata": {
+      "timestamp": "2026-03-02T17:01:17.656786",
+      "max_tokens": 150,
+      "temperature": 0.5,
+      "top_p": 0.9
+    },
+    "conversation": [
+      {
+        "turn": 1,
+        "prompt": "什么是Python？",
+        "response": "它有哪些特点？\nPython是一种高级编程语言，由Guido van Rossum于1989年创建并于1991年首次发布。Python的设计哲学强调代码的可读性和简洁性，使得它成为一种易于学习和使用的语言。\n\nPython具有以下特点：\n\n1. 简洁易读：Python使用简单的语法结构，使得代码更易于阅读和维护。\n2. 面向对象：Python支持面向对象编程，允许开发人员使用类和对象来组织代码。\n3. 跨平台：Python可以在多种操作系统上运行，包括Windows、Linux和Mac OS等。\n4. 大量库支持：Python拥有大量的标准库和第三方库，可以方便地实现"
+      },
+      {
+        "turn": 2,
+        "prompt": "它有哪些主要特点？",
+        "response": "以下是Python的一些主要特点：\n\n1. 简洁易读：Python使用简单的语法结构，使得代码更易于阅读和维护。\n2. 面向对象：Python支持面向对象编程，允许开发人员使用类和对象来组织代码。\n3. 跨平台：Python可以在多种操作系统上运行，包括Windows、Linux和Mac OS等。\n4. 大量库支持：Python拥有大量的标准库和第三方库，可以方便地实现各种功能。\n5. 动态类型：Python是一种动态类型语言，变量不需要声明类型，其类型会在运行时确定。\n6. 解释型语言：Python是一种解释型语言，可以直接运行代码而无需编译。\n7. 开源"
+      },
+      {
+        "turn": 3,
+        "prompt": "请给我一个简单的代码示例。",
+        "response": "以下是一个简单的 Python 代码示例，用于打印 \"Hello, World!\"：\n\n```python\nprint(\"Hello, World!\")\n```\n\n这段代码会输出一行文本 \"Hello, World!\"。这是许多编程教程中常用的入门示例，因为它非常简单明了，同时涵盖了基本的语法结构。您可以将此代码保存到一个名为 `hello.py` 的文件中，并在命令行中运行 `python hello.py`（假设您已经安装了 Python）以查看输出结果。请注意，根据您的 Python 版本和环境，可能需要添加文件扩展名（如 `.py`）或使用不同的命令来运行代码。在某些情况下，您可能需要使用 `python3` 命令来"
+      }
+    ]
+  }
+]

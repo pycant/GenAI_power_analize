@@ -1,0 +1,24 @@
+[
+  {
+    "question": "What is the embryological origin of the hyoid bone?",
+    "subject": "anatomy",
+    "choices": [
+      "The first pharyngeal arch",
+      "The first and second pharyngeal arches",
+      "The second pharyngeal arch",
+      "The second and third pharyngeal arches"
+    ],
+    "answer": 3
+  },
+  {
+    "question": "Which of the following is not a way to form recombinant DNA?",
+    "subject": "college_biology",
+    "choices": [
+      "Translation",
+      "Conjugation",
+      "Specialized transduction",
+      "Transformation"
+    ],
+    "answer": 0
+  }
+]

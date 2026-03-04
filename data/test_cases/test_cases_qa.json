@@ -1,0 +1,351 @@
+{
+  "metadata": {
+    "task_type": "qa",
+    "count": 18,
+    "created_date": "2026-03-02"
+  },
+  "tasks": [
+    {
+      "id": "qa_machine_learning_001",
+      "task_type": "qa",
+      "difficulty": "easy",
+      "language": "en",
+      "question": "Statement 1| In a Bayesian network, the inference results of the junction tree algorithm are the same as the inference results of variable elimination. Statement 2| If two random variable X and Y are conditionally independent given another random variable Z, then in the corresponding Bayesian network, the nodes for X and Y are d-separated given Z.",
+      "choices": [
+        "True, True",
+        "False, False",
+        "True, False",
+        "False, True"
+      ],
+      "expected_answer": 2,
+      "expected_answer_text": "True, False",
+      "temperature": 0.0,
+      "max_tokens": 100,
+      "repeat": 1,
+      "source": "MMLU-machine_learning"
+    },
+    {
+      "id": "qa_machine_learning_002",
+      "task_type": "qa",
+      "difficulty": "easy",
+      "language": "en",
+      "question": "High entropy means that the partitions in classification are",
+      "choices": [
+        "pure",
+        "not pure",
+        "useful",
+        "useless"
+      ],
+      "expected_answer": 1,
+      "expected_answer_text": "not pure",
+      "temperature": 0.0,
+      "max_tokens": 100,
+      "repeat": 1,
+      "source": "MMLU-machine_learning"
+    },
+    {
+      "id": "qa_machine_learning_003",
+      "task_type": "qa",
+      "difficulty": "easy",
+      "language": "en",
+      "question": "A machine learning problem involves four attributes plus a class. The attributes have 3, 2, 2, and 2 possible values each. The class has 3 possible values. How many maximum possible different examples are there?",
+      "choices": [
+        "12",
+        "24",
+        "48",
+        "72"
+      ],
+      "expected_answer": 3,
+      "expected_answer_text": "72",
+      "temperature": 0.0,
+      "max_tokens": 100,
+      "repeat": 1,
+      "source": "MMLU-machine_learning"
+    },
+    {
+      "id": "qa_machine_learning_004",
+      "task_type": "qa",
+      "difficulty": "easy",
+      "language": "en",
+      "question": "Statement 1| For any two variables x and y having joint distribution p(x, y), we always have H[x, y] ≥ H[x] + H[y] where H is entropy function. Statement 2| For some directed graphs, moralization decreases the number of edges present in the graph.",
+      "choices": [
+        "True, True",
+        "False, False",
+        "True, False",
+        "False, True"
+      ],
+      "expected_answer": 1,
+      "expected_answer_text": "False, False",
+      "temperature": 0.0,
+      "max_tokens": 100,
+      "repeat": 1,
+      "source": "MMLU-machine_learning"
+    },
+    {
+      "id": "qa_machine_learning_005",
+      "task_type": "qa",
+      "difficulty": "easy",
+      "language": "en",
+      "question": "Which of the following sentence is FALSE regarding regression?",
+      "choices": [
+        "It relates inputs to outputs.",
+        "It is used for prediction.",
+        "It may be used for interpretation.",
+        "It discovers causal relationships"
+      ],
+      "expected_answer": 3,
+      "expected_answer_text": "It discovers causal relationships",
+      "temperature": 0.0,
+      "max_tokens": 100,
+      "repeat": 1,
+      "source": "MMLU-machine_learning"
+    },
+    {
+      "id": "qa_machine_learning_006",
+      "task_type": "qa",
+      "difficulty": "medium",
+      "language": "en",
+      "question": "Say the incidence of a disease D is about 5 cases per 100 people (i.e., P(D) = 0.05). Let Boolean random variable D mean a patient “has disease D” and let Boolean random variable TP stand for \"tests positive.\" Tests for disease D are known to be very accurate in the sense that the probability of testing positive when you have the disease is 0.99, and the probability of testing negative when you do not have the disease is 0.97. What is P(TP), the prior probability of testing positive.",
+      "choices": [
+        "0.0368",
+        "0.473",
+        "0.078",
+        "None of the above"
+      ],
+      "expected_answer": 2,
+      "expected_answer_text": "0.078",
+      "temperature": 0.0,
+      "max_tokens": 100,
+      "repeat": 1,
+      "source": "MMLU-machine_learning"
+    },
+    {
+      "id": "qa_computer_security_001",
+      "task_type": "qa",
+      "difficulty": "medium",
+      "language": "en",
+      "question": "Suppose you want to use fuzzing on a program to try to find memory errors; which of the following statements is true?",
+      "choices": [
+        "You should not use a grammar-based fuzzer, because its adherence to the grammar means it will not find memory errors",
+        "Compiling the program with address sanitizer (ASAN) will make errors harder to reproduce",
+        "Compiling the program with address sanitizer (ASAN) will make the source of a memory error easier to find",
+        "Fuzzing doesn't find memory errors, it finds crashes and hangs"
+      ],
+      "expected_answer": 2,
+      "expected_answer_text": "Compiling the program with address sanitizer (ASAN) will make the source of a memory error easier to find",
+      "temperature": 0.0,
+      "max_tokens": 100,
+      "repeat": 1,
+      "source": "MMLU-computer_security"
+    },
+    {
+      "id": "qa_computer_security_002",
+      "task_type": "qa",
+      "difficulty": "medium",
+      "language": "en",
+      "question": "What is Nmap?",
+      "choices": [
+        "It is a scanner which works by injecting packets to a range of addresses, and inferring what hosts and services might be at those addresses, based on the responses",
+        "It is a network fuzz testing tool",
+        "It is a map of the Internet",
+        "It is a suite of tools for scripting attacks: probe, construct, encode, inject, wait for response"
+      ],
+      "expected_answer": 0,
+      "expected_answer_text": "It is a scanner which works by injecting packets to a range of addresses, and inferring what hosts and services might be at those addresses, based on the responses",
+      "temperature": 0.0,
+      "max_tokens": 100,
+      "repeat": 1,
+      "source": "MMLU-computer_security"
+    },
+    {
+      "id": "qa_computer_security_003",
+      "task_type": "qa",
+      "difficulty": "medium",
+      "language": "en",
+      "question": "Suppose Unix did not provide a way of passing file descriptors between processes, but still allowed inheriting file descriptors from a parent on fork and exec. What aspects of the OKWS design would break without file descriptor passing?\n1. It would be impossible for services to send messages to oklogd.\n2. It would be impossible for services to get a TCP connection to a database proxy.",
+      "choices": [
+        "True, True",
+        "False, False",
+        "True, False",
+        "False, True"
+      ],
+      "expected_answer": 1,
+      "expected_answer_text": "False, False",
+      "temperature": 0.0,
+      "max_tokens": 100,
+      "repeat": 1,
+      "source": "MMLU-computer_security"
+    },
+    {
+      "id": "qa_computer_security_004",
+      "task_type": "qa",
+      "difficulty": "medium",
+      "language": "en",
+      "question": "The AH Protocol provides source authentication and data integrity, but not",
+      "choices": [
+        "Integrity",
+        "Privacy",
+        "Nonrepudiation",
+        "Both A & C"
+      ],
+      "expected_answer": 1,
+      "expected_answer_text": "Privacy",
+      "temperature": 0.0,
+      "max_tokens": 100,
+      "repeat": 1,
+      "source": "MMLU-computer_security"
+    },
+    {
+      "id": "qa_computer_security_005",
+      "task_type": "qa",
+      "difficulty": "medium",
+      "language": "en",
+      "question": "Why is it that the compiler does not know the absolute address of a local variable?",
+      "choices": [
+        "Programs are not allowed to reference memory using absolute addresses",
+        "The size of the address depends on the architecture the program will run on",
+        "As a stack-allocated variable, it could have different addresses depending on when its containing function is called",
+        "Compiler writers are not very good at that sort of thing"
+      ],
+      "expected_answer": 2,
+      "expected_answer_text": "As a stack-allocated variable, it could have different addresses depending on when its containing function is called",
+      "temperature": 0.0,
+      "max_tokens": 100,
+      "repeat": 1,
+      "source": "MMLU-computer_security"
+    },
+    {
+      "id": "qa_computer_security_006",
+      "task_type": "qa",
+      "difficulty": "medium",
+      "language": "en",
+      "question": "You are given a message (m) and its OTP encryption (c). Can you compute the OTP key from m and c ?",
+      "choices": [
+        "No, I cannot compute the key.",
+        "Yes, the key is k = m xor c.",
+        "I can only compute half the bits of the key.",
+        "Yes, the key is k = m xor m."
+      ],
+      "expected_answer": 1,
+      "expected_answer_text": "Yes, the key is k = m xor c.",
+      "temperature": 0.0,
+      "max_tokens": 100,
+      "repeat": 1,
+      "source": "MMLU-computer_security"
+    },
+    {
+      "id": "qa_college_computer_science_001",
+      "task_type": "qa",
+      "difficulty": "medium",
+      "language": "en",
+      "question": "If p(x) is the minimal-degree interpolating polynomial for the real-valued function f(x) at the n + 1 distinct real numbers x0, .... xn what is the maximum possible degree of p(x)?",
+      "choices": [
+        "n",
+        "n + 1",
+        "n + 2",
+        "2n"
+      ],
+      "expected_answer": 0,
+      "expected_answer_text": "n",
+      "temperature": 0.0,
+      "max_tokens": 100,
+      "repeat": 1,
+      "source": "MMLU-college_computer_science"
+    },
+    {
+      "id": "qa_college_computer_science_002",
+      "task_type": "qa",
+      "difficulty": "medium",
+      "language": "en",
+      "question": "Hash tables can contribute to an efficient average-case solution for all of the problems described below EXCEPT:",
+      "choices": [
+        "Counting distinct values: Given a set of n keys, determine the number of distinct key values.",
+        "Dynamic dictionary: Support the operations of insert, delete, and search in a dictionary.",
+        "Range search: Given values a and b, find all the records whose key value is in the range a, b.",
+        "Symbol table lookup: Given a program identifier, find its type and address."
+      ],
+      "expected_answer": 2,
+      "expected_answer_text": "Range search: Given values a and b, find all the records whose key value is in the range a, b.",
+      "temperature": 0.0,
+      "max_tokens": 100,
+      "repeat": 1,
+      "source": "MMLU-college_computer_science"
+    },
+    {
+      "id": "qa_college_computer_science_003",
+      "task_type": "qa",
+      "difficulty": "medium",
+      "language": "en",
+      "question": "Consider the following equations concerning a stack module that has the operations Push, Pop, Top, and IsEmpty. Which of the equations does NOT represent the conventional semantics of a stack?",
+      "choices": [
+        "IsEmpty(Push(Stack,Elem)) = true",
+        "Pop(Push(Stack,Elem)) = Stack",
+        "Top(Push(Stack,Elem)) = Elem",
+        "IsEmpty(Push(Push(Stack,Elem1),Elem2)) = false"
+      ],
+      "expected_answer": 0,
+      "expected_answer_text": "IsEmpty(Push(Stack,Elem)) = true",
+      "temperature": 0.0,
+      "max_tokens": 100,
+      "repeat": 1,
+      "source": "MMLU-college_computer_science"
+    },
+    {
+      "id": "qa_college_computer_science_004",
+      "task_type": "qa",
+      "difficulty": "hard",
+      "language": "en",
+      "question": "Any set of Boolean operators that is sufficient to represent all Boolean expressions is said to be complete. Which of the following is NOT complete?",
+      "choices": [
+        "{AND, NOT}",
+        "{NOT, OR}",
+        "{AND, OR}",
+        "{NAND}"
+      ],
+      "expected_answer": 2,
+      "expected_answer_text": "{AND, OR}",
+      "temperature": 0.0,
+      "max_tokens": 100,
+      "repeat": 1,
+      "source": "MMLU-college_computer_science"
+    },
+    {
+      "id": "qa_college_computer_science_005",
+      "task_type": "qa",
+      "difficulty": "hard",
+      "language": "en",
+      "question": "You want to cluster 7 points into 3 clusters using the k-Means Clustering algorithm. Suppose after the first iteration, clusters C1, C2 and C3 contain the following two-dimensional points: C1 contains the 2 points: {(0,6), (6,0)} C2 contains the 3 points: {(2,2), (4,4), (6,6)} C3 contains the 2 points: {(5,5), (7,7)} What are the cluster centers computed for these 3 clusters?",
+      "choices": [
+        "C1: (3,3), C2: (4,4), C3: (6,6)",
+        "C1: (3,3), C2: (6,6), C3: (12,12)",
+        "C1: (6,6), C2: (12,12), C3: (12,12)",
+        "C1: (0,0), C2: (48,48), C3: (35,35)"
+      ],
+      "expected_answer": 0,
+      "expected_answer_text": "C1: (3,3), C2: (4,4), C3: (6,6)",
+      "temperature": 0.0,
+      "max_tokens": 100,
+      "repeat": 1,
+      "source": "MMLU-college_computer_science"
+    },
+    {
+      "id": "qa_college_computer_science_006",
+      "task_type": "qa",
+      "difficulty": "hard",
+      "language": "en",
+      "question": "Which of the following algorithms has running time Θ(n^2) in the worst case but Θ(n log n) on average?",
+      "choices": [
+        "Bubblesort",
+        "Mergesort",
+        "Heapsort",
+        "Quicksort"
+      ],
+      "expected_answer": 3,
+      "expected_answer_text": "Quicksort",
+      "temperature": 0.0,
+      "max_tokens": 100,
+      "repeat": 1,
+      "source": "MMLU-college_computer_science"
+    }
+  ]
+}
