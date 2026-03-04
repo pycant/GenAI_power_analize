@@ -179,6 +179,7 @@ class QAEvaluator:
     def _calculate_bertscore(self, generated: str, reference: str) -> Dict[str, float]:
         """计算BERTScore"""
         try:
+            import bert_score
             from bert_score import score
             
             P, R, F1 = score(

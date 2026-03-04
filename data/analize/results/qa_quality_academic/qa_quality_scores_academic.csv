@@ -1,62 +1,61 @@
 ﻿model,question_id,reference_answer,extracted_answer,exact_match,f1_score,bertscore_precision,bertscore_recall,bertscore_f1,rouge_l,bleu
-deepseek_8b_ol_q4km,q01,Quicksort,What about insertion sort,0.0,0.0,,,,,
-deepseek_8b_ol_q4km,q02,"Range search: Given values a and b, find all the records whose key value is in the range a, b.","Hash tables are great for average-case O(1) time for insertions, deletions",0.0,0.0,,,,,
-deepseek_8b_ol_q4km,q03,"It is a scanner which works by injecting packets to a range of addresses, and inferring what hosts and services might be at those addresses, based on the responses",but also some depth,0.0,0.0,,,,,
-deepseek_8b_ol_q4km,q04,"{AND, OR}","Similarly, {AND, NOT} is complete because you can get OR from it. For instance, OR can be made with NAND, and NAND is NOT AND, but",0.0,0.14285714285714288,,,,,
-deepseek_8b_ol_q4km,q05,Privacy,Or,0.0,0.0,,,,,
-gemma_2b_hf_4bit,q01,Quicksort,A,0.0,0.0,,,,,
-gemma_2b_hf_4bit,q02,"Range search: Given values a and b, find all the records whose key value is in the range a, b.",a) Searching for an element in a linked list,0.0,0.09090909090909091,,,,,
-gemma_2b_hf_4bit,q03,"It is a scanner which works by injecting packets to a range of addresses, and inferring what hosts and services might be at those addresses, based on the responses","Nmap is a powerful tool that can be used to improve the security of a computer system. It is available for free,",0.0,0.2222222222222222,,,,,
-gemma_2b_hf_4bit,q04,"{AND, OR}",D) NOT,0.0,0.0,,,,,
-gemma_2b_hf_4bit,q05,Privacy,The AH Protocol provides end-to-end encryption.,0.0,0.0,,,,,
-gemma_2b_hf_8bit,q01,Quicksort,A,0.0,0.0,,,,,
-gemma_2b_hf_8bit,q02,"Range search: Given values a and b, find all the records whose key value is in the range a, b.",a) Finding the minimum element in a sorted array**,0.0,0.09090909090909091,,,,,
-gemma_2b_hf_8bit,q03,"It is a scanner which works by injecting packets to a range of addresses, and inferring what hosts and services might be at those addresses, based on the responses",* **Vulnerability scanning:** Nmap,0.0,0.0,,,,,
-gemma_2b_hf_8bit,q04,"{AND, OR}",C) XOR,0.0,0.0,,,,,
-gemma_2b_hf_8bit,q05,Privacy,"The purpose of end-to-end encryption in the AH Protocol is to provide an additional layer of security by encrypting the message end-to-end, ensuring that only the intended recipient can access it.",0.0,0.0,,,,,
-gemma_4b_ol_q4km,q01,Quicksort,"* **Bubble Sort:**  Always Θ(n^2) in all cases (best, average, worst).
-* **Insertion Sort:** Θ(n^2) in the worst and average cases, but Θ(n log n) in the best case",0.0,0.0,,,,,
-gemma_4b_ol_q4km,q02,"Range search: Given values a and b, find all the records whose key value is in the range a, b.",* **Insertion:** Adding new,0.0,0.0,,,,,
-gemma_4b_ol_q4km,q03,"It is a scanner which works by injecting packets to a range of addresses, and inferring what hosts and services might be at those addresses, based on the responses",* **Network topology,0.0,0.0,,,,,
-gemma_4b_ol_q4km,q04,"{AND, OR}",the set of Boolean operators that is missing NOT,0.0,0.0,,,,,
-gemma_4b_ol_q4km,q05,Privacy,"* **AH vs. ESP:** AH is simpler and lighter-weight than ESP (Encapsulating Security Payload). ESP *does* provide confidentiality through encryption, while AH does not.  ESP is generally preferred for",0.0,0.0,,,,,
-phi3_4b_hf_4bit,q01,Quicksort,A) Quicksort,1.0,1.0,,,,,
-phi3_4b_hf_4bit,q02,"Range search: Given values a and b, find all the records whose key value is in the range a, b.",C) Sorting a list of numbers,0.0,0.0,,,,,
-phi3_4b_hf_4bit,q03,"It is a scanner which works by injecting packets to a range of addresses, and inferring what hosts and services might be at those addresses, based on the responses",- **Service and Vulnerability,0.0,0.06896551724137931,,,,,
-phi3_4b_hf_4bit,q04,"{AND, OR}","D) NOT, OR",0.0,0.4,,,,,
+deepseek_8b_ol_q4km,q01,Quicksort,What about insertion sort,0.0,0.0,0.8486271500587463,0.7957019805908203,0.8213128447532654,0.0,0.0
+deepseek_8b_ol_q4km,q02,"Range search: Given values a and b, find all the records whose key value is in the range a, b.","Hash tables are great for average-case O(1) time for insertions, deletions",0.0,0.0,0.8327886462211609,0.8346956372261047,0.8337410688400269,0.0,0.0
+deepseek_8b_ol_q4km,q03,"It is a scanner which works by injecting packets to a range of addresses, and inferring what hosts and services might be at those addresses, based on the responses",but also some depth,0.0,0.0,0.8220597505569458,0.7934991121292114,0.8075270056724548,0.0,0.0
+deepseek_8b_ol_q4km,q04,"{AND, OR}","For instance, OR can be made with NAND, and NAND is NOT AND, but",0.0,0.25,0.8027025461196899,0.7921596765518188,0.7973963022232056,0.0,0.0
+deepseek_8b_ol_q4km,q05,Privacy,Or,0.0,0.0,0.9357287287712097,0.9357287287712097,0.9357287287712097,0.0,0.0
+gemma_2b_hf_4bit,q01,Quicksort,A,0.0,0.0,0.9209640026092529,0.7797132730484009,0.8444728255271912,0.0,0.0
+gemma_2b_hf_4bit,q02,"Range search: Given values a and b, find all the records whose key value is in the range a, b.",a) Searching for an element in a linked list,0.0,0.09090909090909091,0.8690733313560486,0.8437049388885498,0.8562012314796448,0.0714285670663268,3.6846889193984664e-232
+gemma_2b_hf_4bit,q03,"It is a scanner which works by injecting packets to a range of addresses, and inferring what hosts and services might be at those addresses, based on the responses","It is available for free,",0.0,0.12903225806451613,0.8407580852508545,0.8019952774047852,0.820919394493103,0.1290322553590011,6.903331082468818e-157
+gemma_2b_hf_4bit,q04,"{AND, OR}",D) NOT,0.0,0.0,0.824993371963501,0.7832072973251343,0.8035574555397034,0.0,0.0
+gemma_2b_hf_4bit,q05,Privacy,"**
+
+The AH Protocol provides end-to-end encryption",0.0,0.0,0.8337336778640747,0.8861868381500244,0.8591604232788086,0.0,0.0
+gemma_2b_hf_8bit,q01,Quicksort,A,0.0,0.0,0.9209640026092529,0.7797132730484009,0.8444728255271912,0.0,0.0
+gemma_2b_hf_8bit,q02,"Range search: Given values a and b, find all the records whose key value is in the range a, b.",a) Finding the minimum element in a sorted array**,0.0,0.09090909090909091,0.858654260635376,0.8410411477088928,0.8497564792633057,0.1428571384948981,4.07777860681851e-232
+gemma_2b_hf_8bit,q03,"It is a scanner which works by injecting packets to a range of addresses, and inferring what hosts and services might be at those addresses, based on the responses",* **Vulnerability scanning:** Nmap,0.0,0.0,0.8237121105194092,0.8118929862976074,0.8177598118782043,0.0,0.0
+gemma_2b_hf_8bit,q04,"{AND, OR}",C) XOR,0.0,0.0,0.8337920904159546,0.8074535131454468,0.8204114437103271,0.0,0.0
+gemma_2b_hf_8bit,q05,Privacy,end-to-end encryption. This means that the sender and receiver of a message can potentially intercep,0.0,0.0,0.7806805968284607,0.8129734992980957,0.7964998483657837,0.0,0.0
+gemma_4b_ol_q4km,q01,Quicksort,"* **Insertion Sort:** Θ(n^2) in the worst and average cases, but Θ(n log n) in the best case",0.0,0.0,0.7847487330436707,0.7918272018432617,0.7882720232009888,0.0,0.0
+gemma_4b_ol_q4km,q02,"Range search: Given values a and b, find all the records whose key value is in the range a, b.",* **Insertion:** Adding new,0.0,0.0,0.7944335341453552,0.7948037981987,0.7946186065673828,0.0,0.0
+gemma_4b_ol_q4km,q03,"It is a scanner which works by injecting packets to a range of addresses, and inferring what hosts and services might be at those addresses, based on the responses",* **Network topology,0.0,0.0,0.7986131906509399,0.7999502420425415,0.799281120300293,0.0,0.0
+gemma_4b_ol_q4km,q04,"{AND, OR}",the set of Boolean operators that is missing NOT,0.0,0.0,0.7943071126937866,0.781720757484436,0.7879636883735657,0.0,0.0
+gemma_4b_ol_q4km,q05,Privacy,ESP is generally preferred for,0.0,0.0,0.8051266670227051,0.8547255992889404,0.8291851282119751,0.0,0.0
+phi3_4b_hf_4bit,q01,Quicksort,A) Quicksort,1.0,1.0,0.8854948282241821,0.9105895161628723,0.8978668451309204,0.6666666622222223,1.5319719891192393e-231
+phi3_4b_hf_4bit,q02,"Range search: Given values a and b, find all the records whose key value is in the range a, b.",C) Sorting a list of numbers,0.0,0.0,0.8719812631607056,0.842132031917572,0.8567968010902405,0.07999999635200017,1.1287992699191133e-232
+phi3_4b_hf_4bit,q03,"It is a scanner which works by injecting packets to a range of addresses, and inferring what hosts and services might be at those addresses, based on the responses",- **Service and Vulnerability,0.0,0.06896551724137931,0.8183380365371704,0.7962421774864197,0.8071389198303223,0.06666666435555564,2.4868684568653395e-234
+phi3_4b_hf_4bit,q04,"{AND, OR}","D) NOT, OR",0.0,0.4,0.8517853617668152,0.8177306652069092,0.8344106674194336,0.0,0.0
 phi3_4b_hf_4bit,q05,Privacy,"### Level 4 Question:
-What protocol would you use if you need to",0.0,0.0,,,,,
-phi3_4b_hf_8bit,q01,Quicksort,A) Quicksort,1.0,1.0,,,,,
-phi3_4b_hf_8bit,q02,"Range search: Given values a and b, find all the records whose key value is in the range a, b.",C) Sorting a list of numbers,0.0,0.0,,,,,
-phi3_4b_hf_8bit,q03,"It is a scanner which works by injecting packets to a range of addresses, and inferring what hosts and services might be at those addresses, based on the responses","- Host discovery: Identifying live hosts on a network.
-- Port scanning: Determining which ports on",0.0,0.15384615384615388,,,,,
-phi3_4b_hf_8bit,q04,"{AND, OR}","C) AND, NOT",0.0,0.4,,,,,
-phi3_4b_hf_8bit,q05,Privacy,"D) The AH Protocol provides source authentication and data integrity, but not confidentiality",0.0,0.0,,,,,
-qwen25_3b_hf_4bit,q01,Quicksort,This is because,0.0,0.0,,,,,
-qwen25_3b_hf_4bit,q02,"Range search: Given values a and b, find all the records whose key value is in the range a, b.",C,0.0,0.0,,,,,
-qwen25_3b_hf_4bit,q03,"It is a scanner which works by injecting packets to a range of addresses, and inferring what hosts and services might be at those addresses, based on the responses",3. UDP Scan: This scan sends a UDP packet to a target host and checks if the port is open,0.0,0.13953488372093026,,,,,
-qwen25_3b_hf_4bit,q04,"{AND, OR}",D,0.0,0.0,,,,,
-qwen25_3b_hf_4bit,q05,Privacy,A,0.0,0.0,,,,,
+What protocol would you use if you need to",0.0,0.0,0.793678343296051,0.8573201298713684,0.824272632598877,0.0,0.0
+phi3_4b_hf_8bit,q01,Quicksort,A) Quicksort,1.0,1.0,0.8854948282241821,0.9105895161628723,0.8978668451309204,0.6666666622222223,1.5319719891192393e-231
+phi3_4b_hf_8bit,q02,"Range search: Given values a and b, find all the records whose key value is in the range a, b.",C) Sorting a list of numbers,0.0,0.0,0.8719812631607056,0.842132031917572,0.8567968010902405,0.07999999635200017,1.1287992699191133e-232
+phi3_4b_hf_8bit,q03,"It is a scanner which works by injecting packets to a range of addresses, and inferring what hosts and services might be at those addresses, based on the responses",- Port scanning: Determining which ports on,0.0,0.125,0.8502374887466431,0.8305586576461792,0.8402828574180603,0.12121211786960524,5.74864907331084e-233
+phi3_4b_hf_8bit,q04,"{AND, OR}","C) AND, NOT",0.0,0.4,0.8525612354278564,0.8328157067298889,0.842572808265686,0.0,0.0
+phi3_4b_hf_8bit,q05,Privacy,"D) The AH Protocol provides source authentication and data integrity, but not confidentiality",0.0,0.0,0.802208423614502,0.8334778547286987,0.8175442814826965,0.0,0.0
+qwen25_3b_hf_4bit,q01,Quicksort,This is because,0.0,0.0,0.8237061500549316,0.7660539746284485,0.7938347458839417,0.0,0.0
+qwen25_3b_hf_4bit,q02,"Range search: Given values a and b, find all the records whose key value is in the range a, b.",C,0.0,0.0,0.8598288297653198,0.7837744951248169,0.820042073726654,0.0,0.0
+qwen25_3b_hf_4bit,q03,"It is a scanner which works by injecting packets to a range of addresses, and inferring what hosts and services might be at those addresses, based on the responses",UDP Scan: This scan sends a UDP packet to a target host and checks if the port is open,0.0,0.14285714285714285,0.9016144275665283,0.8703407049179077,0.8857015371322632,0.18604650684694443,3.207210452816087e-155
+qwen25_3b_hf_4bit,q04,"{AND, OR}",D,0.0,0.0,0.8743199110031128,0.7626875042915344,0.8146973848342896,0.0,0.0
+qwen25_3b_hf_4bit,q05,Privacy,A,0.0,0.0,0.9378044009208679,0.9378044009208679,0.9378044009208679,0.0,0.0
 qwen25_3b_hf_8bit,q01,Quicksort,"From the analysis, we see that:
-- Quick sort has a worst-case running time of \(\Theta(n^2)\) but an average-case running time of \(\Theta(n \log",0.0,0.0,,,,,
-qwen25_3b_hf_8bit,q02,"Range search: Given values a and b, find all the records whose key value is in the range a, b.",- A hash table does not,0.0,0.0,,,,,
-qwen25_3b_hf_8bit,q03,"It is a scanner which works by injecting packets to a range of addresses, and inferring what hosts and services might be at those addresses, based on the responses",Nmap,0.0,0.0,,,,,
-qwen25_3b_hf_8bit,q04,"{AND, OR}",- Any Boolean expression can be constructed using these two operators,0.0,0.0,,,,,
-qwen25_3b_hf_8bit,q05,Privacy,A,0.0,0.0,,,,,
-qwen25_7b_hf_4bit,q01,Quicksort,a,0.0,0.0,,,,,
-qwen25_7b_hf_4bit,q02,"Range search: Given values a and b, find all the records whose key value is in the range a, b.",D,0.0,0.0,,,,,
-qwen25_7b_hf_4bit,q03,"It is a scanner which works by injecting packets to a range of addresses, and inferring what hosts and services might be at those addresses, based on the responses",7. **Command-Line Interface**: Nmap is primarily command-line based but has a graphical user interface (GUI) available as an,0.0,0.09523809523809525,,,,,
-qwen25_7b_hf_4bit,q04,"{AND, OR}",D,0.0,0.0,,,,,
-qwen25_7b_hf_4bit,q05,Privacy,A,0.0,0.0,,,,,
-qwen_4b_ol_q4km,q01,Quicksort,"Insertion sort has worst case Θ(n²) and average case Θ(n²) as well, so no",0.0,0.0,,,,,
-qwen_4b_ol_q4km,q02,"Range search: Given values a and b, find all the records whose key value is in the range a, b.",This is a bit confusing. In typical multiple-choice questions,0.0,0.16666666666666666,,,,,
+- Quick sort has a worst-case running time of \(\Theta(n^2)\) but an average-case running time of \(\Theta(n \log",0.0,0.0,0.7558618783950806,0.750110924243927,0.7529754042625427,0.0,0.0
+qwen25_3b_hf_8bit,q02,"Range search: Given values a and b, find all the records whose key value is in the range a, b.",- A hash table does not,0.0,0.0,0.8418725728988647,0.8192015290260315,0.8303822875022888,0.0,0.0
+qwen25_3b_hf_8bit,q03,"It is a scanner which works by injecting packets to a range of addresses, and inferring what hosts and services might be at those addresses, based on the responses",Nmap,0.0,0.0,0.8035614490509033,0.7925570011138916,0.7980212569236755,0.0,0.0
+qwen25_3b_hf_8bit,q04,"{AND, OR}",- Any Boolean expression can be constructed using these two operators,0.0,0.0,0.7949151992797852,0.748437225818634,0.7709763646125793,0.0,0.0
+qwen25_3b_hf_8bit,q05,Privacy,A,0.0,0.0,0.9378044009208679,0.9378044009208679,0.9378044009208679,0.0,0.0
+qwen25_7b_hf_4bit,q01,Quicksort,a,0.0,0.0,0.92180335521698,0.7807954549789429,0.8454602956771851,0.0,0.0
+qwen25_7b_hf_4bit,q02,"Range search: Given values a and b, find all the records whose key value is in the range a, b.",D,0.0,0.0,0.8601769208908081,0.7850899696350098,0.8209200501441956,0.0,0.0
+qwen25_7b_hf_4bit,q03,"It is a scanner which works by injecting packets to a range of addresses, and inferring what hosts and services might be at those addresses, based on the responses",**Command-Line Interface**: Nmap is primarily command-line based but has a graphical user interface (GUI) available as an,0.0,0.0975609756097561,0.8140026926994324,0.8257058262825012,0.8198124766349792,0.09302325103299106,5.8292891230573805e-232
+qwen25_7b_hf_4bit,q04,"{AND, OR}",D,0.0,0.0,0.8743199110031128,0.7626875042915344,0.8146973848342896,0.0,0.0
+qwen25_7b_hf_4bit,q05,Privacy,A,0.0,0.0,0.9378044009208679,0.9378044009208679,0.9378044009208679,0.0,0.0
+qwen_4b_ol_q4km,q01,Quicksort,"Insertion sort has worst case Θ(n²) and average case Θ(n²) as well, so no",0.0,0.0,0.7781015634536743,0.8058661222457886,0.7917405366897583,0.0,0.0
+qwen_4b_ol_q4km,q02,"Range search: Given values a and b, find all the records whose key value is in the range a, b.",In typical multiple-choice questions,0.0,0.1,0.8776242136955261,0.8160271644592285,0.845705509185791,0.0,0.0
 qwen_4b_ol_q4km,q03,"It is a scanner which works by injecting packets to a range of addresses, and inferring what hosts and services might be at those addresses, based on the responses","Let me structure this: 
-First define it simply (network scanner),",0.0,0.1111111111111111,,,,,
-qwen_4b_ol_q4km,q04,"{AND, OR}",based on common cases,0.0,0.0,,,,,
-qwen_4b_ol_q4km,q05,Privacy,"Also, the user's phrasing is a bit cut off with """,0.0,0.0,,,,,
-qwen_8b_ol_q4km,q01,Quicksort,"**Shell Sort**: Depending on the gap sequence, it can have different",0.0,0.0,,,,,
-qwen_8b_ol_q4km,q02,"Range search: Given values a and b, find all the records whose key value is in the range a, b.","1. Checking for duplicates in a list.
-2. Implementing a phone book (name to",0.0,0.07142857142857144,,,,,
-qwen_8b_ol_q4km,q03,"It is a scanner which works by injecting packets to a range of addresses, and inferring what hosts and services might be at those addresses, based on the responses",I should also note,0.0,0.0,,,,,
-qwen_8b_ol_q4km,q04,"{AND, OR}",You can't,0.0,0.0,,,,,
-qwen_8b_ol_q4km,q05,Privacy,"Then, what about encryption? Since AH doesn't encrypt, it's not providing confidentiality. Also, maybe it doesn't provide non-repudiation? Wait, non-repudiation is",0.0,0.0,,,,,
+First define it simply (network scanner),",0.0,0.1111111111111111,0.8189076781272888,0.8344511985778809,0.8266063928604126,0.0,0.0
+qwen_4b_ol_q4km,q04,"{AND, OR}",based on common cases,0.0,0.0,0.8115814328193665,0.7567987442016602,0.7832333445549011,0.0,0.0
+qwen_4b_ol_q4km,q05,Privacy,"Also, the user's phrasing is a bit cut off with """,0.0,0.0,0.7973177433013916,0.852148175239563,0.8238216638565063,0.0,0.0
+qwen_8b_ol_q4km,q01,Quicksort,"**Shell Sort**: Depending on the gap sequence, it can have different",0.0,0.0,0.8114033341407776,0.797892153263092,0.8045910596847534,0.0,0.0
+qwen_8b_ol_q4km,q02,"Range search: Given values a and b, find all the records whose key value is in the range a, b.",Implementing a phone book (name to,0.0,0.0,0.8171323537826538,0.8057604432106018,0.8114065527915955,0.07999999635200017,1.1287992699191133e-232
+qwen_8b_ol_q4km,q03,"It is a scanner which works by injecting packets to a range of addresses, and inferring what hosts and services might be at those addresses, based on the responses",I should also note,0.0,0.0,0.7957738637924194,0.7886470556259155,0.7921944260597229,0.0,0.0
+qwen_8b_ol_q4km,q04,"{AND, OR}",You can't,0.0,0.0,0.8116523623466492,0.7745941877365112,0.7926904559135437,0.0,0.0
+qwen_8b_ol_q4km,q05,Privacy,"Wait, non-repudiation is",0.0,0.0,0.8186274766921997,0.8640657067298889,0.8407330513000488,0.0,0.0
