@@ -1,53 +1,38 @@
 # -*- coding: utf-8 -*-
 """
-问答任务质量评估器
+问答任务质量评估器 - 学术标准版
 
-评估维度:
-- 响应完整性: 是否包含答案、结论
-- 专业性: 技术术语密度
-- 置信度: 确定性程度
-- 结构质量: 段落组织、列举
-- 推理深度: 推理过程、例子
+基于传统NLP评估指标:
+- Exact Match (EM)
+- F1 Score
+- BERTScore (可选)
+- ROUGE-L
+- BLEU
 """
 
 import re
-from typing import Dict, Set
+import string
+from typing import Dict, Optional, List
 
 
 class QAEvaluator:
-    """问答任务评估器"""
+    """问答任务评估器 - 基于学术标准指标"""
     
     def __init__(self, config: Dict = None):
         self.config = config or {}
-        self.domain = self.config.get('domain', 'cs')
-        self._load_technical_terms()
+        self.use_bertscore = self.config.get('use_bertscore', False)
+        self.device = self.config.get('device', 'cuda')
+        self.lang = self.config.get('lang', 'en')
+        self.extract_answer = self.config.get('extract_answer', True)
     
-    def _load_technical_terms(self):
-        """加载技术术语库"""
-        # 计算机科学术语
-        self.cs_terms = {
-            'algorithm', 'complexity', 'runtime', 'worst-case', 'average-case',
-            'hash', 'table', 'array', 'linked', 'list', 'tree', 'graph',
-            'sort', 'search', 'binary', 'quicksort', 'mergesort', 'heapsort',
-            'network', 'protocol', 'packet', 'encryption', 'authentication',
-            'security', 'vulnerability', 'firewall', 'port', 'scan', 'nmap',
-            'boolean', 'operator', 'logic', 'gate', 'circuit',
-            'nand', 'nor', 'xor', 'and', 'or', 'not',
-            'ipsec', 'vpn', 'ssl', 'tls', 'tcp', 'udp', 'ip', 'http',
-            'data', 'structure', 'pointer', 'memory', 'stack', 'queue',
-            'recursion', 'iteration', 'loop', 'function', 'class', 'object',
-            'insertion', 'deletion', 'traversal', 'pivot', 'partition',
-            'confidentiality', 'integrity', 'availability', 'cipher'
-        }
-    
-    def evaluate(self, generated: str, reference: str = None, 
+    def evaluate(self, generated: str, reference: str, 
                  context: Dict = None) -> Dict[str, float]:
         """
         评估问答质量
         
         Args:
-            generated: 生成的答案文本
-            reference: 标准答案(可选,QA任务通常没有)
+            generated: 生成的答案
+            reference: 标准答案
             context: 额外上下文
         
         Returns:
@@ -56,218 +41,235 @@ class QAEvaluator:
         scores = {}
         
         # 基础检查
-        if not generated or len(generated.strip()) == 0:
+        if not generated or not reference:
             return self._get_zero_scores()
         
-        # 1. 响应完整性
-        completeness_scores = self._calculate_completeness(generated)
-        scores.update(completeness_scores)
+        # 答案提取(如果启用)
+        if self.extract_answer:
+            extracted = self._extract_final_answer(generated)
+            scores['extracted_answer'] = extracted
+        else:
+            extracted = generated
+            scores['extracted_answer'] = None
         
-        # 2. 技术术语密度
-        scores['technical_term_density'] = self._calculate_technical_density(generated)
-        scores['technical_term_count'] = self._count_technical_terms(generated)
+        # 1. Exact Match
+        scores['exact_match'] = self._calculate_exact_match(extracted, reference)
         
-        # 3. 置信度
-        scores['confidence_score'] = self._calculate_confidence(generated)
-        scores['uncertainty_count'] = self._count_uncertainty(generated)
-        scores['certainty_count'] = self._count_certainty(generated)
+        # 2. F1 Score
+        scores['f1_score'] = self._calculate_f1_score(extracted, reference)
         
-        # 4. 结构质量
-        structure_scores = self._calculate_structure(generated)
-        scores.update(structure_scores)
+        # 3. BERTScore (可选)
+        if self.use_bertscore:
+            bertscore_results = self._calculate_bertscore(extracted, reference)
+            scores.update(bertscore_results)
+        else:
+            scores['bertscore_precision'] = None
+            scores['bertscore_recall'] = None
+            scores['bertscore_f1'] = None
         
-        # 5. 推理深度
-        reasoning_scores = self._calculate_reasoning(generated)
-        scores.update(reasoning_scores)
+        # 4. ROUGE-L
+        scores['rouge_l'] = self._calculate_rouge_l(extracted, reference)
+        
+        # 5. BLEU
+        scores['bleu'] = self._calculate_bleu(extracted, reference)
         
         return scores
+    
+    def _extract_final_answer(self, text: str) -> str:
+        """
+        从模型输出中提取最终答案
+        
+        策略:
+        1. 查找明确的答案标记("answer is", "the answer is", "correct answer")
+        2. 查找结论性语句("therefore", "thus", "in conclusion")
+        3. 提取最后一句话
+        4. 如果都失败,返回前100个字符
+        """
+        if not text or len(text.strip()) == 0:
+            return ""
+        
+        text = text.strip()
+        
+        # 策略1: 查找明确的答案标记
+        answer_patterns = [
+            r'(?:the\s+)?(?:correct\s+)?answer\s+is[:\s]+([^.!?\n]+)',
+            r'(?:the\s+)?(?:final\s+)?answer[:\s]+([^.!?\n]+)',
+            r'therefore[,\s]+(?:the\s+)?answer\s+is[:\s]+([^.!?\n]+)',
+            r'thus[,\s]+(?:the\s+)?answer\s+is[:\s]+([^.!?\n]+)',
+            r'in\s+conclusion[,\s]+([^.!?\n]+)',
+            r'so\s+(?:the\s+)?answer\s+is[:\s]+([^.!?\n]+)',
+        ]
+        
+        for pattern in answer_patterns:
+            match = re.search(pattern, text, re.IGNORECASE)
+            if match:
+                answer = match.group(1).strip()
+                # 清理答案(去除引号、括号等)
+                answer = re.sub(r'^["\'\(\[\{]+|["\'\)\]\}]+$', '', answer)
+                if len(answer) > 0:
+                    return answer
+        
+        # 策略2: 查找结论性段落(最后一段)
+        paragraphs = [p.strip() for p in text.split('\n\n') if p.strip()]
+        if paragraphs:
+            last_para = paragraphs[-1]
+            # 如果最后一段较短(可能是答案)
+            if len(last_para) < 200:
+                return last_para
+        
+        # 策略3: 提取最后一句话
+        sentences = re.split(r'[.!?]+', text)
+        sentences = [s.strip() for s in sentences if s.strip()]
+        if sentences:
+            last_sentence = sentences[-1]
+            # 如果最后一句较短(可能是答案)
+            if len(last_sentence) < 150:
+                return last_sentence
+        
+        # 策略4: 返回前100个字符(作为fallback)
+        return text[:100].strip()
+    
+    
+    def _normalize_answer(self, text: str) -> str:
+        """答案归一化"""
+        # 转小写
+        text = text.lower()
+        
+        # 去除标点
+        text = text.translate(str.maketrans('', '', string.punctuation))
+        
+        # 去除冠词
+        articles = ['a', 'an', 'the']
+        words = text.split()
+        words = [w for w in words if w not in articles]
+        
+        # 去除多余空格
+        text = ' '.join(words).strip()
+        
+        return text
+    
+    def _calculate_exact_match(self, generated: str, reference: str) -> float:
+        """计算Exact Match"""
+        gen_norm = self._normalize_answer(generated)
+        ref_norm = self._normalize_answer(reference)
+        
+        return 1.0 if gen_norm == ref_norm else 0.0
 
     
-    def _calculate_completeness(self, text: str) -> Dict[str, float]:
-        """计算响应完整性"""
-        scores = {}
+    def _calculate_f1_score(self, generated: str, reference: str) -> float:
+        """计算F1 Score"""
+        gen_tokens = self._normalize_answer(generated).split()
+        ref_tokens = self._normalize_answer(reference).split()
         
-        # 是否有答案
-        scores['has_answer'] = 1.0 if len(text.strip()) > 50 else 0.0
-        scores['answer_length'] = len(text)
-        
-        # 检测结论
-        conclusion_patterns = [
-            r'(?:answer|result|conclusion|therefore|thus|so)\s+is',
-            r'(?:答案|结论|因此|所以)\s*(?:是|为)',
-            r'the correct answer',
-            r'in summary',
-            r'to summarize'
-        ]
-        
-        has_conclusion = any(
-            re.search(pattern, text, re.IGNORECASE) 
-            for pattern in conclusion_patterns
-        )
-        scores['has_conclusion'] = 1.0 if has_conclusion else 0.0
-        
-        return scores
-    
-    def _calculate_technical_density(self, text: str) -> float:
-        """计算技术术语密度"""
-        words = text.lower().split()
-        
-        if len(words) == 0:
+        if len(gen_tokens) == 0 or len(ref_tokens) == 0:
             return 0.0
         
-        term_count = sum(1 for word in words if word in self.cs_terms)
-        density = term_count / len(words)
+        common = set(gen_tokens) & set(ref_tokens)
         
-        # 归一化 (0-0.3为正常范围)
-        normalized_density = min(density / 0.3, 1.0)
+        precision = len(common) / len(gen_tokens)
+        recall = len(common) / len(ref_tokens)
         
-        return normalized_density
+        if precision + recall == 0:
+            return 0.0
+        
+        f1 = 2 * precision * recall / (precision + recall)
+        
+        return f1
     
-    def _count_technical_terms(self, text: str) -> int:
-        """统计技术术语数量"""
-        words = text.lower().split()
-        return sum(1 for word in words if word in self.cs_terms)
+    def _calculate_bertscore(self, generated: str, reference: str) -> Dict[str, float]:
+        """计算BERTScore"""
+        try:
+            from bert_score import score
+            
+            P, R, F1 = score(
+                [generated], 
+                [reference], 
+                lang=self.lang, 
+                device=self.device,
+                verbose=False
+            )
+            
+            return {
+                'bertscore_precision': P.item(),
+                'bertscore_recall': R.item(),
+                'bertscore_f1': F1.item()
+            }
+        except ImportError:
+            print("⚠️  bert-score not installed. Run: pip install bert-score")
+            return {
+                'bertscore_precision': None,
+                'bertscore_recall': None,
+                'bertscore_f1': None
+            }
+        except Exception as e:
+            print(f"⚠️  BERTScore calculation failed: {e}")
+            return {
+                'bertscore_precision': None,
+                'bertscore_recall': None,
+                'bertscore_f1': None
+            }
     
-    def _calculate_confidence(self, text: str) -> float:
-        """计算置信度"""
-        text_lower = text.lower()
-        
-        uncertainty_count = self._count_uncertainty(text_lower)
-        certainty_count = self._count_certainty(text_lower)
-        
-        # 基础分数0.5 + 确定性0.1 - 不确定性0.1
-        confidence = 0.5 + (certainty_count * 0.1) - (uncertainty_count * 0.1)
-        
-        return max(0.0, min(1.0, confidence))
+    def _calculate_rouge_l(self, generated: str, reference: str) -> float:
+        """计算ROUGE-L"""
+        try:
+            from rouge import Rouge
+            
+            # 确保文本不为空
+            if not generated.strip() or not reference.strip():
+                return 0.0
+            
+            rouge = Rouge()
+            scores = rouge.get_scores(generated, reference)[0]
+            
+            return scores['rouge-l']['f']
+        except ImportError:
+            return None
+        except Exception as e:
+            # 处理rouge库的异常(如空文本、特殊字符等)
+            return 0.0
     
-    def _count_uncertainty(self, text: str) -> int:
-        """统计不确定性表达"""
-        uncertainty_keywords = [
-            'i think', 'probably', 'maybe', 'perhaps', 'might',
-            'could be', 'not sure', 'unclear', 'uncertain',
-            'i believe', 'seems like', 'appears to'
-        ]
-        
-        return sum(1 for keyword in uncertainty_keywords if keyword in text)
-    
-    def _count_certainty(self, text: str) -> int:
-        """统计确定性表达"""
-        certainty_keywords = [
-            'definitely', 'certainly', 'clearly', 'obviously',
-            'the answer is', 'the correct answer', 'must be',
-            'always', 'never', 'exactly'
-        ]
-        
-        return sum(1 for keyword in certainty_keywords if keyword in text)
-    
-    def _calculate_structure(self, text: str) -> Dict[str, float]:
-        """计算结构质量"""
-        scores = {}
-        
-        # 段落分析
-        paragraphs = [p.strip() for p in text.split('\n\n') if len(p.strip()) > 20]
-        scores['paragraph_count'] = len(paragraphs)
-        
-        if paragraphs:
-            avg_length = sum(len(p) for p in paragraphs) / len(paragraphs)
-            scores['avg_paragraph_length'] = avg_length
-        else:
-            scores['avg_paragraph_length'] = 0
-        
-        # 检测列举
-        enumeration_patterns = [
-            r'(?:first|second|third|finally)',
-            r'(?:1\.|2\.|3\.)',
-            r'(?:a\)|b\)|c\))',
-            r'(?:首先|其次|最后)'
-        ]
-        
-        has_enumeration = any(
-            re.search(pattern, text, re.IGNORECASE) 
-            for pattern in enumeration_patterns
-        )
-        scores['has_enumeration'] = 1.0 if has_enumeration else 0.0
-        
-        return scores
-    
-    def _calculate_reasoning(self, text: str) -> Dict[str, float]:
-        """计算推理深度"""
-        scores = {}
-        
-        # 推理关键词
-        reasoning_keywords = [
-            'because', 'since', 'therefore', 'thus', 'so',
-            'if', 'then', 'when', 'however', 'but',
-            '因为', '所以', '因此', '如果', '那么'
-        ]
-        
-        has_reasoning = any(
-            keyword in text.lower() 
-            for keyword in reasoning_keywords
-        )
-        scores['has_reasoning'] = 1.0 if has_reasoning else 0.0
-        
-        # 推理步骤数
-        sentences = [s.strip() for s in text.split('.') if len(s.strip()) > 10]
-        scores['reasoning_steps'] = len(sentences)
-        
-        # 检测例子
-        example_patterns = [
-            r'for example', r'for instance', r'such as',
-            r'例如', r'比如', r'举例'
-        ]
-        
-        has_examples = any(
-            re.search(pattern, text, re.IGNORECASE) 
-            for pattern in example_patterns
-        )
-        scores['has_examples'] = 1.0 if has_examples else 0.0
-        
-        return scores
+    def _calculate_bleu(self, generated: str, reference: str) -> float:
+        """计算BLEU"""
+        try:
+            from nltk.translate.bleu_score import sentence_bleu
+            
+            gen_tokens = generated.split()
+            ref_tokens = [reference.split()]
+            
+            return sentence_bleu(ref_tokens, gen_tokens)
+        except ImportError:
+            return None
+        except Exception:
+            return 0.0
     
     def _get_zero_scores(self) -> Dict[str, float]:
         """返回零分数"""
         return {
-            'has_answer': 0.0,
-            'answer_length': 0,
-            'has_conclusion': 0.0,
-            'technical_term_density': 0.0,
-            'technical_term_count': 0,
-            'confidence_score': 0.0,
-            'uncertainty_count': 0,
-            'certainty_count': 0,
-            'paragraph_count': 0,
-            'avg_paragraph_length': 0,
-            'has_enumeration': 0.0,
-            'has_reasoning': 0.0,
-            'reasoning_steps': 0,
-            'has_examples': 0.0
+            'exact_match': 0.0,
+            'f1_score': 0.0,
+            'bertscore_precision': None,
+            'bertscore_recall': None,
+            'bertscore_f1': None,
+            'rouge_l': 0.0,
+            'bleu': 0.0
         }
     
     def get_metric_categories(self) -> Dict[str, list]:
         """返回指标分类"""
         return {
-            'completeness': ['has_answer', 'answer_length', 'has_conclusion'],
-            'professionalism': ['technical_term_density', 'technical_term_count'],
-            'confidence': ['confidence_score', 'uncertainty_count', 'certainty_count'],
-            'structure': ['paragraph_count', 'avg_paragraph_length', 'has_enumeration'],
-            'reasoning': ['has_reasoning', 'reasoning_steps', 'has_examples']
+            'exact': ['exact_match'],
+            'overlap': ['f1_score', 'rouge_l', 'bleu'],
+            'semantic': ['bertscore_precision', 'bertscore_recall', 'bertscore_f1']
         }
     
     def get_metric_directions(self) -> Dict[str, bool]:
-        """返回指标方向"""
+        """返回指标方向(True=越大越好)"""
         return {
-            'has_answer': True,
-            'answer_length': True,
-            'has_conclusion': True,
-            'technical_term_density': True,
-            'technical_term_count': True,
-            'confidence_score': True,
-            'uncertainty_count': False,  # 越少越好
-            'certainty_count': True,
-            'paragraph_count': True,
-            'has_enumeration': True,
-            'has_reasoning': True,
-            'reasoning_steps': True,
-            'has_examples': True
+            'exact_match': True,
+            'f1_score': True,
+            'bertscore_precision': True,
+            'bertscore_recall': True,
+            'bertscore_f1': True,
+            'rouge_l': True,
+            'bleu': True
         }

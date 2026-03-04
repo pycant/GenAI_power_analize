@@ -1,437 +1,434 @@
-# 问答任务质量评估方法设计
+# 2.4 问答任务 (QA) 评估方法设计
 
 ## 1. 评估目标
 
-问答任务的核心评估维度:
-- **响应完整性 (Response Completeness)**: 是否给出了答案
-- **响应质量 (Response Quality)**: 答案的详细程度和结构
-- **技术准确性 (Technical Accuracy)**: 技术术语使用的合理性
-- **置信度 (Confidence)**: 答案的确定性程度
+评估模型在问答任务中的**答案准确性、完整性、相关性与语义正确性**。
 
 ## 2. 数据特征分析
 
 ### 2.1 任务类型
 
 基于提供的QA问题,任务类型为:
-- **技术问答**: 计算机科学、算法、网络安全等专业问题
-- **概念解释**: 需要解释技术概念和工具
-- **选择题**: 部分问题可能有多个选项
+- **事实型问答**: 计算机科学、算法、网络安全等专业领域问题
+- **简短答案**: 大多数答案为单词、短语或简短句子
+- **抽取式/生成式混合**: 部分答案可直接从知识中抽取,部分需要生成解释
 
-### 2.2 答案格式
+### 2.2 标准答案
 
-从样本数据观察到的答案格式:
-- **详细推理过程**: 模型展示思考过程
-- **逐步分析**: 分步骤解答问题
-- **技术术语**: 包含专业术语和概念
-- **不确定性表达**: 部分答案包含"I think", "probably"等
+| 问题ID | 问题 | 标准答案 |
+|--------|------|----------|
+| q01 | Which algorithm has Θ(n²) worst case but Θ(n log n) average? | Quicksort |
+| q02 | Hash tables EXCEPT for which problem? | Range search: Given values a and b, find all records whose key value is in range a, b. |
+| q03 | What is Nmap? | It is a scanner which works by injecting packets to a range of addresses, and inferring what hosts and services might be at those addresses, based on the responses |
+| q04 | Which Boolean operator set is NOT complete? | {AND, OR} |
+| q05 | AH Protocol provides authentication and integrity, but not | Privacy |
 
-### 2.3 评估挑战
+### 2.3 答案特征
 
-**核心挑战**: 没有标准答案
-- 无法使用Exact Match或F1 Score
-- 需要基于响应质量本身进行评估
-- 需要评估技术内容的合理性
+- **简短答案**: q01, q04, q05 (1-2个词)
+- **中等长度**: q02 (一句话)
+- **详细解释**: q03 (完整描述)
 
 
-## 3. 评估方法设计
 
-### 3.1 核心指标
+## 3. 核心指标
 
-#### 3.1.1 Response Completeness (响应完整性) ✅ 高度可行
+### 3.1 Exact Match (EM)
 
-**定义**:
-- 评估响应是否包含实质性答案
-- 检测是否完整回答了问题
+**定义**: 预测答案与标准答案在归一化后**完全一致**。
+
+**计算方法**:
+1. 对预测答案与标准答案进行归一化处理:
+   - 转换为小写
+   - 去除前后空格
+   - 去除标点符号
+   - 去除冠词(a, an, the)
+2. 进行字符串严格匹配
+
+**数学表达**:
+$$
+EM = \begin{cases} 
+1, & \text{normalize}(\text{预测答案}) = \text{normalize}(\text{标准答案}) \\
+0, & \text{其他}
+\end{cases}
+$$
+
+**范围**: $\{0, 1\}$
+
+**特点**:
+- ✅ 严格、直观
+- ✅ 适用于抽取式QA、简短事实型答案
+- ⚠️ 对表述差异敏感(如"Quicksort" vs "Quick sort")
 
 **实现方案**:
 ```python
-def calculate_response_completeness(text: str) -> Dict[str, float]:
-    """
-    计算响应完整性
+def normalize_answer(text: str) -> str:
+    """答案归一化"""
+    import re
+    import string
     
-    Returns:
-        Dict with:
-        - has_answer: 是否包含答案
-        - answer_length: 答案长度
-        - has_conclusion: 是否有结论
-    """
-    scores = {}
+    # 转小写
+    text = text.lower()
     
-    # 1. 基础检查
-    scores['has_answer'] = 1.0 if len(text.strip()) > 50 else 0.0
-    scores['answer_length'] = len(text)
+    # 去除标点
+    text = text.translate(str.maketrans('', '', string.punctuation))
     
-    # 2. 检测结论性语句
-    conclusion_patterns = [
-        r'(?:answer|result|conclusion|therefore|thus|so)\s+is',
-        r'(?:答案|结论|因此|所以)\s*(?:是|为)',
-        r'the correct answer',
-        r'in summary',
-        r'to summarize'
-    ]
+    # 去除冠词
+    articles = ['a', 'an', 'the']
+    words = text.split()
+    words = [w for w in words if w not in articles]
     
-    has_conclusion = any(
-        re.search(pattern, text, re.IGNORECASE) 
-        for pattern in conclusion_patterns
-    )
-    scores['has_conclusion'] = 1.0 if has_conclusion else 0.0
+    # 去除多余空格
+    text = ' '.join(words).strip()
     
-    return scores
+    return text
+
+def calculate_exact_match(generated: str, reference: str) -> float:
+    """计算Exact Match"""
+    gen_norm = normalize_answer(generated)
+    ref_norm = normalize_answer(reference)
+    
+    return 1.0 if gen_norm == ref_norm else 0.0
 ```
 
-**优势**:
-- ✅ 无需外部模型
-- ✅ 计算快速
-- ✅ 客观可量化
 
 
+### 3.2 F1 Score (词级别)
 
-#### 3.1.2 Technical Term Density (技术术语密度) ✅ 高度可行
+**定义**: 衡量预测答案与标准答案在**词汇层面的重合程度**,综合精确率与召回率。
 
-**定义**:
-- 评估响应中技术术语的使用频率
-- 反映答案的专业性
+**计算方法**:
+
+1. **Precision (精确率)**:
+$$
+Precision = \frac{|\text{预测词} \cap \text{标准词}|}{|\text{预测词}|}
+$$
+
+2. **Recall (召回率)**:
+$$
+Recall = \frac{|\text{预测词} \cap \text{标准词}|}{|\text{标准词}|}
+$$
+
+3. **F1 Score**:
+$$
+F1 = 2 \times \frac{Precision \times Recall}{Precision + Recall}
+$$
+
+**范围**: $[0, 1]$
+
+**特点**:
+- ✅ 对**部分正确、答案较长、多片段答案**更友好
+- ✅ 比EM更宽松合理
+- ✅ 适用于生成式QA
+- ⚠️ 不考虑词序
 
 **实现方案**:
 ```python
-def calculate_technical_term_density(text: str, domain: str = 'cs') -> float:
-    """
-    计算技术术语密度
+def calculate_f1_score(generated: str, reference: str) -> float:
+    """计算F1 Score"""
+    # 归一化并分词
+    gen_tokens = normalize_answer(generated).split()
+    ref_tokens = normalize_answer(reference).split()
     
-    Args:
-        text: 响应文本
-        domain: 领域 ('cs' for computer science)
-    
-    Returns:
-        float: 技术术语密度 [0, 1]
-    """
-    # 计算机科学相关技术术语
-    cs_terms = {
-        'algorithm', 'complexity', 'runtime', 'worst-case', 'average-case',
-        'hash', 'table', 'array', 'linked', 'list', 'tree', 'graph',
-        'sort', 'search', 'binary', 'quicksort', 'mergesort',
-        'network', 'protocol', 'packet', 'encryption', 'authentication',
-        'security', 'vulnerability', 'firewall', 'port', 'scan',
-        'boolean', 'operator', 'logic', 'gate', 'circuit',
-        'nand', 'nor', 'xor', 'and', 'or', 'not',
-        'ipsec', 'vpn', 'ssl', 'tls', 'tcp', 'udp', 'ip'
-    }
-    
-    # 转小写并分词
-    words = text.lower().split()
-    
-    # 统计技术术语
-    term_count = sum(1 for word in words if word in cs_terms)
-    
-    # 计算密度
-    if len(words) == 0:
+    if len(gen_tokens) == 0 or len(ref_tokens) == 0:
         return 0.0
     
-    density = term_count / len(words)
+    # 计算交集
+    common = set(gen_tokens) & set(ref_tokens)
     
-    # 归一化到合理范围 (0-0.3为正常范围)
-    normalized_density = min(density / 0.3, 1.0)
+    # 计算precision和recall
+    precision = len(common) / len(gen_tokens)
+    recall = len(common) / len(ref_tokens)
     
-    return normalized_density
+    # 计算F1
+    if precision + recall == 0:
+        return 0.0
+    
+    f1 = 2 * precision * recall / (precision + recall)
+    
+    return f1
 ```
 
-**优势**:
-- ✅ 反映专业性
-- ✅ 无需外部模型
-- ✅ 可扩展术语库
+**示例**:
+- 标准答案: "Quicksort"
+- 预测答案: "The answer is Quicksort algorithm"
+- Precision: 1/5 = 0.2 (1个共同词/5个预测词)
+- Recall: 1/1 = 1.0 (1个共同词/1个标准词)
+- F1: 2 × 0.2 × 1.0 / (0.2 + 1.0) = 0.33
 
 
 
-#### 3.1.3 Confidence Score (置信度评分) ✅ 高度可行
+### 3.3 BERTScore
 
-**定义**:
-- 评估答案的确定性程度
-- 检测不确定性表达
+**定义**: 基于预训练语言模型(BERT)的**上下文语义相似度**,不依赖表面词重叠。
+
+**计算方法**:
+1. 使用预训练BERT模型获取token向量表示
+2. 计算预测答案与标准答案token间的余弦相似度
+3. 通过最大匹配得到语义级别的Precision/Recall/F1
+
+**数学表达**:
+$$
+\text{BERTScore}_P = \frac{1}{|x|} \sum_{x_i \in x} \max_{y_j \in y} \cos(e_{x_i}, e_{y_j})
+$$
+
+$$
+\text{BERTScore}_R = \frac{1}{|y|} \sum_{y_j \in y} \max_{x_i \in x} \cos(e_{x_i}, e_{y_j})
+$$
+
+$$
+\text{BERTScore}_{F1} = 2 \times \frac{P \times R}{P + R}
+$$
+
+其中:
+- $x$: 预测答案的token序列
+- $y$: 标准答案的token序列
+- $e_{x_i}$, $e_{y_j}$: BERT生成的token向量
+- $\cos(\cdot, \cdot)$: 余弦相似度
+
+**范围**: $[0, 1]$
+
+**特点**:
+- ✅ 能识别**同义不同表述**的答案
+- ✅ 更贴近人类理解
+- ✅ 适合**抽象、转述型、长答案**
+- ⚠️ 需要GPU加速
+- ⚠️ 首次运行需下载模型(~400MB)
 
 **实现方案**:
 ```python
-def calculate_confidence_score(text: str) -> float:
+def calculate_bertscore(generated: str, reference: str, 
+                       lang: str = 'en', device: str = 'cuda') -> Dict[str, float]:
     """
-    计算答案置信度
+    计算BERTScore
+    
+    Args:
+        generated: 生成的答案
+        reference: 标准答案
+        lang: 语言('en' for English, 'zh' for Chinese)
+        device: 'cuda' or 'cpu'
     
     Returns:
-        float: [0, 1]，越高表示越确定
+        Dict with precision, recall, f1
     """
-    # 不确定性关键词
-    uncertainty_keywords = [
-        'i think', 'probably', 'maybe', 'perhaps', 'might',
-        'could be', 'not sure', 'unclear', 'uncertain',
-        'i believe', 'seems like', 'appears to'
-    ]
-    
-    # 确定性关键词
-    certainty_keywords = [
-        'definitely', 'certainly', 'clearly', 'obviously',
-        'the answer is', 'the correct answer', 'must be',
-        'always', 'never', 'exactly'
-    ]
-    
-    text_lower = text.lower()
-    
-    # 统计不确定性表达
-    uncertainty_count = sum(
-        1 for keyword in uncertainty_keywords 
-        if keyword in text_lower
-    )
-    
-    # 统计确定性表达
-    certainty_count = sum(
-        1 for keyword in certainty_keywords 
-        if keyword in text_lower
-    )
-    
-    # 计算置信度
-    # 基础分数: 0.5
-    # 每个确定性表达 +0.1
-    # 每个不确定性表达 -0.1
-    confidence = 0.5 + (certainty_count * 0.1) - (uncertainty_count * 0.1)
-    
-    # 限制在 [0, 1]
-    confidence = max(0.0, min(1.0, confidence))
-    
-    return confidence
+    try:
+        from bert_score import score
+        
+        # 计算BERTScore
+        P, R, F1 = score(
+            [generated], 
+            [reference], 
+            lang=lang, 
+            device=device,
+            verbose=False
+        )
+        
+        return {
+            'bertscore_precision': P.item(),
+            'bertscore_recall': R.item(),
+            'bertscore_f1': F1.item()
+        }
+    except ImportError:
+        print("⚠️  bert-score not installed. Run: pip install bert-score")
+        return {
+            'bertscore_precision': None,
+            'bertscore_recall': None,
+            'bertscore_f1': None
+        }
 ```
 
-**优势**:
-- ✅ 反映答案质量
-- ✅ 简单直观
-- ✅ 无需外部模型
+**示例**:
+- 标准答案: "Quicksort"
+- 预测答案: "Quick sort algorithm"
+- BERTScore F1: ~0.85 (能识别语义相似性)
 
 
 
-### 3.2 辅助指标
+## 4. 辅助指标
 
-#### 3.2.1 Structure Quality (结构质量) ✅ 可行
+### 4.1 ROUGE-L
 
-**定义**:
-- 评估答案的组织结构
-- 检测是否有清晰的段落和逻辑
+**定义**: 基于**最长公共子序列**(LCS)的重叠度量。
+
+**计算方法**:
+$$
+R_{lcs} = \frac{LCS(X, Y)}{|Y|}
+$$
+
+$$
+P_{lcs} = \frac{LCS(X, Y)}{|X|}
+$$
+
+$$
+F_{lcs} = \frac{(1 + \beta^2) R_{lcs} P_{lcs}}{R_{lcs} + \beta^2 P_{lcs}}
+$$
+
+其中:
+- $X$: 预测答案
+- $Y$: 标准答案
+- $LCS(X, Y)$: 最长公共子序列长度
+- $\beta$: 通常设为1
+
+**特点**:
+- 关注答案的**整体顺序与完整性**
+- 适用于**长文本答案、生成式QA**
+- 考虑词序信息
 
 **实现方案**:
 ```python
-def calculate_structure_quality(text: str) -> Dict[str, float]:
-    """
-    评估答案结构质量
-    
-    Returns:
-        Dict with:
-        - paragraph_count: 段落数量
-        - avg_paragraph_length: 平均段落长度
-        - has_enumeration: 是否有列举
-    """
-    scores = {}
-    
-    # 1. 段落分析
-    paragraphs = [p.strip() for p in text.split('\n\n') if len(p.strip()) > 20]
-    scores['paragraph_count'] = len(paragraphs)
-    
-    if paragraphs:
-        avg_length = sum(len(p) for p in paragraphs) / len(paragraphs)
-        scores['avg_paragraph_length'] = avg_length
-    else:
-        scores['avg_paragraph_length'] = 0
-    
-    # 2. 检测列举/编号
-    enumeration_patterns = [
-        r'(?:first|second|third|finally)',
-        r'(?:1\.|2\.|3\.)',
-        r'(?:a\)|b\)|c\))',
-        r'(?:首先|其次|最后)'
-    ]
-    
-    has_enumeration = any(
-        re.search(pattern, text, re.IGNORECASE) 
-        for pattern in enumeration_patterns
-    )
-    scores['has_enumeration'] = 1.0 if has_enumeration else 0.0
-    
-    return scores
+def calculate_rouge_l(generated: str, reference: str) -> float:
+    """计算ROUGE-L F1分数"""
+    try:
+        from rouge import Rouge
+        
+        rouge = Rouge()
+        scores = rouge.get_scores(generated, reference)[0]
+        
+        return scores['rouge-l']['f']
+    except ImportError:
+        print("⚠️  rouge not installed. Run: pip install rouge")
+        return None
 ```
 
-#### 3.2.2 Reasoning Depth (推理深度) ✅ 可行
+### 4.2 BLEU
 
-**定义**:
-- 评估推理过程的深度
-- 检测是否有逐步分析
+**定义**: 基于N-gram精确率的重叠指标。
+
+**计算方法**:
+$$
+BLEU = BP \times \exp\left(\sum_{n=1}^{N} w_n \log p_n\right)
+$$
+
+其中:
+- $p_n$: n-gram精确率
+- $w_n$: 权重(通常均匀分配)
+- $BP$: 简短惩罚因子
+
+**特点**:
+- 常用于**多参考答案**的生成式问答
+- 衡量生成文本与标准答案的相似度
+- 对短答案可能不够敏感
 
 **实现方案**:
 ```python
-def calculate_reasoning_depth(text: str) -> Dict[str, float]:
-    """
-    评估推理深度
+def calculate_bleu(generated: str, reference: str) -> float:
+    """计算BLEU分数"""
+    from nltk.translate.bleu_score import sentence_bleu
     
-    Returns:
-        Dict with:
-        - has_reasoning: 是否包含推理
-        - reasoning_steps: 推理步骤数
-        - has_examples: 是否有例子
-    """
-    scores = {}
+    gen_tokens = generated.split()
+    ref_tokens = [reference.split()]  # BLEU需要列表格式
     
-    # 1. 推理关键词
-    reasoning_keywords = [
-        'because', 'since', 'therefore', 'thus', 'so',
-        'if', 'then', 'when', 'however', 'but',
-        '因为', '所以', '因此', '如果', '那么'
-    ]
-    
-    has_reasoning = any(
-        keyword in text.lower() 
-        for keyword in reasoning_keywords
-    )
-    scores['has_reasoning'] = 1.0 if has_reasoning else 0.0
-    
-    # 2. 推理步骤数 (基于句子)
-    sentences = [s.strip() for s in text.split('.') if len(s.strip()) > 10]
-    scores['reasoning_steps'] = len(sentences)
-    
-    # 3. 检测例子
-    example_patterns = [
-        r'for example', r'for instance', r'such as',
-        r'例如', r'比如', r'举例'
-    ]
-    
-    has_examples = any(
-        re.search(pattern, text, re.IGNORECASE) 
-        for pattern in example_patterns
-    )
-    scores['has_examples'] = 1.0 if has_examples else 0.0
-    
-    return scores
+    return sentence_bleu(ref_tokens, gen_tokens)
 ```
 
 
 
-## 4. 推荐评估方案
+## 5. 推荐评估方案
 
-### 4.1 核心指标(必须实现)
+### 5.1 核心指标组合
 
-| 维度 | 指标 | 优先级 | 计算成本 | 可行性 |
-|------|------|--------|----------|--------|
-| 完整性 | Has Answer | ⭐⭐⭐ | 低 | ✅ 高 |
-| 完整性 | Has Conclusion | ⭐⭐⭐ | 低 | ✅ 高 |
-| 专业性 | Technical Term Density | ⭐⭐⭐ | 低 | ✅ 高 |
-| 置信度 | Confidence Score | ⭐⭐ | 低 | ✅ 高 |
-| 结构 | Has Enumeration | ⭐⭐ | 低 | ✅ 高 |
-| 推理 | Has Reasoning | ⭐⭐ | 低 | ✅ 高 |
+| 维度 | 指标 | 优先级 | 计算成本 | 适用场景 |
+|------|------|--------|----------|----------|
+| 精确匹配 | Exact Match | ⭐⭐⭐ | 低 | 简短答案、事实型QA |
+| 部分匹配 | F1 Score | ⭐⭐⭐ | 低 | 长答案、多片段答案 |
+| 语义相似 | BERTScore | ⭐⭐⭐ | 高(需GPU) | 转述型答案、语义评估 |
+| 序列匹配 | ROUGE-L | ⭐⭐ | 低 | 长文本答案 |
+| N-gram匹配 | BLEU | ⭐ | 低 | 多参考答案 |
 
-### 4.2 评估流程
+### 5.2 评估流程
 
 ```
-1. 基础检查
-   ├── 检测是否有答案
-   ├── 计算答案长度
-   └── 检测结论性语句
+1. 答案提取与归一化
+   ├── 从模型输出中提取答案
+   ├── 归一化处理(小写、去标点、去冠词)
+   └── 准备标准答案
 
-2. 专业性评估
-   ├── 统计技术术语
-   ├── 计算术语密度
-   └── 评估专业程度
+2. 基础指标计算
+   ├── Exact Match (严格匹配)
+   └── F1 Score (词级别重叠)
 
-3. 置信度评估
-   ├── 检测不确定性表达
-   ├── 检测确定性表达
-   └── 计算置信度分数
+3. 语义指标计算(可选)
+   ├── BERTScore (语义相似度)
+   ├── ROUGE-L (序列匹配)
+   └── BLEU (N-gram匹配)
 
-4. 结构与推理评估
-   ├── 分析段落结构
-   ├── 检测推理关键词
-   └── 统计推理步骤
+4. 结果汇总
+   ├── 按模型汇总平均分数
+   ├── 按问题分析难度
+   └── 生成评估报告
 ```
 
-### 4.3 评分方案
+### 5.3 评分权重建议
 
-#### 方案1: 多维度呈现(推荐)
-不计算单一综合分数,保留多维度指标:
-```python
-qa_quality_metrics = {
-    'completeness': {
-        'has_answer': bool,
-        'answer_length': int,
-        'has_conclusion': bool,
-    },
-    'professionalism': {
-        'technical_term_density': float,
-        'technical_term_count': int,
-    },
-    'confidence': {
-        'confidence_score': float,
-        'uncertainty_count': int,
-        'certainty_count': int,
-    },
-    'structure': {
-        'paragraph_count': int,
-        'has_enumeration': bool,
-    },
-    'reasoning': {
-        'has_reasoning': bool,
-        'reasoning_steps': int,
-        'has_examples': bool,
-    }
-}
-```
-
-#### 方案2: 综合评分(可选)
+#### 方案1: 简短答案优先(推荐用于本数据集)
 ```python
 qa_quality_score = {
-    'completeness': 0.3,        # 30% - 是否完整回答
-    'technical_density': 0.3,   # 30% - 专业性
-    'confidence': 0.2,          # 20% - 置信度
-    'structure': 0.2            # 20% - 结构质量
+    'exact_match': 0.5,      # 50% - 精确匹配最重要
+    'f1_score': 0.3,         # 30% - 部分匹配
+    'bertscore_f1': 0.2      # 20% - 语义相似度
 }
 ```
 
+**理由**: 本数据集中q01, q04, q05为简短答案,EM最能反映准确性
+
+#### 方案2: 语义理解优先
+```python
+qa_quality_score = {
+    'bertscore_f1': 0.4,     # 40% - 语义最重要
+    'f1_score': 0.3,         # 30% - 词汇重叠
+    'exact_match': 0.3       # 30% - 精确匹配
+}
+```
+
+**理由**: 强调语义理解,适合转述型答案
+
+#### 方案3: 多维度呈现(推荐)
+不计算单一综合分数,保留所有原始指标:
+```python
+qa_quality_metrics = {
+    'exact_match': float,
+    'f1_score': float,
+    'bertscore_precision': float,
+    'bertscore_recall': float,
+    'bertscore_f1': float,
+    'rouge_l': float,
+    'bleu': float
+}
+```
+
+**理由**: 保留完整信息,支持多角度分析
 
 
-## 5. 实现方案
 
-### 5.1 评估器设计
+## 6. 实现方案
+
+### 6.1 评估器设计
 
 ```python
 # data/analize/scripts/quality_evaluation/qa_evaluator.py
 
 import re
-from typing import Dict, Set
-from .base_evaluator import BaseEvaluator
+import string
+from typing import Dict, Optional
 
 
-class QAEvaluator(BaseEvaluator):
-    """问答任务评估器"""
+class QAEvaluator:
+    """问答任务评估器 - 基于学术标准指标"""
     
     def __init__(self, config: Dict = None):
-        super().__init__(config)
-        self.domain = config.get('domain', 'cs') if config else 'cs'
-        self._load_technical_terms()
+        self.config = config or {}
+        self.use_bertscore = self.config.get('use_bertscore', True)
+        self.device = self.config.get('device', 'cuda')
+        self.lang = self.config.get('lang', 'en')
     
-    def _load_technical_terms(self):
-        """加载技术术语库"""
-        # 计算机科学术语
-        self.cs_terms = {
-            'algorithm', 'complexity', 'runtime', 'worst-case', 'average-case',
-            'hash', 'table', 'array', 'linked', 'list', 'tree', 'graph',
-            'sort', 'search', 'binary', 'quicksort', 'mergesort', 'heapsort',
-            'network', 'protocol', 'packet', 'encryption', 'authentication',
-            'security', 'vulnerability', 'firewall', 'port', 'scan', 'nmap',
-            'boolean', 'operator', 'logic', 'gate', 'circuit',
-            'nand', 'nor', 'xor', 'and', 'or', 'not',
-            'ipsec', 'vpn', 'ssl', 'tls', 'tcp', 'udp', 'ip', 'http',
-            'data', 'structure', 'pointer', 'memory', 'stack', 'queue',
-            'recursion', 'iteration', 'loop', 'function', 'class', 'object'
-        }
-    
-    def evaluate(self, generated: str, reference: str = None, 
+    def evaluate(self, generated: str, reference: str, 
                  context: Dict = None) -> Dict[str, float]:
         """
         评估问答质量
         
         Args:
-            generated: 生成的答案文本
-            reference: 标准答案(可选,QA任务通常没有)
+            generated: 生成的答案
+            reference: 标准答案
             context: 额外上下文
         
         Returns:
@@ -440,240 +437,207 @@ class QAEvaluator(BaseEvaluator):
         scores = {}
         
         # 基础检查
-        if not generated or len(generated.strip()) == 0:
+        if not generated or not reference:
             return self._get_zero_scores()
         
-        # 1. 响应完整性
-        completeness_scores = self._calculate_completeness(generated)
-        scores.update(completeness_scores)
+        # 1. Exact Match
+        scores['exact_match'] = self._calculate_exact_match(generated, reference)
         
-        # 2. 技术术语密度
-        scores['technical_term_density'] = self._calculate_technical_density(generated)
-        scores['technical_term_count'] = self._count_technical_terms(generated)
+        # 2. F1 Score
+        scores['f1_score'] = self._calculate_f1_score(generated, reference)
         
-        # 3. 置信度
-        scores['confidence_score'] = self._calculate_confidence(generated)
-        scores['uncertainty_count'] = self._count_uncertainty(generated)
-        scores['certainty_count'] = self._count_certainty(generated)
+        # 3. BERTScore (可选)
+        if self.use_bertscore:
+            bertscore_results = self._calculate_bertscore(generated, reference)
+            scores.update(bertscore_results)
         
-        # 4. 结构质量
-        structure_scores = self._calculate_structure(generated)
-        scores.update(structure_scores)
+        # 4. ROUGE-L
+        scores['rouge_l'] = self._calculate_rouge_l(generated, reference)
         
-        # 5. 推理深度
-        reasoning_scores = self._calculate_reasoning(generated)
-        scores.update(reasoning_scores)
+        # 5. BLEU
+        scores['bleu'] = self._calculate_bleu(generated, reference)
         
         return scores
     
-    def _calculate_completeness(self, text: str) -> Dict[str, float]:
-        """计算响应完整性"""
-        scores = {}
+    def _normalize_answer(self, text: str) -> str:
+        """答案归一化"""
+        # 转小写
+        text = text.lower()
         
-        # 是否有答案
-        scores['has_answer'] = 1.0 if len(text.strip()) > 50 else 0.0
-        scores['answer_length'] = len(text)
+        # 去除标点
+        text = text.translate(str.maketrans('', '', string.punctuation))
         
-        # 检测结论
-        conclusion_patterns = [
-            r'(?:answer|result|conclusion|therefore|thus|so)\s+is',
-            r'(?:答案|结论|因此|所以)\s*(?:是|为)',
-            r'the correct answer',
-            r'in summary',
-            r'to summarize'
-        ]
+        # 去除冠词
+        articles = ['a', 'an', 'the']
+        words = text.split()
+        words = [w for w in words if w not in articles]
         
-        has_conclusion = any(
-            re.search(pattern, text, re.IGNORECASE) 
-            for pattern in conclusion_patterns
-        )
-        scores['has_conclusion'] = 1.0 if has_conclusion else 0.0
+        # 去除多余空格
+        text = ' '.join(words).strip()
         
-        return scores
+        return text
     
-    def _calculate_technical_density(self, text: str) -> float:
-        """计算技术术语密度"""
-        words = text.lower().split()
+    def _calculate_exact_match(self, generated: str, reference: str) -> float:
+        """计算Exact Match"""
+        gen_norm = self._normalize_answer(generated)
+        ref_norm = self._normalize_answer(reference)
         
-        if len(words) == 0:
+        return 1.0 if gen_norm == ref_norm else 0.0
+    
+    def _calculate_f1_score(self, generated: str, reference: str) -> float:
+        """计算F1 Score"""
+        gen_tokens = self._normalize_answer(generated).split()
+        ref_tokens = self._normalize_answer(reference).split()
+        
+        if len(gen_tokens) == 0 or len(ref_tokens) == 0:
             return 0.0
         
-        term_count = sum(1 for word in words if word in self.cs_terms)
-        density = term_count / len(words)
+        common = set(gen_tokens) & set(ref_tokens)
         
-        # 归一化 (0-0.3为正常范围)
-        normalized_density = min(density / 0.3, 1.0)
+        precision = len(common) / len(gen_tokens)
+        recall = len(common) / len(ref_tokens)
         
-        return normalized_density
+        if precision + recall == 0:
+            return 0.0
+        
+        f1 = 2 * precision * recall / (precision + recall)
+        
+        return f1
     
-    def _count_technical_terms(self, text: str) -> int:
-        """统计技术术语数量"""
-        words = text.lower().split()
-        return sum(1 for word in words if word in self.cs_terms)
+    def _calculate_bertscore(self, generated: str, reference: str) -> Dict[str, float]:
+        """计算BERTScore"""
+        try:
+            from bert_score import score
+            
+            P, R, F1 = score(
+                [generated], 
+                [reference], 
+                lang=self.lang, 
+                device=self.device,
+                verbose=False
+            )
+            
+            return {
+                'bertscore_precision': P.item(),
+                'bertscore_recall': R.item(),
+                'bertscore_f1': F1.item()
+            }
+        except ImportError:
+            return {
+                'bertscore_precision': None,
+                'bertscore_recall': None,
+                'bertscore_f1': None
+            }
+        except Exception as e:
+            print(f"⚠️  BERTScore calculation failed: {e}")
+            return {
+                'bertscore_precision': None,
+                'bertscore_recall': None,
+                'bertscore_f1': None
+            }
     
-    def _calculate_confidence(self, text: str) -> float:
-        """计算置信度"""
-        text_lower = text.lower()
-        
-        uncertainty_count = self._count_uncertainty(text_lower)
-        certainty_count = self._count_certainty(text_lower)
-        
-        # 基础分数0.5 + 确定性0.1 - 不确定性0.1
-        confidence = 0.5 + (certainty_count * 0.1) - (uncertainty_count * 0.1)
-        
-        return max(0.0, min(1.0, confidence))
+    def _calculate_rouge_l(self, generated: str, reference: str) -> float:
+        """计算ROUGE-L"""
+        try:
+            from rouge import Rouge
+            
+            rouge = Rouge()
+            scores = rouge.get_scores(generated, reference)[0]
+            
+            return scores['rouge-l']['f']
+        except ImportError:
+            return None
+        except Exception:
+            return 0.0
     
-    def _count_uncertainty(self, text: str) -> int:
-        """统计不确定性表达"""
-        uncertainty_keywords = [
-            'i think', 'probably', 'maybe', 'perhaps', 'might',
-            'could be', 'not sure', 'unclear', 'uncertain',
-            'i believe', 'seems like', 'appears to'
-        ]
-        
-        return sum(1 for keyword in uncertainty_keywords if keyword in text)
-    
-    def _count_certainty(self, text: str) -> int:
-        """统计确定性表达"""
-        certainty_keywords = [
-            'definitely', 'certainly', 'clearly', 'obviously',
-            'the answer is', 'the correct answer', 'must be',
-            'always', 'never', 'exactly'
-        ]
-        
-        return sum(1 for keyword in certainty_keywords if keyword in text)
-    
-    def _calculate_structure(self, text: str) -> Dict[str, float]:
-        """计算结构质量"""
-        scores = {}
-        
-        # 段落分析
-        paragraphs = [p.strip() for p in text.split('\n\n') if len(p.strip()) > 20]
-        scores['paragraph_count'] = len(paragraphs)
-        
-        if paragraphs:
-            avg_length = sum(len(p) for p in paragraphs) / len(paragraphs)
-            scores['avg_paragraph_length'] = avg_length
-        else:
-            scores['avg_paragraph_length'] = 0
-        
-        # 检测列举
-        enumeration_patterns = [
-            r'(?:first|second|third|finally)',
-            r'(?:1\.|2\.|3\.)',
-            r'(?:a\)|b\)|c\))',
-            r'(?:首先|其次|最后)'
-        ]
-        
-        has_enumeration = any(
-            re.search(pattern, text, re.IGNORECASE) 
-            for pattern in enumeration_patterns
-        )
-        scores['has_enumeration'] = 1.0 if has_enumeration else 0.0
-        
-        return scores
-    
-    def _calculate_reasoning(self, text: str) -> Dict[str, float]:
-        """计算推理深度"""
-        scores = {}
-        
-        # 推理关键词
-        reasoning_keywords = [
-            'because', 'since', 'therefore', 'thus', 'so',
-            'if', 'then', 'when', 'however', 'but',
-            '因为', '所以', '因此', '如果', '那么'
-        ]
-        
-        has_reasoning = any(
-            keyword in text.lower() 
-            for keyword in reasoning_keywords
-        )
-        scores['has_reasoning'] = 1.0 if has_reasoning else 0.0
-        
-        # 推理步骤数
-        sentences = [s.strip() for s in text.split('.') if len(s.strip()) > 10]
-        scores['reasoning_steps'] = len(sentences)
-        
-        # 检测例子
-        example_patterns = [
-            r'for example', r'for instance', r'such as',
-            r'例如', r'比如', r'举例'
-        ]
-        
-        has_examples = any(
-            re.search(pattern, text, re.IGNORECASE) 
-            for pattern in example_patterns
-        )
-        scores['has_examples'] = 1.0 if has_examples else 0.0
-        
-        return scores
+    def _calculate_bleu(self, generated: str, reference: str) -> float:
+        """计算BLEU"""
+        try:
+            from nltk.translate.bleu_score import sentence_bleu
+            
+            gen_tokens = generated.split()
+            ref_tokens = [reference.split()]
+            
+            return sentence_bleu(ref_tokens, gen_tokens)
+        except ImportError:
+            return None
+        except Exception:
+            return 0.0
     
     def _get_zero_scores(self) -> Dict[str, float]:
         """返回零分数"""
         return {
-            'has_answer': 0.0,
-            'answer_length': 0,
-            'has_conclusion': 0.0,
-            'technical_term_density': 0.0,
-            'technical_term_count': 0,
-            'confidence_score': 0.0,
-            'uncertainty_count': 0,
-            'certainty_count': 0,
-            'paragraph_count': 0,
-            'avg_paragraph_length': 0,
-            'has_enumeration': 0.0,
-            'has_reasoning': 0.0,
-            'reasoning_steps': 0,
-            'has_examples': 0.0
+            'exact_match': 0.0,
+            'f1_score': 0.0,
+            'bertscore_precision': 0.0,
+            'bertscore_recall': 0.0,
+            'bertscore_f1': 0.0,
+            'rouge_l': 0.0,
+            'bleu': 0.0
         }
     
     def get_metric_categories(self) -> Dict[str, list]:
         """返回指标分类"""
         return {
-            'completeness': ['has_answer', 'answer_length', 'has_conclusion'],
-            'professionalism': ['technical_term_density', 'technical_term_count'],
-            'confidence': ['confidence_score', 'uncertainty_count', 'certainty_count'],
-            'structure': ['paragraph_count', 'avg_paragraph_length', 'has_enumeration'],
-            'reasoning': ['has_reasoning', 'reasoning_steps', 'has_examples']
+            'exact': ['exact_match'],
+            'overlap': ['f1_score', 'rouge_l', 'bleu'],
+            'semantic': ['bertscore_precision', 'bertscore_recall', 'bertscore_f1']
         }
     
     def get_metric_directions(self) -> Dict[str, bool]:
-        """返回指标方向"""
+        """返回指标方向(True=越大越好)"""
         return {
-            'has_answer': True,
-            'answer_length': True,
-            'has_conclusion': True,
-            'technical_term_density': True,
-            'technical_term_count': True,
-            'confidence_score': True,
-            'uncertainty_count': False,  # 越少越好
-            'certainty_count': True,
-            'paragraph_count': True,
-            'has_enumeration': True,
-            'has_reasoning': True,
-            'reasoning_steps': True,
-            'has_examples': True
+            'exact_match': True,
+            'f1_score': True,
+            'bertscore_precision': True,
+            'bertscore_recall': True,
+            'bertscore_f1': True,
+            'rouge_l': True,
+            'bleu': True
         }
 ```
 
 
 
-## 6. 批量评估脚本
+### 6.2 标准答案配置
 
 ```python
-# data/analize/scripts/evaluate_qa_quality.py
+# 标准答案字典
+QA_REFERENCE_ANSWERS = {
+    'q01': 'Quicksort',
+    'q02': 'Range search: Given values a and b, find all the records whose key value is in the range a, b.',
+    'q03': 'It is a scanner which works by injecting packets to a range of addresses, and inferring what hosts and services might be at those addresses, based on the responses',
+    'q04': '{AND, OR}',
+    'q05': 'Privacy'
+}
+```
+
+### 6.3 批量评估脚本
+
+```python
+# data/analize/scripts/evaluate_qa_quality_academic.py
 
 import pandas as pd
 from pathlib import Path
 from tqdm import tqdm
+from datetime import datetime
 from quality_evaluation.qa_evaluator import QAEvaluator
 
+# 标准答案
+REFERENCE_ANSWERS = {
+    'q01': 'Quicksort',
+    'q02': 'Range search: Given values a and b, find all the records whose key value is in the range a, b.',
+    'q03': 'It is a scanner which works by injecting packets to a range of addresses, and inferring what hosts and services might be at those addresses, based on the responses',
+    'q04': '{AND, OR}',
+    'q05': 'Privacy'
+}
 
-def evaluate_qa_quality(data_dir: Path, output_dir: Path):
-    """评估问答任务质量"""
+
+def evaluate_qa_quality(data_dir: Path, output_dir: Path, use_bertscore: bool = False):
+    """评估问答任务质量 - 学术标准指标"""
     
     print("\n" + "="*60)
-    print("❓ Question Answering Quality Evaluation")
+    print("❓ Question Answering Quality Evaluation (Academic)")
     print("="*60)
     
     # 加载数据
@@ -684,12 +648,17 @@ def evaluate_qa_quality(data_dir: Path, output_dir: Path):
     print(f"📝 Questions: {len([c for c in df.columns if c != 'model'])}")
     
     # 初始化评估器
-    evaluator = QAEvaluator(config={'domain': 'cs'})
+    config = {
+        'use_bertscore': use_bertscore,
+        'device': 'cuda',
+        'lang': 'en'
+    }
+    evaluator = QAEvaluator(config)
     
     # 评估每个模型的每个响应
     results = []
     
-    for _, row in tqdm(df.iterrows(), total=len(df), desc="Models"):
+    for _, row in tqdm(df.iterrows(), total=len(df), desc="Evaluating models"):
         model = row['model']
         
         for col in df.columns:
@@ -701,13 +670,21 @@ def evaluate_qa_quality(data_dir: Path, output_dir: Path):
             if pd.isna(response) or len(str(response).strip()) == 0:
                 continue
             
+            # 获取标准答案
+            reference = REFERENCE_ANSWERS.get(col)
+            
+            if reference is None:
+                print(f"⚠️  No reference answer for {col}")
+                continue
+            
             # 评估质量
-            scores = evaluator.evaluate(str(response))
+            scores = evaluator.evaluate(str(response), reference=reference)
             
             # 保存结果
             result = {
                 'model': model,
                 'question_id': col,
+                'reference_answer': reference,
                 **scores
             }
             results.append(result)
@@ -717,7 +694,7 @@ def evaluate_qa_quality(data_dir: Path, output_dir: Path):
     
     # 保存结果
     output_dir.mkdir(parents=True, exist_ok=True)
-    output_file = output_dir / 'qa_quality_scores.csv'
+    output_file = output_dir / 'qa_quality_scores_academic.csv'
     results_df.to_csv(output_file, index=False, encoding='utf-8-sig')
     
     print(f"\n✅ Evaluation completed!")
@@ -731,144 +708,34 @@ def evaluate_qa_quality(data_dir: Path, output_dir: Path):
     generate_report(results_df, output_dir)
     
     return results_df
-
-
-def generate_summary_stats(df: pd.DataFrame, output_dir: Path):
-    """生成汇总统计"""
-    
-    print(f"\n📊 Generating summary statistics...")
-    
-    # 按模型汇总
-    metric_cols = [col for col in df.columns 
-                   if col not in ['model', 'question_id'] 
-                   and df[col].dtype in ['float64', 'int64']]
-    
-    summary = df.groupby('model')[metric_cols].agg(['mean', 'std', 'min', 'max'])
-    
-    # 保存汇总统计
-    summary_file = output_dir / 'qa_quality_summary.csv'
-    summary.to_csv(summary_file, encoding='utf-8-sig')
-    
-    print(f"✅ Summary statistics: {summary_file}")
-    
-    # 打印Top 3模型
-    if 'confidence_score' in df.columns:
-        print(f"\n🏆 Top 3 Models by Confidence Score:")
-        top_models = df.groupby('model')['confidence_score'].mean().sort_values(ascending=False).head(3)
-        for rank, (model, score) in enumerate(top_models.items(), 1):
-            print(f"  {rank}. {model}: {score:.3f}")
-    
-    if 'technical_term_density' in df.columns:
-        print(f"\n🎯 Top 3 Models by Technical Term Density:")
-        top_models = df.groupby('model')['technical_term_density'].mean().sort_values(ascending=False).head(3)
-        for rank, (model, score) in enumerate(top_models.items(), 1):
-            print(f"  {rank}. {model}: {score:.3f}")
-
-
-def generate_report(df: pd.DataFrame, output_dir: Path):
-    """生成评估报告"""
-    from datetime import datetime
-    
-    report_lines = []
-    report_lines.append("# 问答任务质量评估报告")
-    report_lines.append(f"**生成时间**: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
-    report_lines.append(f"**评估模型数**: {df['model'].nunique()}")
-    report_lines.append(f"**评估样本数**: {len(df)}")
-    report_lines.append("")
-    
-    # 评估指标说明
-    report_lines.append("## 评估指标说明")
-    report_lines.append("### 完整性指标")
-    report_lines.append("- **Has Answer**: 是否包含答案")
-    report_lines.append("- **Has Conclusion**: 是否有结论性语句")
-    report_lines.append("")
-    report_lines.append("### 专业性指标")
-    report_lines.append("- **Technical Term Density**: 技术术语密度")
-    report_lines.append("- **Technical Term Count**: 技术术语数量")
-    report_lines.append("")
-    report_lines.append("### 置信度指标")
-    report_lines.append("- **Confidence Score**: 答案置信度")
-    report_lines.append("- **Uncertainty Count**: 不确定性表达数量")
-    report_lines.append("- **Certainty Count**: 确定性表达数量")
-    report_lines.append("")
-    report_lines.append("### 结构与推理指标")
-    report_lines.append("- **Has Enumeration**: 是否有列举")
-    report_lines.append("- **Has Reasoning**: 是否包含推理")
-    report_lines.append("- **Reasoning Steps**: 推理步骤数")
-    report_lines.append("")
-    
-    # 整体统计
-    report_lines.append("## 整体统计")
-    report_lines.append("| 指标 | 均值 | 标准差 | 最小值 | 最大值 |")
-    report_lines.append("|------|------|--------|--------|--------|")
-    
-    key_metrics = ['confidence_score', 'technical_term_density', 'has_reasoning', 'has_conclusion']
-    for metric in key_metrics:
-        if metric in df.columns:
-            mean_val = df[metric].mean()
-            std_val = df[metric].std()
-            min_val = df[metric].min()
-            max_val = df[metric].max()
-            
-            if df[metric].dtype == 'float64':
-                report_lines.append(f"| {metric} | {mean_val:.2%} | {std_val:.2%} | {min_val:.2%} | {max_val:.2%} |")
-            else:
-                report_lines.append(f"| {metric} | {mean_val:.2f} | {std_val:.2f} | {min_val:.2f} | {max_val:.2f} |")
-    
-    report_lines.append("")
-    
-    # 模型排名
-    report_lines.append("## 模型排名")
-    report_lines.append("")
-    report_lines.append("### 按置信度排名")
-    report_lines.append("| 排名 | 模型 | 置信度 | 技术密度 | 推理率 |")
-    report_lines.append("|------|------|--------|----------|--------|")
-    
-    model_stats = df.groupby('model').agg({
-        'confidence_score': 'mean',
-        'technical_term_density': 'mean',
-        'has_reasoning': 'mean'
-    }).sort_values('confidence_score', ascending=False)
-    
-    for rank, (model, row) in enumerate(model_stats.iterrows(), 1):
-        report_lines.append(
-            f"| {rank} | {model} | {row['confidence_score']:.2%} | "
-            f"{row['technical_term_density']:.2%} | {row['has_reasoning']:.2%} |"
-        )
-    
-    report_lines.append("")
-    
-    # 保存报告
-    report_file = output_dir / 'qa_quality_report.md'
-    with open(report_file, 'w', encoding='utf-8') as f:
-        f.write('\n'.join(report_lines))
-    
-    print(f"📄 Report generated: {report_file}")
-
-
-if __name__ == '__main__':
-    import argparse
-    
-    parser = argparse.ArgumentParser(description='评估问答质量')
-    parser.add_argument('--data-dir', type=str, 
-                       default='data/analize/pre_data',
-                       help='数据目录')
-    parser.add_argument('--output-dir', type=str,
-                       default='data/analize/results/qa_quality',
-                       help='输出目录')
-    
-    args = parser.parse_args()
-    
-    data_dir = Path(args.data_dir)
-    output_dir = Path(args.output_dir)
-    
-    evaluate_qa_quality(data_dir, output_dir)
 ```
+
+## 7. 总结
+
+### 7.1 指标体系总结
+
+在问答任务中,**EM与F1是传统事实匹配的核心指标**,**BERTScore用于衡量深层语义一致性**,ROUGE-L与BLEU则用于长答案与生成式场景的补充评估。这套指标组合可全面衡量模型输出的**准确性、完整性、相关性与语义合理性**。
+
+### 7.2 适用场景
+
+| 场景 | 推荐指标 | 理由 |
+|------|---------|------|
+| 简短事实型QA | EM + F1 | 答案明确,精确匹配最重要 |
+| 长答案QA | F1 + ROUGE-L | 考虑部分匹配和序列完整性 |
+| 转述型QA | BERTScore + F1 | 语义理解比表面匹配更重要 |
+| 多参考答案 | BLEU + F1 | 支持多种正确表述 |
+| 综合评估 | EM + F1 + BERTScore | 全面覆盖精确、重叠、语义三个维度 |
+
+### 7.3 实施建议
+
+1. **优先实现EM和F1**: 计算成本低,无需外部依赖
+2. **可选实现BERTScore**: 需要GPU,但能提供语义层面的评估
+3. **保留多维度指标**: 不强制单一综合分数,支持多角度分析
+4. **答案归一化**: 统一处理大小写、标点、冠词等,提高匹配准确性
 
 ---
 
-**文档版本**: v1.0  
+**文档版本**: v2.0 (学术标准版)  
 **创建日期**: 2026-03-04  
 **作者**: Kiro AI Assistant  
 **状态**: 设计完成,待实施
-
