@@ -23,6 +23,8 @@
 | **math** | 准确性、推理 | Exact Match、数值精度 | 步骤完整性 |
 | **qa** | 准确性、相关性 | Exact Match、F1、BERTScore | ROUGE、BLEU |
 | **summary** | 信息保留、简洁性 | ROUGE-L、BERTScore | 压缩比、BARTScore |
+| **reasoning** | 逻辑性、完整性 | 推理步骤完整性、结论正确性 | 逻辑连贯性、论证深度 |
+| **translation** | 准确性、流畅性 | BLEU、BERTScore | 术语一致性、文化适应性 |
 
 ## 2. 任务特定评估指标
 
@@ -339,6 +341,302 @@ def evaluate_summary_quality(generated_summary, reference_summary, source_text=N
     return scores
 ```
 
+### 2.6 逻辑推理任务 (reasoning)
+
+**评估目标**：推理过程的逻辑性、完整性和结论的正确性
+
+**核心指标**：
+
+1. **推理步骤完整性 (Reasoning Completeness)**
+   - 定义：是否包含完整的推理链条（前提→推理→结论）
+   - 计算：检测关键推理标记词（"因为"、"所以"、"因此"、"由于"等）
+   - 范围：[0, 1]
+   - 实现：基于规则的模式匹配
+
+2. **结论正确性 (Conclusion Correctness)**
+   - 定义：最终结论是否与标准答案一致
+   - 计算：提取结论部分，与参考答案比较（Exact Match 或语义相似度）
+   - 范围：{0, 1} 或 [0, 1]
+   - 实现：结合关键词提取和语义匹配
+
+3. **逻辑连贯性 (Logical Coherence)**
+   - 定义：推理步骤之间的逻辑关系是否合理
+   - 计算：检测逻辑矛盾、循环论证等问题
+   - 范围：[0, 1]
+   - 实现：基于规则或小型逻辑检查器
+
+**辅助指标**：
+
+4. **推理步骤数量**
+   - 统计推理步骤的数量
+   - 评估论证的详细程度
+
+5. **前提使用率**
+   - 检查是否使用了所有给定前提
+   - 评估推理的全面性
+
+6. **文本长度**
+   - 字符数、句子数
+   - 评估回答的详细程度
+
+**实现方案**：
+```python
+def evaluate_reasoning_quality(generated_answer, reference_answer=None, premises=None):
+    scores = {}
+    
+    # 1. 推理步骤完整性
+    reasoning_markers = ['因为', '所以', '因此', '由于', '根据', '可以得出', '推断', '结论']
+    marker_count = sum(1 for marker in reasoning_markers if marker in generated_answer)
+    scores['has_reasoning_steps'] = 1.0 if marker_count >= 2 else 0.0
+    scores['reasoning_step_count'] = marker_count
+    
+    # 2. 结论正确性（如果有参考答案）
+    if reference_answer:
+        # 提取结论部分（通常在最后）
+        conclusion_markers = ['因此', '所以', '综上', '总之', '答案是']
+        conclusion = generated_answer
+        for marker in conclusion_markers:
+            if marker in generated_answer:
+                conclusion = generated_answer.split(marker)[-1].strip()
+                break
+        
+        # 与参考答案比较
+        conclusion_norm = normalize_answer(conclusion)
+        ref_norm = normalize_answer(reference_answer)
+        scores['conclusion_correct'] = 1.0 if conclusion_norm == ref_norm else 0.0
+        
+        # 语义相似度（可选）
+        try:
+            from bert_score import score
+            P, R, F1 = score([conclusion], [reference_answer], lang='zh', verbose=False)
+            scores['conclusion_semantic_sim'] = F1.item()
+        except:
+            scores['conclusion_semantic_sim'] = None
+    
+    # 3. 逻辑连贯性（简化版：检测矛盾词）
+    contradiction_markers = ['但是', '然而', '相反', '矛盾']
+    has_contradiction = any(marker in generated_answer for marker in contradiction_markers)
+    scores['logical_coherence'] = 0.5 if has_contradiction else 1.0
+    
+    # 4. 前提使用率（如果提供了前提）
+    if premises:
+        premises_used = sum(1 for premise in premises if premise in generated_answer)
+        scores['premise_usage_rate'] = premises_used / len(premises) if premises else 0.0
+    
+    # 5. 文本长度
+    scores['answer_length'] = len(generated_answer)
+    scores['sentence_count'] = generated_answer.count('。') + generated_answer.count('？')
+    
+    return scores
+
+def normalize_answer(text):
+    """答案归一化"""
+    import re
+    # 去除标点和空格
+    text = re.sub(r'[^\w]', '', text)
+    return text.strip().lower()
+```
+
+**评估示例**：
+
+```python
+# 示例1：三段论推理
+generated = """
+根据题目：
+1. 所有的猫都是哺乳动物
+2. 所有的哺乳动物都需要呼吸
+3. 小花是一只猫
+
+推理过程：
+因为小花是一只猫（前提3），
+而所有的猫都是哺乳动物（前提1），
+所以小花是哺乳动物。
+又因为所有的哺乳动物都需要呼吸（前提2），
+因此小花需要呼吸。
+
+结论：小花需要呼吸。
+"""
+
+reference = "小花需要呼吸"
+premises = ["所有的猫都是哺乳动物", "所有的哺乳动物都需要呼吸", "小花是一只猫"]
+
+scores = evaluate_reasoning_quality(generated, reference, premises)
+# 预期结果：
+# {
+#     'has_reasoning_steps': 1.0,
+#     'reasoning_step_count': 5,
+#     'conclusion_correct': 1.0,
+#     'logical_coherence': 1.0,
+#     'premise_usage_rate': 1.0,
+#     'answer_length': 150,
+#     'sentence_count': 8
+# }
+```
+
+### 2.7 翻译任务 (translation)
+
+**评估目标**：翻译的准确性、流畅性和文化适应性
+
+**核心指标**：
+
+1. **BLEU (Bilingual Evaluation Understudy)**
+   - 定义：N-gram 精确度的几何平均
+   - 计算：比较生成翻译与参考翻译的 N-gram 重叠
+   - 范围：[0, 1]
+   - 优势：广泛使用的机器翻译标准指标
+
+2. **BERTScore**
+   - 定义：基于 BERT 的语义相似度
+   - 计算：使用多语言 BERT 模型计算 token 级别相似度
+   - 范围：[0, 1]
+   - 优势：捕捉语义等价，对同义词友好
+
+3. **chrF (Character n-gram F-score)**
+   - 定义：字符级别的 F1 分数
+   - 计算：基于字符 N-gram 的 precision 和 recall
+   - 范围：[0, 1]
+   - 优势：对形态丰富的语言更友好
+
+**辅助指标**：
+
+4. **METEOR**
+   - 考虑同义词和词干匹配
+   - 更接近人类判断
+
+5. **TER (Translation Edit Rate)**
+   - 计算编辑距离
+   - 越低越好
+
+6. **长度比 (Length Ratio)**
+   - `长度比 = 生成翻译长度 / 参考翻译长度`
+   - 评估翻译的简洁性
+
+**实现方案**：
+```python
+def evaluate_translation_quality(generated_translation, reference_translation, 
+                                 source_text=None, source_lang='en', target_lang='zh'):
+    scores = {}
+    
+    # 1. BLEU 分数
+    try:
+        from nltk.translate.bleu_score import sentence_bleu, SmoothingFunction
+        
+        # 分词（根据语言）
+        if target_lang == 'zh':
+            # 中文按字符分词
+            reference_tokens = [list(reference_translation)]
+            generated_tokens = list(generated_translation)
+        else:
+            # 英文按空格分词
+            reference_tokens = [reference_translation.split()]
+            generated_tokens = generated_translation.split()
+        
+        # 计算 BLEU-4
+        smoothing = SmoothingFunction().method1
+        scores['bleu_4'] = sentence_bleu(reference_tokens, generated_tokens, 
+                                         smoothing_function=smoothing)
+        
+        # 计算 BLEU-1, BLEU-2
+        scores['bleu_1'] = sentence_bleu(reference_tokens, generated_tokens, 
+                                         weights=(1, 0, 0, 0), smoothing_function=smoothing)
+        scores['bleu_2'] = sentence_bleu(reference_tokens, generated_tokens, 
+                                         weights=(0.5, 0.5, 0, 0), smoothing_function=smoothing)
+    except Exception as e:
+        print(f"BLEU calculation failed: {e}")
+        scores['bleu_4'] = None
+    
+    # 2. BERTScore（使用多语言模型）
+    try:
+        from bert_score import score
+        
+        # 根据目标语言选择模型
+        model_type = 'bert-base-multilingual-cased'
+        P, R, F1 = score([generated_translation], [reference_translation], 
+                        model_type=model_type, verbose=False)
+        scores['bertscore_precision'] = P.item()
+        scores['bertscore_recall'] = R.item()
+        scores['bertscore_f1'] = F1.item()
+    except Exception as e:
+        print(f"BERTScore calculation failed: {e}")
+        scores['bertscore_f1'] = None
+    
+    # 3. chrF 分数
+    try:
+        from nltk.translate.chrf_score import sentence_chrf
+        scores['chrf'] = sentence_chrf(reference_translation, generated_translation)
+    except Exception as e:
+        # 手动实现简化版 chrF
+        def char_ngrams(text, n=6):
+            return [text[i:i+n] for i in range(len(text)-n+1)]
+        
+        ref_ngrams = set(char_ngrams(reference_translation))
+        gen_ngrams = set(char_ngrams(generated_translation))
+        
+        if len(gen_ngrams) == 0:
+            scores['chrf'] = 0.0
+        else:
+            precision = len(ref_ngrams & gen_ngrams) / len(gen_ngrams)
+            recall = len(ref_ngrams & gen_ngrams) / len(ref_ngrams) if len(ref_ngrams) > 0 else 0
+            scores['chrf'] = 2 * precision * recall / (precision + recall) if (precision + recall) > 0 else 0.0
+    
+    # 4. 长度比
+    scores['length_ratio'] = len(generated_translation) / len(reference_translation) if len(reference_translation) > 0 else 0.0
+    
+    # 5. 编辑距离（归一化）
+    try:
+        from Levenshtein import distance
+        edit_dist = distance(generated_translation, reference_translation)
+        max_len = max(len(generated_translation), len(reference_translation))
+        scores['normalized_edit_distance'] = 1 - (edit_dist / max_len) if max_len > 0 else 0.0
+    except:
+        scores['normalized_edit_distance'] = None
+    
+    return scores
+
+def normalize_translation(text, lang='zh'):
+    """翻译文本归一化"""
+    import re
+    
+    # 去除多余空格
+    text = re.sub(r'\s+', ' ', text).strip()
+    
+    # 统一标点符号（中英文）
+    if lang == 'zh':
+        text = text.replace(',', '，').replace('.', '。')
+        text = text.replace('!', '！').replace('?', '？')
+    
+    return text
+```
+
+**评估示例**：
+
+```python
+# 示例1：英译中
+source = "Artificial intelligence is transforming the way we live and work."
+generated = "人工智能正在改变我们的生活和工作方式。"
+reference = "人工智能正在重塑我们的生活方式和工作模式。"
+
+scores = evaluate_translation_quality(generated, reference, source, 
+                                     source_lang='en', target_lang='zh')
+# 预期结果：
+# {
+#     'bleu_4': 0.45,
+#     'bleu_1': 0.75,
+#     'bertscore_f1': 0.92,
+#     'chrf': 0.68,
+#     'length_ratio': 0.95,
+#     'normalized_edit_distance': 0.85
+# }
+
+# 示例2：中译英
+source = "深度学习在计算机视觉领域取得了突破性进展。"
+generated = "Deep learning has made breakthrough progress in the field of computer vision."
+reference = "Deep learning has achieved breakthrough advancements in computer vision."
+
+scores = evaluate_translation_quality(generated, reference, source,
+                                     source_lang='zh', target_lang='en')
+```
+
 
 ## 3. 多维质量评分系统（任务-模型适配性导向）
 
@@ -430,6 +728,47 @@ quality_metrics = {
 }
 ```
 
+**逻辑推理 (reasoning)**：
+```python
+quality_metrics = {
+    'reasoning': {
+        'has_reasoning_steps': bool,      # 是否有推理步骤
+        'reasoning_step_count': int,      # 推理步骤数量
+        'logical_coherence': float        # 逻辑连贯性
+    },
+    'correctness': {
+        'conclusion_correct': float,      # 结论正确性
+        'conclusion_semantic_sim': float, # 结论语义相似度
+        'premise_usage_rate': float       # 前提使用率
+    },
+    'completeness': {
+        'answer_length': int,             # 回答长度
+        'sentence_count': int             # 句子数量
+    }
+}
+```
+
+**翻译 (translation)**：
+```python
+quality_metrics = {
+    'accuracy': {
+        'bleu_1': float,                  # 单词级准确度
+        'bleu_2': float,                  # 短语级准确度
+        'bleu_4': float,                  # 句子级准确度
+        'chrf': float                     # 字符级F分数
+    },
+    'semantic': {
+        'bertscore_precision': float,     # 语义精确度
+        'bertscore_recall': float,        # 语义召回率
+        'bertscore_f1': float             # 语义F1分数
+    },
+    'fluency': {
+        'length_ratio': float,            # 长度比
+        'normalized_edit_distance': float # 归一化编辑距离
+    }
+}
+```
+
 ### 3.3 应用场景导向的模型选择
 
 **场景一：代码生成助手**
@@ -461,6 +800,16 @@ quality_metrics = {
 - **核心需求**：各任务均衡表现
 - **关键指标**：所有任务的核心指标
 - **选择策略**：帕累托前沿分析，选择无明显短板的模型
+
+**场景七：逻辑推理助手**
+- **核心需求**：推理完整性 + 结论正确性
+- **关键指标**：`has_reasoning_steps`, `conclusion_correct`, `logical_coherence`
+- **选择策略**：优先选择推理步骤完整且结论正确的模型
+
+**场景八：机器翻译系统**
+- **核心需求**：准确性 + 流畅性
+- **关键指标**：`bleu_4`, `bertscore_f1`, `chrf`
+- **选择策略**：在 BLEU 和 BERTScore 上均衡，同时保持合理的长度比
 
 ### 3.4 客观综合评分方法（可选）
 
@@ -700,10 +1049,12 @@ pip install rouge nltk
 1. ⏳ BERTScore (使用 `bert-score` 库)
 2. ⏳ BARTScore (使用已有的 BARTScore 工具)
 3. ⏳ 困惑度计算
+4. ⏳ chrF (字符级F分数，用于翻译任务)
 
 **依赖**：
 ```bash
 pip install bert-score transformers torch
+pip install python-Levenshtein  # 用于编辑距离计算
 # BARTScore 使用项目中已有的工具
 ```
 
@@ -749,6 +1100,8 @@ data/analize/scripts/
 │   ├── math_evaluator.py          # 数学任务评估
 │   ├── qa_evaluator.py            # 问答任务评估
 │   ├── summary_evaluator.py       # 摘要任务评估
+│   ├── reasoning_evaluator.py     # 逻辑推理任务评估
+│   ├── translation_evaluator.py   # 翻译任务评估
 │   ├── aggregation.py             # 聚合方法（PCA、熵权法等）
 │   ├── metrics/                   # 指标实现
 │   │   ├── exact_match.py
@@ -756,7 +1109,8 @@ data/analize/scripts/
 │   │   ├── distinct_n.py
 │   │   ├── rouge_metrics.py
 │   │   ├── bert_score_wrapper.py
-│   │   └── bart_score_wrapper.py
+│   │   ├── bart_score_wrapper.py
+│   │   └── bleu_metrics.py
 │   └── utils.py                   # 工具函数
 └── evaluate_all_models.py         # 主评估脚本
 ```
@@ -889,7 +1243,9 @@ def evaluate_model_quality(model_name: str, data_dir: Path,
         'creative': CreativeEvaluator(config),
         'math': MathEvaluator(config),
         'qa': QAEvaluator(config),
-        'summary': SummaryEvaluator(config)
+        'summary': SummaryEvaluator(config),
+        'reasoning': ReasoningEvaluator(config),
+        'translation': TranslationEvaluator(config)
     }
     
     # 加载数据
