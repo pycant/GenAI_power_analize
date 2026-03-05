@@ -2,29 +2,25 @@
 """
 文本摘要任务质量评估器
 
-基于多维度评估指标:
-- ROUGE-L (结构完整性)
-- ROUGE-1/2 (词汇覆盖)
-- BERTScore (语义相似度，可选)
-- 压缩比 (简洁性)
-- 字数符合度 (任务完成度)
-- 信息密度 (效率)
-- BARTScore (高级评估，可选)
+评估指标：
+- ROUGE-1/2/L: 内容覆盖和结构完整性
+- BERTScore: 语义相似度
+- 压缩比: 简洁性
+- 字数符合度: 任务完成度
+- 信息密度: 信息效率
 """
 
 from typing import Dict, Optional
-from .base_evaluator import BaseEvaluator
 
 
-class SummaryEvaluator(BaseEvaluator):
+class SummaryEvaluator:
     """文本摘要任务评估器"""
     
     def __init__(self, config: Dict = None):
-        super().__init__(config)
-        self.use_bertscore = config.get('use_bertscore', True) if config else True
-        self.use_bartscore = config.get('use_bartscore', False) if config else False
-        self.device = config.get('device', 'cuda') if config else 'cuda'
-        self.lang = config.get('lang', 'zh') if config else 'zh'
+        self.config = config or {}
+        self.use_bertscore = self.config.get('use_bertscore', True)
+        self.device = self.config.get('device', 'cuda')
+        self.lang = self.config.get('lang', 'zh')
     
     def evaluate(self, generated: str, reference: str = None, 
                  context: Dict = None) -> Dict[str, float]:
@@ -75,6 +71,7 @@ class SummaryEvaluator(BaseEvaluator):
             scores['length'] = len(generated)
             scores['in_range'] = None
             scores['compliance_score'] = None
+            scores['deviation'] = None
         
         # 5. 信息密度
         if 'rouge_l_recall' in scores and scores['compression_ratio'] > 0:
@@ -83,15 +80,6 @@ class SummaryEvaluator(BaseEvaluator):
             )
         else:
             scores['information_density'] = None
-        
-        # 6. BARTScore（可选，成本高）
-        if self.use_bartscore:
-            bartscore_results = self._calculate_bartscore(generated, reference)
-            scores.update(bartscore_results)
-        else:
-            scores['bartscore_info'] = None
-            scores['bartscore_faith'] = None
-            scores['bartscore_avg'] = None
         
         return scores
     
@@ -131,6 +119,7 @@ class SummaryEvaluator(BaseEvaluator):
     def _calculate_bertscore(self, summary: str, source: str) -> Dict[str, float]:
         """计算BERTScore"""
         try:
+            import bert_score
             from bert_score import score
             
             P, R, F1 = score(
@@ -146,63 +135,12 @@ class SummaryEvaluator(BaseEvaluator):
                 'bertscore_recall': R.item(),
                 'bertscore_f1': F1.item()
             }
-        except ImportError:
-            print("⚠️  bert-score not installed. Run: pip install bert-score")
-            return {
-                'bertscore_precision': None,
-                'bertscore_recall': None,
-                'bertscore_f1': None
-            }
         except Exception as e:
             print(f"⚠️  BERTScore calculation failed: {e}")
             return {
                 'bertscore_precision': None,
                 'bertscore_recall': None,
                 'bertscore_f1': None
-            }
-    
-    def _calculate_bartscore(self, summary: str, source: str) -> Dict[str, float]:
-        """计算BARTScore"""
-        try:
-            import sys
-            from pathlib import Path
-            
-            # 添加BARTScore路径
-            bartscore_path = Path(__file__).parent.parent.parent.parent / 'tools' / 'thesis_reproduction' / 'BARTScore'
-            if str(bartscore_path) not in sys.path:
-                sys.path.insert(0, str(bartscore_path))
-            
-            from bart_score import BARTScorer
-            
-            bart_scorer = BARTScorer(
-                device=self.device,
-                checkpoint='facebook/bart-large-cnn'
-            )
-            
-            # 信息性：summary -> source
-            info_score = bart_scorer.score([source], [summary])[0]
-            
-            # 忠实性：source -> summary
-            faith_score = bart_scorer.score([summary], [source])[0]
-            
-            return {
-                'bartscore_info': info_score,
-                'bartscore_faith': faith_score,
-                'bartscore_avg': (info_score + faith_score) / 2
-            }
-        except ImportError as e:
-            print(f"⚠️  BARTScore not available: {e}")
-            return {
-                'bartscore_info': None,
-                'bartscore_faith': None,
-                'bartscore_avg': None
-            }
-        except Exception as e:
-            print(f"⚠️  BARTScore calculation failed: {e}")
-            return {
-                'bartscore_info': None,
-                'bartscore_faith': None,
-                'bartscore_avg': None
             }
     
     def _calculate_compression_ratio(self, summary: str, source: str) -> float:
@@ -235,26 +173,14 @@ class SummaryEvaluator(BaseEvaluator):
     def _get_zero_scores(self) -> Dict[str, float]:
         """返回零分数"""
         return {
-            'rouge_1_precision': 0.0,
-            'rouge_1_recall': 0.0,
             'rouge_1_f1': 0.0,
-            'rouge_2_precision': 0.0,
-            'rouge_2_recall': 0.0,
             'rouge_2_f1': 0.0,
-            'rouge_l_precision': 0.0,
-            'rouge_l_recall': 0.0,
             'rouge_l_f1': 0.0,
-            'bertscore_precision': None,
-            'bertscore_recall': None,
-            'bertscore_f1': None,
+            'bertscore_f1': 0.0,
             'compression_ratio': 0.0,
             'length': 0,
             'in_range': 0.0,
-            'compliance_score': 0.0,
-            'information_density': 0.0,
-            'bartscore_info': None,
-            'bartscore_faith': None,
-            'bartscore_avg': None
+            'information_density': 0.0
         }
     
     def get_metric_categories(self) -> Dict[str, list]:
@@ -262,21 +188,14 @@ class SummaryEvaluator(BaseEvaluator):
         return {
             'content': ['rouge_1_f1', 'rouge_2_f1', 'rouge_l_f1'],
             'semantic': ['bertscore_precision', 'bertscore_recall', 'bertscore_f1'],
-            'conciseness': ['compression_ratio', 'length', 'in_range', 'information_density'],
-            'advanced': ['bartscore_info', 'bartscore_faith', 'bartscore_avg']
+            'conciseness': ['compression_ratio', 'length', 'in_range', 'information_density']
         }
     
     def get_metric_directions(self) -> Dict[str, bool]:
         """返回指标方向(True=越大越好)"""
         return {
-            'rouge_1_precision': True,
-            'rouge_1_recall': True,
             'rouge_1_f1': True,
-            'rouge_2_precision': True,
-            'rouge_2_recall': True,
             'rouge_2_f1': True,
-            'rouge_l_precision': True,
-            'rouge_l_recall': True,
             'rouge_l_f1': True,
             'bertscore_precision': True,
             'bertscore_recall': True,
@@ -284,8 +203,5 @@ class SummaryEvaluator(BaseEvaluator):
             'compression_ratio': False,  # 适中为好，但简化为越小越好
             'in_range': True,
             'compliance_score': True,
-            'information_density': True,
-            'bartscore_info': True,
-            'bartscore_faith': True,
-            'bartscore_avg': True
+            'information_density': True
         }
