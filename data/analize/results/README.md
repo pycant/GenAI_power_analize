@@ -62,9 +62,11 @@ data/analize/results/
 - **报告**: math_quality_report.md
 
 ### 4. 问答 (qa_quality)
-- **评估指标**: Exact Match、F1 Score、BERTScore
-- **核心文件**: qa_quality_scores.csv
-- **报告**: qa_quality_report.md
+
+- **评估指标**: Exact Match、F1 Score、BERTScore、ROUGE-L
+- **核心文件**: qa_quality_scores.csv, qa_quality_scores_academic.csv
+- **报告**: qa_quality_report.md, qa_quality_report_academic.md
+- **说明**: 包含标准版和学术版两个版本的评估结果
 
 ### 5. 逻辑推理 (reasoning_quality)
 - **评估指标**: 结论正确性、推理完整性、逻辑连贯性
@@ -147,6 +149,13 @@ python data/analize/scripts/generate_comprehensive_report.py
 
 ## 相关文档
 
+### 核心文档
+- **[质量评估指标说明](METRICS_GUIDE.md)** - 详细的评估指标说明和数据文件使用指南 ⭐
+- [目录结构文档](DIRECTORY_STRUCTURE.md) - 完整的目录结构说明
+- [变更日志](CHANGELOG.md) - 目录变更记录
+- [索引文档](INDEX.md) - 快速导航索引
+
+### 评估系统设计
 - [质量评估体系设计](../scripts/quality_evaluation_system.md)
 - [代码评估设计](../scripts/CODE_EVALUATION_DESIGN.md)
 - [创意写作评估设计](../scripts/CREATIVE_EVALUATION_DESIGN.md)
@@ -155,6 +164,11 @@ python data/analize/scripts/generate_comprehensive_report.py
 - [逻辑推理评估设计](../scripts/REASONING_EVALUATION_DESIGN.md)
 - [文本摘要评估设计](../scripts/SUMMARY_EVALUATION_DESIGN.md)
 - [翻译评估设计](../scripts/TRANSLATION_EVALUATION_DESIGN.md)
+
+### 可视化相关
+- [可视化生成摘要](../visualization/VISUALIZATION_GENERATION_SUMMARY.md)
+- [可视化快速指南](../visualization/VISUALIZATION_QUICK_GUIDE.md)
+- [学术可视化风格指南](../visualization/ACADEMIC_VISUALIZATION_STYLE_GUIDE.md)
 
 ## 联系方式
 

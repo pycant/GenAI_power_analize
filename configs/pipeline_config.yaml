@@ -1,0 +1,144 @@
+# 数据管道配置文件
+
+# 路径配置
+paths:
+  base_path: data/analize
+  raw_data_path: data/analize/pre_data
+  results_path: data/analize/results
+  processed_path: data/analize/processed
+  cache_path: data/analize/cache
+
+# 文件名配置
+files:
+  master_data: master_data.parquet
+  quality_metrics: quality_metrics.parquet
+  efficiency_metrics: efficiency_metrics.parquet
+  metadata: metadata.json
+
+# 性能配置
+performance:
+  chunk_size: 10000  # 分块处理大文件的行数
+  cache_enabled: true
+  cache_ttl: 3600  # 缓存过期时间(秒)
+  use_aggressive_optimization: false  # 是否使用激进的内存优化
+
+# 数据处理配置
+processing:
+  # 归一化方法: minmax, zscore, robust
+  normalization_method: minmax
+  
+  # 是否按任务类型分组归一化
+  normalization_by_task: true
+  
+  # 缺失值处理策略
+  missing_value_strategy:
+    efficiency_metrics: median  # median, mean, zero
+    quality_metrics: keep  # keep, median, mean, zero
+  
+  # 去重策略
+  deduplication:
+    enabled: true
+    subset: [model_name, task_type, prompt_id, run_id]
+    keep: last  # first, last
+
+# 指标权重配置
+weights:
+  # 复合得分权重
+  composite_score:
+    quality: 0.5
+    efficiency: 0.5
+  
+  # 效率得分权重
+  efficiency_score:
+    throughput: 0.4  # 吞吐量
+    latency: 0.3     # 延迟
+    energy: 0.3      # 能耗
+  
+  # 质量得分权重（按任务类型）
+  quality_score:
+    code:
+      code_compiles: 0.3
+      syntax_score: 0.25
+      logic_score: 0.25
+      readability_score: 0.2
+    
+    qa:
+      bartscore: 0.4
+      relevance: 0.3
+      completeness: 0.3
+    
+    creative:
+      distinct_2: 0.4
+      fluency: 0.3
+      creativity: 0.3
+    
+    summary:
+      rouge_l: 0.4
+      coherence: 0.3
+      bartscore: 0.3
+    
+    reasoning:
+      correctness: 0.5
+      logical_steps: 0.3
+      clarity: 0.2
+    
+    math:
+      accuracy: 0.6
+      step_validity: 0.4
+    
+    translation:
+      bleu: 0.4
+      adequacy: 0.3
+      fluency: 0.3
+
+# 数据验证配置
+validation:
+  # 是否在加载时自动验证
+  auto_validate: true
+  
+  # 严格模式（发现错误时抛出异常）
+  strict_mode: false
+  
+  # 允许的缺失值比例
+  max_missing_ratio: 0.3
+
+# 日志配置
+logging:
+  level: INFO  # DEBUG, INFO, WARNING, ERROR
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  file: data/analize/logs/pipeline.log
+
+# 实验配置
+experiment:
+  # 支持的任务类型
+  task_types:
+    - code
+    - qa
+    - creative
+    - summary
+    - reasoning
+    - math
+    - translation
+  
+  # 主键列
+  primary_keys:
+    - model_name
+    - task_type
+    - prompt_id
+    - run_id
+
+# 导出配置
+export:
+  # 默认导出格式
+  default_format: parquet  # parquet, csv, excel
+  
+  # Parquet配置
+  parquet:
+    engine: pyarrow
+    compression: snappy  # snappy, gzip, brotli, none
+  
+  # CSV配置
+  csv:
+    encoding: utf-8
+    index: false
+    float_format: "%.4f"

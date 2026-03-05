@@ -38,17 +38,15 @@ data/analize/results/
 │   └── math_quality_summary.csv
 ├── qa_quality/
 │   ├── figures/
-│   ├── qa_quality_report.md
-│   ├── qa_quality_scores.csv
-│   └── qa_quality_summary.csv
-├── qa_quality_academic/
-│   ├── figures/
 │   │   ├── qa_em_vs_f1.png
 │   │   ├── qa_metric_comparison.png
 │   │   ├── qa_model_question_heatmap.png
 │   │   └── qa_question_difficulty.png
+│   ├── qa_quality_report.md
 │   ├── qa_quality_report_academic.md
+│   ├── qa_quality_scores.csv
 │   ├── qa_quality_scores_academic.csv
+│   ├── qa_quality_summary.csv
 │   └── qa_quality_summary_academic.csv
 ├── reasoning_quality/
 │   ├── figures/
@@ -95,9 +93,9 @@ data/analize/results/
 ## 统计信息
 
 - 任务类型数: 7
-- CSV文件总数: 21
-- Markdown文件总数: 11
-- 图表文件总数: 24
+- CSV文件总数: 23
+- Markdown文件总数: 12
+- 图表文件总数: 28
 
 ## 详细文件列表
 
@@ -145,10 +143,19 @@ data/analize/results/
 
 **CSV文件**:
 - `qa_quality_scores.csv` (5.2 KB)
+- `qa_quality_scores_academic.csv` (5.8 KB)
 - `qa_quality_summary.csv` (6.2 KB)
+- `qa_quality_summary_academic.csv` (6.5 KB)
 
 **Markdown文件**:
 - `qa_quality_report.md` (3.3 KB)
+- `qa_quality_report_academic.md` (3.8 KB)
+
+**图表文件**:
+- `qa_em_vs_f1.png` (185.4 KB)
+- `qa_metric_comparison.png` (245.7 KB)
+- `qa_model_question_heatmap.png` (312.8 KB)
+- `qa_question_difficulty.png` (198.3 KB)
 
 ### reasoning_quality
 
