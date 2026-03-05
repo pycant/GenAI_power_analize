@@ -1,0 +1,87 @@
+[
+  {
+    "experiment_id": "exp_20260305_173021_2130821276624",
+    "config_ref": {
+      "model": "Ollama:qwen3:4b",
+      "task_type": "qa",
+      "prompts_count": 1,
+      "keep_context": false,
+      "per_turn_monitoring": false
+    },
+    "baseline_summary": {
+      "duration_seconds": 0,
+      "gpu_power_avg_w": 77.20542830540037,
+      "gpu_power_peak_w": 590.006,
+      "gpu_power_std_w": 181.99696331979445,
+      "gpu_energy_j": 10769.807923614026,
+      "cpu_percent_avg": 6.090689013035381,
+      "cpu_percent_peak": 22.4,
+      "gpu_util_avg": 0.0,
+      "gpu_util_peak": 0,
+      "gpu_mem_avg_mb": 192.6852886405959,
+      "gpu_mem_peak_mb": 232.0,
+      "gpu_temp_avg_c": 31.0316573556797,
+      "gpu_temp_peak_c": 40
+    },
+    "performance": {
+      "total_time_seconds": 6.8798840045928955,
+      "token_count": 100,
+      "output_tokens": 100,
+      "throughput_tokens_per_sec": 14.535128780258747,
+      "latency_per_token_ms": 68.79884004592896,
+      "turns": 1,
+      "avg_time_per_turn": 6.8798840045928955,
+      "ttft_seconds": null
+    },
+    "resources": {
+      "cpu_percent_avg": 18.540625,
+      "cpu_percent_peak": 42.0,
+      "cpu_percent_std": 8.891564098029942,
+      "mem_used_avg_mb": 11575.437255859375,
+      "mem_used_peak_mb": 11748.33984375,
+      "gpu_util_avg": 27.34375,
+      "gpu_util_peak": 90,
+      "gpu_util_std": 36.49195919565706,
+      "gpu_mem_avg_mb": 2182.280029296875,
+      "gpu_mem_peak_mb": 3396.6171875,
+      "gpu_power_avg_w": 63.6231875,
+      "gpu_power_peak_w": 590.006,
+      "gpu_power_std_w": 138.47589835135514,
+      "gpu_energy_j": 511.0536580899955,
+      "gpu_temp_avg_c": 34.09375,
+      "gpu_temp_peak_c": 47,
+      "cpu_energy_j_approx": 58.00617392778396
+    },
+    "derived_metrics": {
+      "P_idle": 77.20542830540037,
+      "P_inc": 0,
+      "E_inc": 0,
+      "PPW": 0.22845646927480248,
+      "TPJ": 0.19567416927165446
+    },
+    "quality": {
+      "bartscore": null,
+      "generated_text_length": 457,
+      "has_reference": true,
+      "avg_response_length": 457.0
+    },
+    "conversation_summary": [
+      {
+        "turn": 1,
+        "prompt_preview": "Statement 1| In a Bayesian network, the inference ...",
+        "response_preview": "Okay, let's try to figure out this problem step by step. So, we have two statements here about Bayes...",
+        "response_length": 457,
+        "duration_seconds": 6.489250659942627,
+        "tokens": 100,
+        "throughput": 15.410099754242522
+      }
+    ],
+    "metadata": {
+      "timestamp": "2026-03-05T17:32:28.813891",
+      "analysis_version": "1.0",
+      "max_tokens": 100,
+      "temperature": 0.1,
+      "top_p": 0.9
+    }
+  }
+]

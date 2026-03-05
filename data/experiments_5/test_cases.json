@@ -5,7 +5,7 @@
     "max_tokens": 100,
     "temperature": 0.1,
     "top_p": 0.9,
-    "idle_measurement_duration": 60,
+    "idle_measurement_duration": 120,
     "prompts": "Statement 1| In a Bayesian network, the inference results of the junction tree algorithm are the same as the inference results of variable elimination. Statement 2| If two random variable X and Y are conditionally independent given another random variable Z, then in the corresponding Bayesian network, the nodes for X and Y are d-separated given Z.\n\nOptions:\nA. True, True\nB. False, False\nC. True, False\nD. False, True\n\nPlease select the correct answer.",
     "reference_text": "True, False"
   }
