@@ -1,0 +1,9 @@
+﻿任务类型 \ 模型,deepseek-r1:8b,gemma3:4b,google--gemma-2b-it:4bit,google--gemma-2b-it:8bit,microsoft--phi-3-mini-4k-instruct:4bit,microsoft--phi-3-mini-4k-instruct:8bit,qwen--qwen2.5-3b-instruct:4bit,qwen--qwen2.5-3b-instruct:8bit,qwen--qwen2.5-7b-instruct:4bit,qwen--qwen2.5-7b-instruct:8bit,qwen3:4b,qwen3:8b
+code,46.332371609924984,32.053156146179404,,,,,,,,,,110.30292338709677
+creative,74.43671497584542,25.63368983957219,,,,,,,,,,77.96509433962264
+math,71.38338338338338,16.722522522522524,,,,,,,,,99.77654516640253,
+multi_turn,109.90895522388058,26.866156787762907,,,,,,,,,216.67201834862385,154.73283582089553
+qa,,18.66262626262626,,,,,,,,,,
+reasoning,,17.06967984934087,,,,,,,,,,71.16012084592145
+summary,,45.09259259259259,,,,,,,,,,90.26797385620915
+translation,94.15593705293276,17.611218568665375,,,,,,,,,,

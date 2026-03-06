@@ -1,0 +1,199 @@
+# 质效比分析配置文件
+
+# 数据路径
+data:
+  base_path: "data/analize"
+  processed_path: "data/analize/processed"
+  output_path: "analysis/qe_research/results"
+
+# 输出配置
+output:
+  figures_dir: "analysis/qe_research/results/figures"
+  tables_dir: "analysis/qe_research/results/tables"
+  reports_dir: "analysis/qe_research/results/reports"
+  exports_dir: "analysis/qe_research/results/exports"
+  
+  # 图表格式
+  figure_format: "png"  # png, pdf, svg
+  figure_dpi: 300
+  figure_size: [10, 6]
+  
+  # 表格格式
+  table_format: "csv"  # csv, excel, markdown
+
+# 分析参数
+analysis:
+  # 归一化方法
+  normalization:
+    method: "minmax"  # minmax, zscore, robust
+    by_task: true     # 是否按任务分组归一化
+  
+  # 统计显著性水平
+  significance_level: 0.05
+  
+  # 异常值处理
+  outlier_detection:
+    enabled: true
+    method: "zscore"  # zscore, iqr
+    threshold: 3.0
+  
+  # 缺失值处理
+  missing_values:
+    strategy: "drop"  # drop, mean, median, forward_fill
+    threshold: 0.3    # 缺失率超过30%的列将被删除
+
+# 指标权重配置
+weights:
+  # 效率得分权重
+  efficiency:
+    throughput: 0.4   # 吞吐量
+    latency: 0.3      # 延迟
+    energy: 0.3       # 能耗
+  
+  # 复合得分权重
+  composite:
+    quality: 0.5      # 质量
+    efficiency: 0.5   # 效率
+  
+  # 任务特定权重（可选）
+  task_specific:
+    code:
+      quality: 0.6
+      efficiency: 0.4
+    qa:
+      quality: 0.5
+      efficiency: 0.5
+    creative:
+      quality: 0.7
+      efficiency: 0.3
+
+# 质效比计算
+qe_ratio:
+  epsilon: 0.01  # 避免除零的小常数
+  
+  # 公平性调整
+  fairness_adjustment:
+    enabled: true
+    lambda: 0.1  # 公平性惩罚系数
+
+# 可视化配置
+visualization:
+  # 颜色方案
+  color_scheme: "Set2"  # Set1, Set2, tab10, viridis
+  
+  # 字体
+  font:
+    family: "Microsoft YaHei"  # 中文字体
+    size: 12
+  
+  # 图表样式
+  style: "whitegrid"  # whitegrid, darkgrid, white, dark
+  
+  # 是否显示中文
+  use_chinese: true
+
+# 模型分组
+model_groups:
+  by_size:
+    small: ["gemma-2b", "qwen2.5-3b"]
+    medium: ["gemma3:4b", "phi-3-mini", "qwen3:4b"]
+    large: ["deepseek-r1:8b", "qwen3:8b", "qwen2.5-7b"]
+  
+  by_quantization:
+    "4bit": ["*_4bit"]
+    "8bit": ["*_8bit"]
+    "q4km": ["*_q4km"]
+  
+  by_family:
+    qwen: ["qwen*"]
+    gemma: ["gemma*"]
+    phi: ["phi*"]
+    deepseek: ["deepseek*"]
+
+# 任务配置
+tasks:
+  types:
+    - code
+    - qa
+    - creative
+    - summary
+    - reasoning
+    - math
+    - translation
+  
+  # 任务权重（用于加权平均）
+  weights:
+    code: 1.0
+    qa: 1.0
+    creative: 1.0
+    summary: 1.0
+    reasoning: 1.0
+    math: 1.0
+    translation: 1.0
+
+# 统计检验
+statistical_tests:
+  # t检验
+  t_test:
+    enabled: true
+    paired: false
+  
+  # ANOVA
+  anova:
+    enabled: true
+    post_hoc: "tukey"  # tukey, bonferroni
+  
+  # 相关性分析
+  correlation:
+    method: "pearson"  # pearson, spearman, kendall
+
+# 公平性分析
+fairness:
+  # Fairness Gap
+  fairness_gap:
+    enabled: true
+  
+  # Gini系数
+  gini_coefficient:
+    enabled: true
+  
+  # Nash Social Welfare
+  nash_social_welfare:
+    enabled: true
+    epsilon: 0.001
+
+# 报告生成
+report:
+  # 报告格式
+  format: "markdown"  # markdown, html, pdf
+  
+  # 包含的章节
+  sections:
+    - executive_summary
+    - data_overview
+    - performance_analysis
+    - efficiency_analysis
+    - quality_analysis
+    - qe_ratio_analysis
+    - fairness_analysis
+    - model_ranking
+    - recommendations
+    - appendix
+  
+  # 是否包含图表
+  include_figures: true
+  
+  # 是否包含统计表
+  include_tables: true
+
+# 日志配置
+logging:
+  level: "INFO"  # DEBUG, INFO, WARNING, ERROR
+  file: "analysis/qe_research/logs/analysis.log"
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+
+# 缓存配置
+cache:
+  enabled: true
+  directory: "analysis/qe_research/cache"
+  ttl: 3600  # 缓存过期时间（秒）

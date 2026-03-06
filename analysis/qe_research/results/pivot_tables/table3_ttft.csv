@@ -1,0 +1,9 @@
+﻿task_type,deepseek-r1:8b,gemma3:4b,qwen3:4b,qwen3:8b
+code,8028.1,1926.4,N/A,21884.1
+creative,7703.2,957.3,N/A,8262.7
+math,7129.7,926.6,6293.8,N/A
+multi_turn,7363.2,1403.4,9446.2,10366.1
+qa,N/A,921.3,N/A,N/A
+reasoning,N/A,904.4,N/A,7064.6
+summary,N/A,971.6,N/A,5523.3
+translation,6579.7,909.1,N/A,N/A
