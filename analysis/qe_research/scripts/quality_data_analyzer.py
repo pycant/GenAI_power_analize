@@ -34,8 +34,22 @@ logger = logging.getLogger(__name__)
 class QualityDataAnalyzer:
     """质量数据分析器"""
     
-    def __init__(self, data_root: str = 'data/analize'):
-        self.data_root = Path(data_root)
+    def __init__(self, data_source: str = 'quality_scores'):
+        """
+        初始化分析器
+        
+        Args:
+            data_source: 数据源类型
+                - 'quality_scores': 使用 analysis/qe_research/results/quality_scores/ 的数据
+                - 'legacy': 使用 data/analize/results/ 的数据（旧版）
+        """
+        self.data_source = data_source
+        
+        if data_source == 'quality_scores':
+            self.data_root = Path('analysis/qe_research/results/quality_scores')
+        else:
+            self.data_root = Path('data/analize/results')
+        
         self.output_dir = Path('analysis/qe_research/results/quality_analysis')
         self.figures_dir = self.output_dir / 'figures'
         self.tables_dir = self.output_dir / 'tables'
@@ -60,7 +74,7 @@ class QualityDataAnalyzer:
         self.quality_data = {}
         self.task_types = []
         self.insights = {}  # 存储提取的洞察
-        logger.info("质量数据分析器初始化完成")
+        logger.info(f"质量数据分析器初始化完成 (数据源: {data_source})")
     
     # ========== 共享工具函数 ==========
     
@@ -180,6 +194,41 @@ class QualityDataAnalyzer:
         """加载所有质量评估数据"""
         logger.info("开始加载质量数据...")
         
+        if self.data_source == 'quality_scores':
+            # 从 quality_scores 目录加载数据（转置格式：指标为行，模型为列）
+            self._load_from_quality_scores()
+        else:
+            # 从 data/analize/results 加载数据（旧格式）
+            self._load_from_legacy()
+        
+        logger.info(f"总共加载 {len(self.quality_data)} 个任务类型的质量数据")
+    
+    def _load_from_quality_scores(self):
+        """从 quality_scores 目录加载数据"""
+        # 查找所有任务的评分文件
+        score_files = list(self.data_root.glob('*_scores_raw.csv'))
+        
+        for file in score_files:
+            # 从文件名提取任务类型
+            task_type = file.stem.replace('_scores_raw', '')
+            
+            try:
+                # 读取转置格式的数据（指标为行，模型为列）
+                df_transposed = pd.read_csv(file, index_col=0)
+                
+                # 转置为标准格式（模型为行，指标为列）
+                df = df_transposed.T
+                df.reset_index(inplace=True)
+                df.rename(columns={'index': 'model'}, inplace=True)
+                
+                self.quality_data[task_type] = df
+                self.task_types.append(task_type)
+                logger.info(f"✓ {task_type}: {len(df)} 个模型, {len(df.columns)-1} 个指标")
+            except Exception as e:
+                logger.error(f"✗ {file}: {e}")
+    
+    def _load_from_legacy(self):
+        """从 data/analize/results 加载数据（旧格式）"""
         # 查找所有quality_summary文件
         results_dir = self.data_root / 'results'
         quality_files = list(results_dir.glob('*/quality_summary_*.csv'))
@@ -197,8 +246,6 @@ class QualityDataAnalyzer:
                 logger.info(f"✓ {task_type}: {len(df)} 个模型")
             except Exception as e:
                 logger.error(f"✗ {file}: {e}")
-        
-        logger.info(f"总共加载 {len(self.quality_data)} 个任务类型的质量数据")
     
     def run_all_analyses(self):
         """运行所有分析任务"""
@@ -504,7 +551,22 @@ class QualityDataAnalyzer:
     
     def task_specific_analysis(self):
         """任务专项分析"""
-        self._task7_code_analysis()
+        # 为每个任务类型执行专项分析
+        for task_type in self.task_types:
+            if task_type == 'code':
+                self._task7_code_analysis()
+            elif task_type == 'creative':
+                self._task7_creative_analysis()
+            elif task_type == 'qa':
+                self._task7_qa_analysis()
+            elif task_type == 'summary':
+                self._task7_summary_analysis()
+            elif task_type == 'translation':
+                self._task7_translation_analysis()
+            elif task_type == 'math':
+                self._task7_math_analysis()
+            elif task_type == 'reasoning':
+                self._task7_reasoning_analysis()
     
     def _task7_code_analysis(self):
         """任务7: 代码任务专项分析"""
@@ -921,7 +983,11 @@ def main():
     print("质量数据深度分析")
     print("=" * 80 + "\n")
     
-    analyzer = QualityDataAnalyzer()
+    # 导入扩展方法
+    from quality_analyzer_extensions import add_task_specific_methods
+    add_task_specific_methods(QualityDataAnalyzer)
+    
+    analyzer = QualityDataAnalyzer(data_source='quality_scores')
     
     # 加载数据
     analyzer.load_quality_data()
