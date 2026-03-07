@@ -1,4 +1,4 @@
-﻿model,model_full,quality,energy,speed
+model,model_full,quality,energy,speed
 deepseek_8b_ol_q4km,deepseek-r1:8b,0.6895117166372369,1.8834732824427485,37.48211731044349
 gemma_2b_hf_4bit,google--gemma-2b-it:4bit,0.0,1.2271942446043167,21.958925750394943
 gemma_2b_hf_8bit,google--gemma-2b-it:8bit,0.0,2.096223776223776,11.412609736632083

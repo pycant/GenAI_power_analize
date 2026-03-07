@@ -1,4 +1,4 @@
-﻿model,model_full,quality,energy,speed
+model,model_full,quality,energy,speed
 deepseek_8b_ol_q4km,deepseek-r1:8b,0.8986,1.9290070921985816,40.869565217391305
 gemma_2b_hf_4bit,google--gemma-2b-it:4bit,0.7027,1.2718571428571428,23.41137123745819
 gemma_2b_hf_8bit,google--gemma-2b-it:8bit,0.8107,2.1299056603773585,12.282734646581693
@@ -8,5 +8,6 @@ phi3_4b_hf_8bit,microsoft--phi-3-mini-4k-instruct:8bit,0.8801,2.16680412371134,1
 qwen25_3b_hf_4bit,qwen--qwen2.5-3b-instruct:4bit,0.6883,1.5540416666666668,17.647058823529413
 qwen25_3b_hf_8bit,qwen--qwen2.5-3b-instruct:8bit,0.7105,2.4722291666666667,7.332722273143905
 qwen25_7b_hf_4bit,qwen--qwen2.5-7b-instruct:4bit,0.6858,3.1537916666666663,19.055180627233028
+qwen25_7b_hf_8bit,qwen--qwen2.5-7b-instruct:8bit,0.068,9.26912,3.423250718882651
 qwen_4b_ol_q4km,qwen3:4b,0.7832,1.0827708333333337,65.75342465753425
 qwen_8b_ol_q4km,qwen3:8b,0.9605,1.937659090909091,41.50943396226416

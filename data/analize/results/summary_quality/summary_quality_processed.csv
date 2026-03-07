@@ -1,0 +1,12 @@
+model,quality
+deepseek_8b_ol_q4km,0.0
+gemma_2b_hf_4bit,0.0
+gemma_2b_hf_8bit,0.0
+gemma_4b_ol_q4km,0.0
+phi3_4b_hf_4bit,0.0
+phi3_4b_hf_8bit,0.0
+qwen25_3b_hf_4bit,0.1809523790839002
+qwen25_3b_hf_8bit,0.1333333324444444
+qwen25_7b_hf_4bit,0.0333333330277777
+qwen_4b_ol_q4km,0.0210526310470914
+qwen_8b_ol_q4km,0.0
