@@ -59,7 +59,122 @@ class QualityDataAnalyzer:
         
         self.quality_data = {}
         self.task_types = []
+        self.insights = {}  # 存储提取的洞察
         logger.info("质量数据分析器初始化完成")
+    
+    # ========== 共享工具函数 ==========
+    
+    def _get_primary_score_column(self, df: pd.DataFrame, task_type: str = None) -> str:
+        """
+        获取主要质量指标列名（按优先级）
+        
+        Args:
+            df: 数据框
+            task_type: 任务类型（可选，用于特定任务的优化）
+        
+        Returns:
+            主要质量指标列名，如果未找到返回None
+        """
+        # 定义优先级列表
+        priority_columns = [
+            'overall_score',
+            'functional_correctness_mean',
+            'compilation_success_mean',
+            'compilation_rate_mean',
+            'bert_score_mean',
+            'bleu_score_mean',
+            'rouge_1_mean',
+            'distinct_1_mean'
+        ]
+        
+        # 任务特定的优先级
+        task_specific = {
+            'code': ['functional_correctness_mean', 'compilation_success_mean', 'compilation_rate_mean'],
+            'translation': ['bleu_score_mean', 'bert_score_mean'],
+            'summary': ['rouge_1_mean', 'bert_score_mean'],
+            'creative': ['distinct_1_mean', 'fluency_mean'],
+            'qa': ['bert_score_mean', 'f1_score_mean']
+        }
+        
+        # 如果指定了任务类型，优先使用任务特定列
+        if task_type and task_type in task_specific:
+            for col in task_specific[task_type]:
+                if col in df.columns:
+                    return col
+        
+        # 使用通用优先级
+        for col in priority_columns:
+            if col in df.columns:
+                return col
+        
+        return None
+    
+    def _get_std_column(self, mean_col: str) -> str:
+        """获取对应的标准差列名"""
+        return mean_col.replace('_mean', '_std')
+    
+    def _normalize_scores(self, df: pd.DataFrame, columns: List[str]) -> pd.DataFrame:
+        """
+        归一化指定列到0-1范围
+        
+        Args:
+            df: 数据框
+            columns: 要归一化的列名列表
+        
+        Returns:
+            归一化后的数据框副本
+        """
+        df_norm = df.copy()
+        for col in columns:
+            if col not in df.columns:
+                continue
+            min_val = df[col].min()
+            max_val = df[col].max()
+            if max_val > min_val:
+                df_norm[col] = (df[col] - min_val) / (max_val - min_val)
+            else:
+                df_norm[col] = 0.5
+        return df_norm
+    
+    def _extract_task_insights(self, task_type: str, df: pd.DataFrame, score_col: str):
+        """
+        提取任务特定的洞察
+        
+        Args:
+            task_type: 任务类型
+            df: 数据框
+            score_col: 主要得分列
+        """
+        insights = {
+            'task_type': task_type,
+            'model_count': len(df),
+            'score_stats': {
+                'mean': df[score_col].mean(),
+                'median': df[score_col].median(),
+                'std': df[score_col].std(),
+                'min': df[score_col].min(),
+                'max': df[score_col].max(),
+                'range': df[score_col].max() - df[score_col].min()
+            },
+            'top_models': df.nlargest(3, score_col)['model'].tolist(),
+            'bottom_models': df.nsmallest(3, score_col)['model'].tolist()
+        }
+        
+        # 计算变异系数（CV）
+        if insights['score_stats']['mean'] > 0:
+            insights['score_stats']['cv'] = insights['score_stats']['std'] / insights['score_stats']['mean']
+        
+        # 检查是否有标准差列
+        std_col = self._get_std_column(score_col)
+        if std_col in df.columns:
+            insights['stability'] = {
+                'most_stable': df.nsmallest(1, std_col)['model'].iloc[0],
+                'least_stable': df.nlargest(1, std_col)['model'].iloc[0],
+                'avg_std': df[std_col].mean()
+            }
+        
+        self.insights[task_type] = insights
+        return insights
     
     def load_quality_data(self):
         """加载所有质量评估数据"""
@@ -129,30 +244,22 @@ class QualityDataAnalyzer:
     def _task1_score_distribution(self):
         """任务1: 质量得分分布"""
         logger.info("  执行任务1: 质量得分分布")
-        # 对于代码任务，使用compilation_rate作为主要质量指标
         for task_type, df in self.quality_data.items():
             logger.info(f"    处理任务类型: {task_type}, 数据行数: {len(df)}")
             if len(df) == 0:
                 logger.warning(f"    跳过 {task_type}: 数据为空")
                 continue
             
-            # 确定主要质量指标（按优先级）
-            score_col = None
-            if 'overall_score' in df.columns:
-                score_col = 'overall_score'
-                logger.info(f"    使用 overall_score 作为质量指标")
-            elif 'functional_correctness_mean' in df.columns:
-                score_col = 'functional_correctness_mean'
-                logger.info(f"    使用 functional_correctness_mean 作为质量指标")
-            elif 'compilation_success_mean' in df.columns:
-                score_col = 'compilation_success_mean'
-                logger.info(f"    使用 compilation_success_mean 作为质量指标")
-            elif 'compilation_rate_mean' in df.columns:
-                score_col = 'compilation_rate_mean'
-                logger.info(f"    使用 compilation_rate_mean 作为质量指标")
-            else:
+            # 使用共享函数获取主要质量指标
+            score_col = self._get_primary_score_column(df, task_type)
+            if not score_col:
                 logger.warning(f"    跳过 {task_type}: 未找到质量指标列")
                 continue
+            
+            logger.info(f"    使用 {score_col} 作为质量指标")
+            
+            # 提取洞察
+            self._extract_task_insights(task_type, df, score_col)
             
             fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 6))
             
@@ -199,23 +306,13 @@ class QualityDataAnalyzer:
                 logger.warning(f"    跳过 {task_type}: 数据为空")
                 continue
             
-            # 确定主要质量指标（按优先级）
-            score_col = None
-            if 'overall_score' in df.columns:
-                score_col = 'overall_score'
-                logger.info(f"    使用 overall_score 作为质量指标")
-            elif 'functional_correctness_mean' in df.columns:
-                score_col = 'functional_correctness_mean'
-                logger.info(f"    使用 functional_correctness_mean 作为质量指标")
-            elif 'compilation_success_mean' in df.columns:
-                score_col = 'compilation_success_mean'
-                logger.info(f"    使用 compilation_success_mean 作为质量指标")
-            elif 'compilation_rate_mean' in df.columns:
-                score_col = 'compilation_rate_mean'
-                logger.info(f"    使用 compilation_rate_mean 作为质量指标")
-            else:
+            # 使用共享函数获取主要质量指标
+            score_col = self._get_primary_score_column(df, task_type)
+            if not score_col:
                 logger.warning(f"    跳过 {task_type}: 未找到质量指标列")
                 continue
+            
+            logger.info(f"    使用 {score_col} 作为质量指标")
             
             plt.figure(figsize=(12, 6))
             
@@ -227,7 +324,7 @@ class QualityDataAnalyzer:
             y = df_sorted[score_col]
             
             # 如果有标准差列，添加误差线
-            std_col = score_col.replace('_mean', '_std')
+            std_col = self._get_std_column(score_col)
             if std_col in df_sorted.columns:
                 yerr = df_sorted[std_col]
             else:
@@ -284,23 +381,13 @@ class QualityDataAnalyzer:
                 logger.warning(f"    跳过 {task_type}: 数据为空")
                 continue
             
-            # 确定主要质量指标（按优先级）
-            score_col = None
-            if 'overall_score' in df.columns:
-                score_col = 'overall_score'
-                logger.info(f"    使用 overall_score 作为质量指标")
-            elif 'functional_correctness_mean' in df.columns:
-                score_col = 'functional_correctness_mean'
-                logger.info(f"    使用 functional_correctness_mean 作为质量指标")
-            elif 'compilation_success_mean' in df.columns:
-                score_col = 'compilation_success_mean'
-                logger.info(f"    使用 compilation_success_mean 作为质量指标")
-            elif 'compilation_rate_mean' in df.columns:
-                score_col = 'compilation_rate_mean'
-                logger.info(f"    使用 compilation_rate_mean 作为质量指标")
-            else:
+            # 使用共享函数获取主要质量指标
+            score_col = self._get_primary_score_column(df, task_type)
+            if not score_col:
                 logger.warning(f"    跳过 {task_type}: 未找到质量指标列")
                 continue
+            
+            logger.info(f"    使用 {score_col} 作为质量指标")
             
             plt.figure(figsize=(12, 6))
             
@@ -312,7 +399,7 @@ class QualityDataAnalyzer:
             x = df_sorted[score_col]
             
             # 误差线
-            std_col = score_col.replace('_mean', '_std')
+            std_col = self._get_std_column(score_col)
             if std_col in df_sorted.columns:
                 xerr = df_sorted[std_col]
             else:
@@ -385,17 +472,9 @@ class QualityDataAnalyzer:
         # 合并所有任务的数据
         all_data = []
         for task_type, df in self.quality_data.items():
-            # 确定主要质量指标（按优先级）
-            score_col = None
-            if 'overall_score' in df.columns:
-                score_col = 'overall_score'
-            elif 'functional_correctness_mean' in df.columns:
-                score_col = 'functional_correctness_mean'
-            elif 'compilation_success_mean' in df.columns:
-                score_col = 'compilation_success_mean'
-            elif 'compilation_rate_mean' in df.columns:
-                score_col = 'compilation_rate_mean'
-            else:
+            # 使用共享函数获取主要质量指标
+            score_col = self._get_primary_score_column(df, task_type)
+            if not score_col:
                 logger.warning(f"    跳过 {task_type}: 未找到质量指标列")
                 continue
             
@@ -561,11 +640,9 @@ class QualityDataAnalyzer:
         all_scores = {}
         
         for task_type, df in self.quality_data.items():
-            if 'overall_score' in df.columns:
-                score_col = 'overall_score'
-            elif 'compilation_rate_mean' in df.columns:
-                score_col = 'compilation_rate_mean'
-            else:
+            # 使用共享函数获取主要质量指标
+            score_col = self._get_primary_score_column(df, task_type)
+            if not score_col:
                 continue
             
             for _, row in df.iterrows():
@@ -626,6 +703,68 @@ class QualityDataAnalyzer:
         plt.close()
         logger.info(f"  ✓ {filename}")
     
+    def _write_insights_section(self, f):
+        """写入洞察部分到报告"""
+        for task_type, insights in self.insights.items():
+            f.write(f"### {task_type.upper()} 任务洞察\n\n")
+            
+            stats = insights['score_stats']
+            f.write(f"**质量得分统计**:\n")
+            f.write(f"- 平均分: {stats['mean']:.3f}\n")
+            f.write(f"- 中位数: {stats['median']:.3f}\n")
+            f.write(f"- 标准差: {stats['std']:.3f}\n")
+            f.write(f"- 得分范围: {stats['min']:.3f} - {stats['max']:.3f} (跨度: {stats['range']:.3f})\n")
+            if 'cv' in stats:
+                f.write(f"- 变异系数: {stats['cv']:.3f} ")
+                if stats['cv'] < 0.1:
+                    f.write("(模型间差异小，质量稳定)\n")
+                elif stats['cv'] < 0.2:
+                    f.write("(模型间差异中等)\n")
+                else:
+                    f.write("(模型间差异大，质量分化明显)\n")
+            f.write("\n")
+            
+            f.write(f"**最佳模型**: {', '.join(insights['top_models'][:3])}\n\n")
+            f.write(f"**待改进模型**: {', '.join(insights['bottom_models'][:3])}\n\n")
+            
+            if 'stability' in insights:
+                stab = insights['stability']
+                f.write(f"**稳定性分析**:\n")
+                f.write(f"- 最稳定模型: {stab['most_stable']}\n")
+                f.write(f"- 最不稳定模型: {stab['least_stable']}\n")
+                f.write(f"- 平均标准差: {stab['avg_std']:.3f}\n\n")
+            
+            # 添加任务特定的洞察
+            self._write_task_specific_insights(f, task_type, insights)
+    
+    def _write_task_specific_insights(self, f, task_type: str, insights: Dict):
+        """写入任务特定的洞察"""
+        f.write(f"**{task_type.upper()}任务特点**:\n")
+        
+        if task_type == 'code':
+            f.write("- 代码生成任务主要评估功能正确性、编译成功率和代码质量\n")
+            f.write("- 建议关注: 语法正确性、逻辑完整性、代码可读性\n")
+        elif task_type == 'creative':
+            f.write("- 创意写作任务评估流畅度、连贯性和创意性\n")
+            f.write("- 建议关注: 词汇多样性(distinct-n)、语言流畅度、内容创新性\n")
+        elif task_type == 'qa':
+            f.write("- 问答任务评估答案准确性和完整性\n")
+            f.write("- 建议关注: 精确匹配(EM)、F1分数、语义相似度(BERTScore)\n")
+        elif task_type == 'summary':
+            f.write("- 摘要任务评估信息保留和压缩质量\n")
+            f.write("- 建议关注: ROUGE分数、信息密度、压缩比\n")
+        elif task_type == 'translation':
+            f.write("- 翻译任务评估语义保真度和流畅度\n")
+            f.write("- 建议关注: BLEU分数、语义一致性、术语准确性\n")
+        elif task_type == 'math':
+            f.write("- 数学推理任务评估答案正确性和推理过程\n")
+            f.write("- 建议关注: 答案准确性、步骤完整性、公式使用\n")
+        elif task_type == 'reasoning':
+            f.write("- 逻辑推理任务评估推理完整性和逻辑连贯性\n")
+            f.write("- 建议关注: 结论正确性、推理步骤、论证深度\n")
+        
+        f.write("\n")
+    
     def generate_report(self):
         """生成综合报告"""
         report_path = self.reports_dir / 'quality_analysis_report.md'
@@ -638,6 +777,11 @@ class QualityDataAnalyzer:
             f.write("## 执行摘要\n\n")
             f.write(f"本报告对 {len(self.quality_data)} 个任务类型的质量评估数据进行了深度分析，")
             f.write("涵盖数据探索、模型对比、任务专项分析、子指标关系、稳定性和跨任务综合评估。\n\n")
+            
+            # 添加关键洞察部分
+            if self.insights:
+                f.write("## 关键洞察\n\n")
+                self._write_insights_section(f)
             
             f.write("## 分析维度\n\n")
             
@@ -681,10 +825,94 @@ class QualityDataAnalyzer:
                 f.write(f"- {task_type}: {len(df)} 个模型\n")
             f.write("\n")
             
+            # 添加图表洞察部分
+            f.write("## 从图表中得出的结论\n\n")
+            self._write_figure_insights(f)
+            
             f.write("---\n\n")
             f.write("**分析完成时间**: " + datetime.now().strftime('%Y-%m-%d %H:%M:%S') + "\n")
         
         logger.info(f"报告已生成: {report_path}")
+    
+    def _write_figure_insights(self, f):
+        """从图表数据中提取并写入洞察"""
+        f.write("### 任务1: 质量得分分布图\n\n")
+        f.write("**从图表可以得出**:\n\n")
+        
+        for task_type, insights in self.insights.items():
+            stats = insights['score_stats']
+            f.write(f"**{task_type}任务**:\n")
+            
+            # 分布形态分析
+            if abs(stats['mean'] - stats['median']) < 0.05:
+                f.write(f"- 得分分布接近正态分布(均值≈中位数: {stats['mean']:.3f}≈{stats['median']:.3f})\n")
+            elif stats['mean'] > stats['median']:
+                f.write(f"- 得分分布右偏，存在高分模型拉高平均值(均值{stats['mean']:.3f} > 中位数{stats['median']:.3f})\n")
+            else:
+                f.write(f"- 得分分布左偏，存在低分模型拉低平均值(均值{stats['mean']:.3f} < 中位数{stats['median']:.3f})\n")
+            
+            # 离散程度分析
+            if 'cv' in stats:
+                if stats['cv'] < 0.1:
+                    f.write(f"- 模型质量高度一致，变异系数仅{stats['cv']:.3f}，说明该任务上各模型表现接近\n")
+                elif stats['cv'] < 0.2:
+                    f.write(f"- 模型质量存在中等差异，变异系数{stats['cv']:.3f}\n")
+                else:
+                    f.write(f"- 模型质量分化明显，变异系数达{stats['cv']:.3f}，说明模型能力差距大\n")
+            
+            # 得分水平分析
+            if stats['mean'] > 0.8:
+                f.write(f"- 整体质量优秀，平均分{stats['mean']:.3f}，大部分模型表现良好\n")
+            elif stats['mean'] > 0.6:
+                f.write(f"- 整体质量良好，平均分{stats['mean']:.3f}，仍有提升空间\n")
+            else:
+                f.write(f"- 整体质量有待提高，平均分仅{stats['mean']:.3f}，需要重点优化\n")
+            
+            f.write("\n")
+        
+        f.write("### 任务2-4: 模型对比图\n\n")
+        f.write("**从图表可以得出**:\n\n")
+        
+        for task_type, insights in self.insights.items():
+            f.write(f"**{task_type}任务**:\n")
+            f.write(f"- 最佳模型: {insights['top_models'][0]}，建议在该任务上优先使用\n")
+            if len(insights['top_models']) > 1:
+                f.write(f"- 次优模型: {', '.join(insights['top_models'][1:3])}，可作为备选方案\n")
+            f.write(f"- 待改进模型: {insights['bottom_models'][0]}，需要针对性优化\n")
+            
+            if 'stability' in insights:
+                stab = insights['stability']
+                f.write(f"- 最稳定模型: {stab['most_stable']}，输出质量波动小，适合生产环境\n")
+                f.write(f"- 最不稳定模型: {stab['least_stable']}，输出质量波动大，需要多次采样\n")
+            
+            f.write("\n")
+        
+        f.write("### 任务6: 模型×任务热力图\n\n")
+        f.write("**从图表可以得出**:\n\n")
+        f.write("- 通过热力图可以快速识别每个模型在不同任务上的强弱项\n")
+        f.write("- 深色区域表示该模型在该任务上表现优秀，浅色区域表示需要改进\n")
+        f.write("- 可以根据实际应用场景选择在特定任务上表现最佳的模型\n")
+        f.write("- 横向对比可以看出模型的全面性，纵向对比可以看出任务的难度\n\n")
+        
+        f.write("### 任务8: 子指标相关性矩阵\n\n")
+        f.write("**从图表可以得出**:\n\n")
+        f.write("- 强正相关(>0.7)的指标说明它们衡量的是相似的质量维度\n")
+        f.write("- 弱相关或负相关的指标说明它们衡量的是独立的质量维度\n")
+        f.write("- 可以根据相关性选择代表性指标，避免冗余评估\n")
+        f.write("- 负相关可能揭示质量权衡关系(如速度vs准确性)\n\n")
+        
+        f.write("### 任务9: 稳定性对比图\n\n")
+        f.write("**从图表可以得出**:\n\n")
+        f.write("- 标准差小的模型输出稳定，适合对一致性要求高的场景\n")
+        f.write("- 标准差大的模型输出多样，可能需要多次采样或温度调节\n")
+        f.write("- 稳定性与平均质量不一定正相关，需要综合考虑\n\n")
+        
+        f.write("### 任务10: 跨任务综合评估\n\n")
+        f.write("**从图表可以得出**:\n\n")
+        f.write("- 综合得分高的模型在多个任务上表现均衡，适合通用场景\n")
+        f.write("- 综合得分低但在特定任务上突出的模型适合专用场景\n")
+        f.write("- 任务数量(n值)反映了模型的评估覆盖度\n")
+        f.write("- 误差线反映了模型在不同任务间的性能波动\n\n")
 
 
 def main():
