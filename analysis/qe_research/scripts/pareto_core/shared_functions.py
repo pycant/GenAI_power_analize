@@ -348,20 +348,53 @@ def load_energy_speed_data(task_name, energy_file, speed_file):
     return energy_dict, speed_dict
 
 
-def merge_quality_metrics(quality_df, energy_dict, speed_dict, model_mapping, quality_col):
+def merge_quality_metrics(quality_df, energy_dict, speed_dict, model_mapping, quality_col='quality'):
     """
     合并质量、能耗、速度数据
     
+    此函数兼容两种输入格式：
+    1. 旧格式：quality_df 包含 'model' 和自定义质量列（需指定 quality_col）
+    2. 新格式：quality_df 来自 load_process_quality_data()，包含 'model' 和 'quality' 列
+    
     Args:
-        quality_df: 质量数据框
-        energy_dict: 能耗字典
-        speed_dict: 速度字典
-        model_mapping: 模型名称映射
-        quality_col: 质量列名
+        quality_df (pd.DataFrame): 质量数据框
+            - 必须包含 'model' 列
+            - 旧格式：包含自定义质量列（通过 quality_col 指定）
+            - 新格式：包含 'quality' 列（load_process_quality_data 的输出）
+        energy_dict (dict): 能耗字典 {model_full: energy_value}
+        speed_dict (dict): 速度字典 {model_full: speed_value}
+        model_mapping (dict): 模型名称映射 {model_short: model_full}
+        quality_col (str): 质量列名，默认 'quality'
+            - 新格式（load_process_quality_data）：使用默认值 'quality'
+            - 旧格式：指定实际的质量列名（如 'compilation_rate_mean'）
     
     Returns:
-        merged_df: 合并后的数据框
+        pd.DataFrame: 合并后的数据框，包含列：
+            - model: 模型短名称
+            - model_full: 模型完整名称
+            - quality: 质量得分
+            - energy: 能耗值
+            - speed: 速度值
+    
+    Examples:
+        # 新格式（推荐）：使用 load_process_quality_data()
+        quality_df = load_process_quality_data('code', method='entropy')
+        merged_df = merge_quality_metrics(quality_df, energy_dict, speed_dict, MODEL_MAPPING)
+        
+        # 旧格式：手动加载的数据
+        quality_df = pd.read_csv('quality_file.csv')
+        merged_df = merge_quality_metrics(quality_df, energy_dict, speed_dict, 
+                                          MODEL_MAPPING, quality_col='compilation_rate_mean')
     """
+    # 验证输入
+    if 'model' not in quality_df.columns:
+        raise ValueError("quality_df 必须包含 'model' 列")
+    
+    if quality_col not in quality_df.columns:
+        raise ValueError(f"quality_df 中不存在列 '{quality_col}'。"
+                        f"可用列: {list(quality_df.columns)}")
+    
+    # 合并数据
     data = []
     for _, row in quality_df.iterrows():
         model_short = row['model']
@@ -377,6 +410,165 @@ def merge_quality_metrics(quality_df, energy_dict, speed_dict, model_mapping, qu
             })
     
     return pd.DataFrame(data)
+
+
+def load_process_quality_data(task_name, method='entropy', normalize_method='minmax', 
+                               use_raw=True, verbose=True,output_dir='./figures', **kwargs):
+    """
+    加载并处理质量数据（集成 process_quality_data 模块）
+    
+    此函数提供统一接口，用于加载质量数据并应用不同的处理方法：
+    - 'entropy': 熵权法加权
+    - 'pca': PCA降维（取第一主成分）
+    - 'mean': 简单平均
+    - 'single': 使用单一指标（需指定 quality_column 参数）
+    
+    Args:
+        task_name (str): 任务名称（code, creative, math, qa, reasoning, summary, translation）
+        method (str): 处理方法
+            - 'entropy': 熵权法加权（默认）
+            - 'pca': PCA降维取第一主成分
+            - 'mean': 简单平均所有指标
+            - 'single': 使用单一指标
+        normalize_method (str): 归一化方法（'minmax', 'zscore', 'robust', 'maxabs'）
+        use_raw (bool): 是否使用原始数据（保留完整精度）
+        verbose (bool): 是否输出详细信息
+        **kwargs: 额外参数
+            - quality_column (str): 当 method='single' 时，指定使用的质量列名
+            - n_components (int): 当 method='pca' 时，PCA主成分数量（默认1）
+            - weights (dict): 当 method='custom' 时，自定义权重字典
+    
+    Returns:
+        pd.DataFrame: 包含 'model' 和 'quality' 列的数据框
+    
+    Examples:
+        # 使用熵权法
+        df = load_process_quality_data('code', method='entropy')
+        
+        # 使用单一指标
+        df = load_process_quality_data('code', method='single', 
+                                       quality_column='compilation_rate')
+        
+        # 使用PCA
+        df = load_process_quality_data('reasoning', method='pca', n_components=1)
+        
+        # 使用简单平均
+        df = load_process_quality_data('creative', method='mean')
+    """
+    from .process_quality_data import QualityDataProcessor
+    
+    if verbose:
+        print(f"\n{'='*80}")
+        print(f"加载质量数据: {task_name.upper()}")
+        print(f"处理方法: {method.upper()}")
+        print(f"{'='*80}")
+    
+    # 初始化处理器
+    processor = QualityDataProcessor(task_name=task_name, use_raw=use_raw, verbose=verbose)
+    
+    # 加载数据
+    data = processor.load_quality_data()
+    
+    # 根据方法处理数据
+    if method == 'entropy':
+        # 熵权法
+        weights = processor.calculate_entropy_weights()
+        quality_score = processor.get_weighted_quality_score(weights, normalize_first=True)
+        #绘制各指标的权重
+        plt.figure(figsize=(8, 6),dpi=300)
+        plt.bar(weights.keys(), weights.values(), color='skyblue')
+        plt.savefig(output_dir / '/entropy_weights.png',dpi=300)
+        print(f"✓ 权重可视化已保存:{output_dir}") 
+        
+        result_df = pd.DataFrame({
+            'model': quality_score.index,
+            'quality': quality_score.values
+        })
+        
+        if verbose:
+            print(f"\n✓ 熵权法处理完成")
+            print(f"  质量得分范围: [{quality_score.min():.4f}, {quality_score.max():.4f}]")
+    
+    elif method == 'pca':
+        # PCA降维
+        n_components = kwargs.get('n_components', 1)
+        pca_result = processor.apply_pca(n_components=n_components, normalize_first=True)
+        
+        # 使用第一主成分作为质量得分
+        quality_score = pca_result['transformed']['PC1']
+        
+        result_df = pd.DataFrame({
+            'model': quality_score.index,
+            'quality': quality_score.values
+        })
+        
+        if verbose:
+            print(f"\n✓ PCA降维完成")
+            print(f"  使用PC1作为质量得分")
+            print(f"  PC1解释方差: {pca_result['explained_variance_ratio'][0]:.2%}")
+    
+    elif method == 'mean':
+        # 简单平均
+        normalized = processor.normalize(method=normalize_method)
+        quality_score = normalized.mean(axis=1)
+        
+        result_df = pd.DataFrame({
+            'model': quality_score.index,
+            'quality': quality_score.values
+        })
+        
+        if verbose:
+            print(f"\n✓ 简单平均完成")
+            print(f"  质量得分范围: [{quality_score.min():.4f}, {quality_score.max():.4f}]")
+    
+    elif method == 'single':
+        # 使用单一指标
+        quality_column = kwargs.get('quality_column')
+        if quality_column is None:
+            raise ValueError("method='single' 时必须指定 quality_column 参数")
+        
+        if quality_column not in data.columns:
+            raise ValueError(f"指标 '{quality_column}' 不存在。可用指标: {list(data.columns)}")
+        
+        quality_score = data[quality_column]
+        
+        result_df = pd.DataFrame({
+            'model': quality_score.index,
+            'quality': quality_score.values
+        })
+        
+        if verbose:
+            print(f"\n✓ 使用单一指标: {quality_column}")
+            print(f"  质量得分范围: [{quality_score.min():.4f}, {quality_score.max():.4f}]")
+    
+    elif method == 'custom':
+        # 自定义权重
+        weights = kwargs.get('weights')
+        if weights is None:
+            raise ValueError("method='custom' 时必须指定 weights 参数")
+        
+        quality_score = processor.get_weighted_quality_score(weights, normalize_first=True)
+        
+        result_df = pd.DataFrame({
+            'model': quality_score.index,
+            'quality': quality_score.values
+        })
+        
+        if verbose:
+            print(f"\n✓ 自定义权重处理完成")
+            print(f"  质量得分范围: [{quality_score.min():.4f}, {quality_score.max():.4f}]")
+    
+    else:
+        raise ValueError(f"不支持的处理方法: {method}. "
+                        f"支持的方法: 'entropy', 'pca', 'mean', 'single', 'custom'")
+    
+    # 重置索引
+    result_df = result_df.reset_index(drop=True)
+    
+    if verbose:
+        print(f"\n✓ 数据加载完成: {len(result_df)} 个模型")
+    
+    return result_df
 
 
 

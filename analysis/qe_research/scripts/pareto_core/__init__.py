@@ -26,11 +26,13 @@ from .shared_functions import (
     plot_pareto_2d,
     load_energy_speed_data,
     merge_quality_metrics,
+    load_process_quality_data,
     perturbation_analysis,
     cross_validation_pareto,
     generate_pareto_report,
     print_analysis_summary
 )
+from .process_quality_data import QualityDataProcessor, quick_process
 
 # 构建导出列表
 __all__ = [
@@ -48,12 +50,16 @@ __all__ = [
     'plot_pareto_2d',
     'load_energy_speed_data',
     'merge_quality_metrics',
+    'load_process_quality_data',
     # 稳健性分析
     'perturbation_analysis',
     'cross_validation_pareto',
     # 报告生成
     'generate_pareto_report',
     'print_analysis_summary',
+    # 质量数据处理
+    'QualityDataProcessor',
+    'quick_process',
 ]
 
 # 如果高级类可用，添加到导出列表
