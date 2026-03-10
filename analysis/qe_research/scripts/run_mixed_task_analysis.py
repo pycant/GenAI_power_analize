@@ -210,6 +210,8 @@ def aggregate_quality_scores(quality_data: Dict[str, pd.DataFrame],
     for df in quality_data.values():
         all_models.update(df['model'].unique())
     
+    all_models = sorted(list(all_models))  # 转换为排序的列表
+    
     if verbose:
         print(f"\n共有 {len(all_models)} 个模型")
     
@@ -266,7 +268,7 @@ def aggregate_quality_scores(quality_data: Dict[str, pd.DataFrame],
     results = []
     task_scores_matrix = []
     
-    for model in sorted(all_models):
+    for model in all_models:
         weighted_score = 0.0
         task_scores = {'model': model}
         
