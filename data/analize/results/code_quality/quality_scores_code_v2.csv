@@ -1,4 +1,4 @@
-﻿experiment_id,model,task_type,prompt,functional_correctness,compilation_success,has_code,test_pass_rate,tests_passed,tests_total,time_complexity_score,space_complexity_score,code_simplicity,code_length,cyclomatic_complexity,nesting_depth,readability_score,has_docstring,has_type_hints,functional_dimension,efficiency_dimension,quality_dimension,readability_dimension
+experiment_id,model,task_type,prompt,functional_correctness,compilation_success,has_code,test_pass_rate,tests_passed,tests_total,time_complexity_score,space_complexity_score,code_simplicity,code_length,cyclomatic_complexity,nesting_depth,readability_score,has_docstring,has_type_hints,functional_dimension,efficiency_dimension,quality_dimension,readability_dimension
 exp_20260303_203028_2759390320288,deepseek_8b_ol_q4km,code,"
 def multiply(a, b):
     """"""Complete the function that takes two integers and returns 
@@ -7,12 +7,12 @@ exp_20260303_203049_2759390320288,deepseek_8b_ol_q4km,code,"
 
 def triples_sum_to_zero(l: list):
     """"""
-    triples_sum_to_zero takes a list of integers as an i...",0.0,0.0,1.0,,,0,0.5,0.7,0.7380116959064329,4,4,0,0.0,0.0,0.0,0.0,0.58,0.7380116959064329,0.0
+    triples_sum_to_zero takes a list of integers as an i...",0.0,0.0,1.0,0.0,0.0,0,0.5,0.7,0.7380116959064329,4,4,0,0.0,0.0,0.0,0.0,0.58,0.7380116959064329,0.0
 exp_20260303_203106_2759390320288,deepseek_8b_ol_q4km,code,"from typing import List
 
 
 def separate_paren_groups(paren_string: str) -> List[str]:
-    """""" Input t...",0.0,0.0,1.0,,,0,0.5,0.7,0.9083333333333334,1,1,0,0.2,0.0,1.0,0.0,0.58,0.9083333333333334,0.2
+    """""" Input t...",0.0,0.0,1.0,0.0,0.0,0,0.5,0.7,0.9083333333333334,1,1,0,0.2,0.0,1.0,0.0,0.58,0.9083333333333334,0.2
 exp_20260303_203123_2759390320288,deepseek_8b_ol_q4km,code,"
 def triangle_area(a, b, c):
     '''
@@ -39,7 +39,7 @@ def separate_paren_groups(paren_string: str) -> List[str]:
 exp_20260303_190315_2518223083168,gemma_2b_hf_4bit,code,"
 def triangle_area(a, b, c):
     '''
-    Given the lengths of the three sides of a triangle. Return ...",0.0,0.0,1.0,,,0,0.5,0.7,0.6666666666666667,5,7,0,0.0,0.0,0.0,0.0,0.58,0.6666666666666667,0.0
+    Given the lengths of the three sides of a triangle. Return ...",0.0,0.0,1.0,0.0,0.0,0,0.5,0.7,0.6666666666666667,5,7,0,0.0,0.0,0.0,0.0,0.58,0.6666666666666667,0.0
 exp_20260303_190324_2518223083168,gemma_2b_hf_4bit,code,"
 def get_row(lst, x):
     """"""
@@ -48,7 +48,7 @@ def get_row(lst, x):
 exp_20260303_191242_2570525529760,gemma_2b_hf_8bit,code,"
 def multiply(a, b):
     """"""Complete the function that takes two integers and returns 
-    the produ...",0.0,0.0,1.0,,,0,0.5,0.7,0.6807692307692308,11,3,0,0.0,0.0,0.0,0.0,0.58,0.6807692307692308,0.0
+    the produ...",0.0,0.0,1.0,0.0,0.0,0,0.5,0.7,0.6807692307692308,11,3,0,0.0,0.0,0.0,0.0,0.58,0.6807692307692308,0.0
 exp_20260303_191317_2570525529760,gemma_2b_hf_8bit,code,"
 
 def triples_sum_to_zero(l: list):
@@ -62,7 +62,7 @@ def separate_paren_groups(paren_string: str) -> List[str]:
 exp_20260303_191422_2570525529760,gemma_2b_hf_8bit,code,"
 def triangle_area(a, b, c):
     '''
-    Given the lengths of the three sides of a triangle. Return ...",0.0,0.0,1.0,,,0,0.5,0.7,0.6666666666666667,5,7,0,0.0,0.0,0.0,0.0,0.58,0.6666666666666667,0.0
+    Given the lengths of the three sides of a triangle. Return ...",0.0,0.0,1.0,0.0,0.0,0,0.5,0.7,0.6666666666666667,5,7,0,0.0,0.0,0.0,0.0,0.58,0.6666666666666667,0.0
 exp_20260303_191454_2570525529760,gemma_2b_hf_8bit,code,"
 def get_row(lst, x):
     """"""
@@ -81,7 +81,7 @@ exp_20260303_171113_2801312650912,gemma_4b_ol_q4km,code,"from typing import List
 
 
 def separate_paren_groups(paren_string: str) -> List[str]:
-    """""" Input t...",0.0,1.0,1.0,0.0,0.0,1,0.8,0.7,0.43333333333333335,21,7,3,0.8,1.0,1.0,0.3,0.76,0.43333333333333335,0.8
+    """""" Input t...",0.0,1.0,1.0,0.0,0.0,1,0.8,0.7,0.4333333333333333,21,7,3,0.8,1.0,1.0,0.3,0.76,0.4333333333333333,0.8
 exp_20260303_171120_2801312650912,gemma_4b_ol_q4km,code,"
 def triangle_area(a, b, c):
     '''
@@ -99,21 +99,21 @@ exp_20260303_203929_2801285387936,phi3_4b_hf_4bit,code,"
 
 def triples_sum_to_zero(l: list):
     """"""
-    triples_sum_to_zero takes a list of integers as an i...",0.0,0.0,1.0,,,0,0.5,0.7,0.580952380952381,13,7,0,0.0,0.0,0.0,0.0,0.58,0.580952380952381,0.0
+    triples_sum_to_zero takes a list of integers as an i...",0.0,0.0,1.0,0.0,0.0,0,0.5,0.7,0.580952380952381,13,7,0,0.0,0.0,0.0,0.0,0.58,0.580952380952381,0.0
 exp_20260303_203941_2801285387936,phi3_4b_hf_4bit,code,"from typing import List
 
 
 def separate_paren_groups(paren_string: str) -> List[str]:
-    """""" Input t...",0.0,0.0,1.0,,,0,0.5,0.7,0.7657894736842106,4,3,0,0.0,0.0,0.0,0.0,0.58,0.7657894736842106,0.0
+    """""" Input t...",0.0,0.0,1.0,0.0,0.0,0,0.5,0.7,0.7657894736842106,4,3,0,0.0,0.0,0.0,0.0,0.58,0.7657894736842106,0.0
 exp_20260303_203951_2801285387936,phi3_4b_hf_4bit,code,"
 def triangle_area(a, b, c):
     '''
-    Given the lengths of the three sides of a triangle. Return ...",0.0,0.0,1.0,,,0,0.5,0.7,0.8333333333333335,5,1,0,0.0,0.0,0.0,0.0,0.58,0.8333333333333335,0.0
+    Given the lengths of the three sides of a triangle. Return ...",0.0,0.0,1.0,0.0,0.0,0,0.5,0.7,0.8333333333333335,5,1,0,0.0,0.0,0.0,0.0,0.58,0.8333333333333335,0.0
 exp_20260303_204033_2801285387936,phi3_4b_hf_4bit,code,"
 def get_row(lst, x):
     """"""
     You are given a 2 dimensional data, as a nested lists,
-    which i...",0.0,0.0,1.0,,,0,0.5,0.7,0.7079365079365081,6,4,0,0.2,0.0,1.0,0.0,0.58,0.7079365079365081,0.2
+    which i...",0.0,0.0,1.0,0.0,0.0,0,0.5,0.7,0.7079365079365081,6,4,0,0.2,0.0,1.0,0.0,0.58,0.7079365079365081,0.2
 exp_20260303_205305_2199671396000,phi3_4b_hf_8bit,code,"
 def multiply(a, b):
     """"""Complete the function that takes two integers and returns 
@@ -122,44 +122,44 @@ exp_20260303_205325_2199671396000,phi3_4b_hf_8bit,code,"
 
 def triples_sum_to_zero(l: list):
     """"""
-    triples_sum_to_zero takes a list of integers as an i...",0.0,0.0,1.0,,,0,0.5,0.7,0.8386554621848741,2,2,0,0.0,0.0,0.0,0.0,0.58,0.8386554621848741,0.0
+    triples_sum_to_zero takes a list of integers as an i...",0.0,0.0,1.0,0.0,0.0,0,0.5,0.7,0.8386554621848741,2,2,0,0.0,0.0,0.0,0.0,0.58,0.8386554621848741,0.0
 exp_20260303_205338_2199671396000,phi3_4b_hf_8bit,code,"from typing import List
 
 
 def separate_paren_groups(paren_string: str) -> List[str]:
-    """""" Input t...",0.0,0.0,1.0,,,0,0.5,0.7,0.6722222222222223,9,4,0,0.0,0.0,0.0,0.0,0.58,0.6722222222222223,0.0
+    """""" Input t...",0.0,0.0,1.0,0.0,0.0,0,0.5,0.7,0.6722222222222223,9,4,0,0.0,0.0,0.0,0.0,0.58,0.6722222222222223,0.0
 exp_20260303_205351_2199671396000,phi3_4b_hf_8bit,code,"
 def triangle_area(a, b, c):
     '''
-    Given the lengths of the three sides of a triangle. Return ...",0.0,0.0,1.0,,,0,0.5,0.7,0.8491228070175438,4,1,0,0.0,0.0,0.0,0.0,0.58,0.8491228070175438,0.0
+    Given the lengths of the three sides of a triangle. Return ...",0.0,0.0,1.0,0.0,0.0,0,0.5,0.7,0.8491228070175438,4,1,0,0.0,0.0,0.0,0.0,0.58,0.8491228070175438,0.0
 exp_20260303_205454_2199671396000,phi3_4b_hf_8bit,code,"
 def get_row(lst, x):
     """"""
     You are given a 2 dimensional data, as a nested lists,
-    which i...",0.0,0.0,1.0,,,0,0.5,0.7,0.7222222222222223,5,4,0,0.2,0.0,1.0,0.0,0.58,0.7222222222222223,0.2
+    which i...",0.0,0.0,1.0,0.0,0.0,0,0.5,0.7,0.7222222222222223,5,4,0,0.2,0.0,1.0,0.0,0.58,0.7222222222222223,0.2
 exp_20260303_194909_2034608821920,qwen_4b_ol_q4km,code,"
 def multiply(a, b):
     """"""Complete the function that takes two integers and returns 
-    the produ...",0.0,0.0,1.0,,,0,0.5,0.7,0.7833333333333334,3,3,0,0.2,0.0,1.0,0.0,0.58,0.7833333333333334,0.2
+    the produ...",0.0,0.0,1.0,0.0,0.0,0,0.5,0.7,0.7833333333333334,3,3,0,0.2,0.0,1.0,0.0,0.58,0.7833333333333334,0.2
 exp_20260303_194938_2034608821920,qwen_4b_ol_q4km,code,"
 
 def triples_sum_to_zero(l: list):
     """"""
-    triples_sum_to_zero takes a list of integers as an i...",0.0,0.0,1.0,,,0,0.5,0.7,0.9083333333333334,1,1,0,0.2,0.0,1.0,0.0,0.58,0.9083333333333334,0.2
+    triples_sum_to_zero takes a list of integers as an i...",0.0,0.0,1.0,0.0,0.0,0,0.5,0.7,0.9083333333333334,1,1,0,0.2,0.0,1.0,0.0,0.58,0.9083333333333334,0.2
 exp_20260303_194949_2034608821920,qwen_4b_ol_q4km,code,"from typing import List
 
 
 def separate_paren_groups(paren_string: str) -> List[str]:
-    """""" Input t...",0.0,0.0,1.0,,,0,0.5,0.7,0.8666666666666667,3,1,0,0.0,0.0,0.0,0.0,0.58,0.8666666666666667,0.0
+    """""" Input t...",0.0,0.0,1.0,0.0,0.0,0,0.5,0.7,0.8666666666666667,3,1,0,0.0,0.0,0.0,0.0,0.58,0.8666666666666667,0.0
 exp_20260303_195001_2034608821920,qwen_4b_ol_q4km,code,"
 def triangle_area(a, b, c):
     '''
-    Given the lengths of the three sides of a triangle. Return ...",0.0,0.0,1.0,,,0,0.5,0.7,0.8862745098039215,2,1,0,0.0,0.0,0.0,0.0,0.58,0.8862745098039215,0.0
+    Given the lengths of the three sides of a triangle. Return ...",0.0,0.0,1.0,0.0,0.0,0,0.5,0.7,0.8862745098039215,2,1,0,0.0,0.0,0.0,0.0,0.58,0.8862745098039215,0.0
 exp_20260303_195015_2034608821920,qwen_4b_ol_q4km,code,"
 def get_row(lst, x):
     """"""
     You are given a 2 dimensional data, as a nested lists,
-    which i...",0.0,0.0,1.0,,,0,0.5,0.7,0.8386554621848741,2,2,0,0.0,0.0,0.0,0.0,0.58,0.8386554621848741,0.0
+    which i...",0.0,0.0,1.0,0.0,0.0,0,0.5,0.7,0.8386554621848741,2,2,0,0.0,0.0,0.0,0.0,0.58,0.8386554621848741,0.0
 exp_20260303_195843_3063473428128,qwen_8b_ol_q4km,code,"
 def multiply(a, b):
     """"""Complete the function that takes two integers and returns 
@@ -168,25 +168,25 @@ exp_20260303_195917_3063473428128,qwen_8b_ol_q4km,code,"
 
 def triples_sum_to_zero(l: list):
     """"""
-    triples_sum_to_zero takes a list of integers as an i...",0.0,0.0,1.0,,,0,0.5,0.7,0.6285714285714286,6,9,0,0.2,0.0,1.0,0.0,0.58,0.6285714285714286,0.2
+    triples_sum_to_zero takes a list of integers as an i...",0.0,0.0,1.0,0.0,0.0,0,0.5,0.7,0.6285714285714286,6,9,0,0.2,0.0,1.0,0.0,0.58,0.6285714285714286,0.2
 exp_20260303_195934_3063473428128,qwen_8b_ol_q4km,code,"from typing import List
 
 
 def separate_paren_groups(paren_string: str) -> List[str]:
-    """""" Input t...",0.0,0.0,1.0,,,0,0.5,0.7,0.49292929292929294,18,13,0,0.2,0.0,1.0,0.0,0.58,0.49292929292929294,0.2
+    """""" Input t...",0.0,0.0,1.0,0.0,0.0,0,0.5,0.7,0.4929292929292929,18,13,0,0.2,0.0,1.0,0.0,0.58,0.4929292929292929,0.2
 exp_20260303_195952_3063473428128,qwen_8b_ol_q4km,code,"
 def triangle_area(a, b, c):
     '''
-    Given the lengths of the three sides of a triangle. Return ...",0.0,0.0,1.0,,,0,0.5,0.7,0.5025000000000001,10,27,0,0.2,0.0,1.0,0.0,0.58,0.5025000000000001,0.2
+    Given the lengths of the three sides of a triangle. Return ...",0.0,0.0,1.0,0.0,0.0,0,0.5,0.7,0.5025000000000001,10,27,0,0.2,0.0,1.0,0.0,0.58,0.5025000000000001,0.2
 exp_20260303_200013_3063473428128,qwen_8b_ol_q4km,code,"
 def get_row(lst, x):
     """"""
     You are given a 2 dimensional data, as a nested lists,
-    which i...",0.0,0.0,1.0,,,0,0.5,0.7,0.42647058823529416,19,35,0,0.2,0.0,1.0,0.0,0.58,0.42647058823529416,0.2
+    which i...",0.0,0.0,1.0,0.0,0.0,0,0.5,0.7,0.4264705882352941,19,35,0,0.2,0.0,1.0,0.0,0.58,0.4264705882352941,0.2
 exp_20260303_211315_2358431307424,qwen25_3b_hf_4bit,code,"
 def multiply(a, b):
     """"""Complete the function that takes two integers and returns 
-    the produ...",0.0,1.0,1.0,0.0,0.0,4,0.8,0.7,0.37098039215686274,36,10,2,0.49047619047619045,0.0,1.0,0.3,0.76,0.37098039215686274,0.49047619047619045
+    the produ...",0.0,1.0,1.0,0.0,0.0,4,0.8,0.7,0.3709803921568627,36,10,2,0.4904761904761904,0.0,1.0,0.3,0.76,0.3709803921568627,0.4904761904761904
 exp_20260303_211438_2358431307424,qwen25_3b_hf_4bit,code,"
 
 def triples_sum_to_zero(l: list):
@@ -196,7 +196,7 @@ exp_20260303_211515_2358431307424,qwen25_3b_hf_4bit,code,"from typing import Lis
 
 
 def separate_paren_groups(paren_string: str) -> List[str]:
-    """""" Input t...",0.0,0.0,1.0,,,0,0.5,0.7,0.6622222222222223,10,4,0,0.0,0.0,0.0,0.0,0.58,0.6622222222222223,0.0
+    """""" Input t...",0.0,0.0,1.0,0.0,0.0,0,0.5,0.7,0.6622222222222223,10,4,0,0.0,0.0,0.0,0.0,0.58,0.6622222222222223,0.0
 exp_20260303_211551_2358431307424,qwen25_3b_hf_4bit,code,"
 def triangle_area(a, b, c):
     '''
@@ -214,25 +214,25 @@ exp_20260303_213603_2451737990816,qwen25_3b_hf_8bit,code,"
 
 def triples_sum_to_zero(l: list):
     """"""
-    triples_sum_to_zero takes a list of integers as an i...",0.0,0.0,1.0,,,0,0.5,0.7,0.5607427055702918,14,8,0,0.0,0.0,0.0,0.0,0.58,0.5607427055702918,0.0
+    triples_sum_to_zero takes a list of integers as an i...",0.0,0.0,1.0,0.0,0.0,0,0.5,0.7,0.5607427055702918,14,8,0,0.0,0.0,0.0,0.0,0.58,0.5607427055702918,0.0
 exp_20260303_213730_2451737990816,qwen25_3b_hf_8bit,code,"from typing import List
 
 
 def separate_paren_groups(paren_string: str) -> List[str]:
-    """""" Input t...",0.0,0.0,1.0,,,0,0.5,0.7,0.65,9,5,0,0.0,0.0,0.0,0.0,0.58,0.65,0.0
+    """""" Input t...",0.0,0.0,1.0,0.0,0.0,0,0.5,0.7,0.65,9,5,0,0.0,0.0,0.0,0.0,0.58,0.65,0.0
 exp_20260303_213904_2451737990816,qwen25_3b_hf_8bit,code,"
 def triangle_area(a, b, c):
     '''
-    Given the lengths of the three sides of a triangle. Return ...",1.0,1.0,1.0,1.0,2.0,2,1.0,1.0,0.47051282051282056,24,7,1,0.7535714285714286,1.0,1.0,1.0,1.0,0.47051282051282056,0.7535714285714286
+    Given the lengths of the three sides of a triangle. Return ...",1.0,1.0,1.0,1.0,2.0,2,1.0,1.0,0.4705128205128205,24,7,1,0.7535714285714286,1.0,1.0,1.0,1.0,0.4705128205128205,0.7535714285714286
 exp_20260303_214052_2451737990816,qwen25_3b_hf_8bit,code,"
 def get_row(lst, x):
     """"""
     You are given a 2 dimensional data, as a nested lists,
-    which i...",0.0,0.0,1.0,,,0,0.5,0.7,0.694949494949495,7,4,0,0.0,0.0,0.0,0.0,0.58,0.694949494949495,0.0
+    which i...",0.0,0.0,1.0,0.0,0.0,0,0.5,0.7,0.694949494949495,7,4,0,0.0,0.0,0.0,0.0,0.58,0.694949494949495,0.0
 exp_20260303_231029_2405126166176,qwen25_7b_hf_4bit,code,"
 def multiply(a, b):
     """"""Complete the function that takes two integers and returns 
-    the produ...",0.0,1.0,1.0,0.0,0.0,4,0.8,0.7,0.42619047619047623,27,10,1,0.823015873015873,1.0,1.0,0.3,0.76,0.42619047619047623,0.823015873015873
+    the produ...",0.0,1.0,1.0,0.0,0.0,4,0.8,0.7,0.4261904761904762,27,10,1,0.823015873015873,1.0,1.0,0.3,0.76,0.4261904761904762,0.823015873015873
 exp_20260303_231203_2405126166176,qwen25_7b_hf_4bit,code,"
 
 def triples_sum_to_zero(l: list):
@@ -242,11 +242,11 @@ exp_20260303_231234_2405126166176,qwen25_7b_hf_4bit,code,"from typing import Lis
 
 
 def separate_paren_groups(paren_string: str) -> List[str]:
-    """""" Input t...",0.0,0.0,1.0,,,0,0.5,0.7,0.5887147335423197,14,6,0,0.0,0.0,0.0,0.0,0.58,0.5887147335423197,0.0
+    """""" Input t...",0.0,0.0,1.0,0.0,0.0,0,0.5,0.7,0.5887147335423197,14,6,0,0.0,0.0,0.0,0.0,0.58,0.5887147335423197,0.0
 exp_20260303_231305_2405126166176,qwen25_7b_hf_4bit,code,"
 def triangle_area(a, b, c):
     '''
-    Given the lengths of the three sides of a triangle. Return ...",0.0,0.0,1.0,,,0,0.5,0.7,0.6857142857142857,6,5,0,0.0,0.0,0.0,0.0,0.58,0.6857142857142857,0.0
+    Given the lengths of the three sides of a triangle. Return ...",0.0,0.0,1.0,0.0,0.0,0,0.5,0.7,0.6857142857142857,6,5,0,0.0,0.0,0.0,0.0,0.58,0.6857142857142857,0.0
 exp_20260303_231350_2405126166176,qwen25_7b_hf_4bit,code,"
 def get_row(lst, x):
     """"""
@@ -255,17 +255,17 @@ def get_row(lst, x):
 exp_20260303_224034_2093745559200,qwen25_7b_hf_8bit,code,"
 def multiply(a, b):
     """"""Complete the function that takes two integers and returns 
-    the produ...",0.0,1.0,1.0,0.0,0.0,4,0.8,0.7,0.38717948717948714,24,10,3,0.8250000000000001,1.0,1.0,0.3,0.76,0.38717948717948714,0.8250000000000001
+    the produ...",0.0,1.0,1.0,0.0,0.0,4,0.8,0.7,0.3871794871794871,24,10,3,0.8250000000000001,1.0,1.0,0.3,0.76,0.3871794871794871,0.8250000000000001
 exp_20260303_224638_2093745559200,qwen25_7b_hf_8bit,code,"
 
 def triples_sum_to_zero(l: list):
     """"""
-    triples_sum_to_zero takes a list of integers as an i...",0.0,0.0,1.0,,,0,0.5,0.7,0.6857142857142857,6,5,0,0.0,0.0,0.0,0.0,0.58,0.6857142857142857,0.0
+    triples_sum_to_zero takes a list of integers as an i...",0.0,0.0,1.0,0.0,0.0,0,0.5,0.7,0.6857142857142857,6,5,0,0.0,0.0,0.0,0.0,0.58,0.6857142857142857,0.0
 exp_20260303_224952_2093745559200,qwen25_7b_hf_8bit,code,"from typing import List
 
 
 def separate_paren_groups(paren_string: str) -> List[str]:
-    """""" Input t...",0.0,0.0,1.0,,,0,0.5,0.7,0.6040404040404042,12,6,0,0.0,0.0,0.0,0.0,0.58,0.6040404040404042,0.0
+    """""" Input t...",0.0,0.0,1.0,0.0,0.0,0,0.5,0.7,0.6040404040404042,12,6,0,0.0,0.0,0.0,0.0,0.58,0.6040404040404042,0.0
 exp_20260303_225305_2093745559200,qwen25_7b_hf_8bit,code,"
 def triangle_area(a, b, c):
     '''
@@ -274,4 +274,4 @@ exp_20260303_225707_2093745559200,qwen25_7b_hf_8bit,code,"
 def get_row(lst, x):
     """"""
     You are given a 2 dimensional data, as a nested lists,
-    which i...",1.0,1.0,1.0,1.0,3.0,3,0.5,0.7,0.40303030303030307,29,7,3,0.8413793103448276,1.0,1.0,1.0,0.58,0.40303030303030307,0.8413793103448276
+    which i...",1.0,1.0,1.0,1.0,3.0,3,0.5,0.7,0.403030303030303,29,7,3,0.8413793103448276,1.0,1.0,1.0,0.58,0.403030303030303,0.8413793103448276

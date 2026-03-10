@@ -74,6 +74,63 @@ class QualityDataProcessor:
         if self.verbose:
             print(f"初始化质量数据处理器: 任务={task_name}, 使用原始数据={use_raw}")
     
+    @staticmethod
+    def get_cost_type_metrics() -> List[str]:
+        """
+        获取成本型指标列表（越小越好的指标）
+        
+        Returns:
+            List[str]: 成本型指标名称列表
+        """
+        # 根据METRICS_GUIDE.md和QUALITY_SCORES_GENERATION_REPORT_V2.md定义
+        cost_metrics = [
+            'perplexity',  # 困惑度：越低越好（creative任务）
+            # 未来可能添加其他成本型指标
+        ]
+        return cost_metrics
+    
+    def convert_cost_to_benefit(self, data: pd.DataFrame, 
+                                cost_metrics: Optional[List[str]] = None) -> pd.DataFrame:
+        """
+        将成本型指标转换为效益型指标（越小越好 -> 越大越好）
+        
+        使用倒数转换：benefit = 1 / (cost + epsilon)
+        
+        Args:
+            data: 输入数据框
+            cost_metrics: 成本型指标列名列表，如果为None则自动获取
+        
+        Returns:
+            pd.DataFrame: 转换后的数据框副本
+        """
+        if cost_metrics is None:
+            cost_metrics = self.get_cost_type_metrics()
+        
+        df_converted = data.copy()
+        epsilon = 1e-10  # 避免除零
+        
+        converted_count = 0
+        for metric in cost_metrics:
+            if metric in df_converted.columns:
+                # 检查是否有负值或零值
+                min_val = df_converted[metric].min()
+                if min_val <= 0:
+                    # 如果有负值或零值，先平移到正数域
+                    df_converted[metric] = 1 / (df_converted[metric] - min_val + 1 + epsilon)
+                else:
+                    # 直接取倒数
+                    df_converted[metric] = 1 / (df_converted[metric] + epsilon)
+                
+                if self.verbose:
+                    print(f"  成本型指标转换: {metric} (原始范围: [{data[metric].min():.4f}, {data[metric].max():.4f}]) "
+                          f"-> (转换后范围: [{df_converted[metric].min():.4f}, {df_converted[metric].max():.4f}])")
+                converted_count += 1
+        
+        if converted_count == 0 and self.verbose:
+            print(f"  未发现需要转换的成本型指标")
+        
+        return df_converted
+    
     def load_quality_data(self) -> pd.DataFrame:
         """
         加载质量数据
@@ -105,6 +162,11 @@ class QualityDataProcessor:
             print(f"  模型数量: {len(self.data)}")
             print(f"  指标数量: {len(self.data.columns)}")
             print(f"  指标列表: {', '.join(self.data.columns[:5])}{'...' if len(self.data.columns) > 5 else ''}")
+        
+        # 成本型指标转换（在归一化之前）
+        if self.verbose:
+            print(f"\n检查成本型指标...")
+        self.data = self.convert_cost_to_benefit(self.data)
         
         return self.data.copy()
     
@@ -234,8 +296,22 @@ class QualityDataProcessor:
         if columns is None:
             columns = data.columns.tolist()
         
+        # 首先删除全为NaN的列
+        valid_columns = []
+        for col in columns:
+            if not data[col].isna().all():
+                valid_columns.append(col)
+            elif self.verbose:
+                print(f"⚠ 跳过全为NaN的列: {col}")
+        
+        if len(valid_columns) == 0:
+            raise ValueError("所有列都是NaN，无法计算熵权")
+        
+        if self.verbose and len(valid_columns) < len(columns):
+            print(f"✓ 有效指标数: {len(valid_columns)}/{len(columns)}")
+        
         # 提取数据并处理缺失值
-        X = data[columns].values
+        X = data[valid_columns].values
         
         # 删除包含NaN的行
         mask = ~np.isnan(X).any(axis=1)
@@ -276,8 +352,8 @@ class QualityDataProcessor:
         # 步骤4: 归一化得到权重
         weights_array = d / d.sum()
         
-        # 转换为字典
-        weights = {col: float(w) for col, w in zip(columns, weights_array)}
+        # 转换为字典（使用valid_columns）
+        weights = {col: float(w) for col, w in zip(valid_columns, weights_array)}
         
         self.weights = weights
         
@@ -386,15 +462,25 @@ class QualityDataProcessor:
             print("PCA降维分析")
             print(f"{'='*80}")
         
-        # 处理缺失值：删除包含NaN的行
-        data_clean = data.dropna()
+        # 处理缺失值：
+        # 1. 删除全为NaN的列
+        data_clean = data.dropna(axis=1, how='all')
+        
+        if len(data_clean.columns) == 0:
+            raise ValueError("所有列都是NaN，无法进行PCA")
+        
+        # 2. 删除包含NaN的行
+        data_clean = data_clean.dropna(axis=0)
         
         if len(data_clean) == 0:
-            raise ValueError("所有行都包含NaN，无法进行PCA")
+            raise ValueError("删除NaN后没有有效样本，无法进行PCA")
         
         if self.verbose:
+            removed_cols = set(data.columns) - set(data_clean.columns)
+            if removed_cols:
+                print(f"⚠️  已删除全为NaN的列: {removed_cols}")
             print(f"有效样本数: {len(data_clean)}/{len(data)}")
-            print(f"特征数量: {len(data_clean.columns)}")
+            print(f"有效特征数: {len(data_clean.columns)}/{len(data.columns)}")
         
         # 标准化
         if normalize_first:

@@ -1,0 +1,12 @@
+﻿model,certainty_count
+deepseek_8b_ol_q4km,0.6
+gemma_2b_hf_4bit,0.4
+gemma_4b_ol_q4km,0.4
+phi3_4b_hf_4bit,0.2
+phi3_4b_hf_8bit,0.2
+qwen25_3b_hf_4bit,0.2
+qwen25_3b_hf_8bit,0.2
+qwen25_7b_hf_4bit,0.2
+qwen_4b_ol_q4km,0.2
+gemma_2b_hf_8bit,0.0
+qwen_8b_ol_q4km,0.0

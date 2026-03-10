@@ -1,0 +1,12 @@
+﻿model,has_answer
+deepseek_8b_ol_q4km,1.0
+gemma_2b_hf_4bit,1.0
+gemma_2b_hf_8bit,1.0
+gemma_4b_ol_q4km,1.0
+phi3_4b_hf_4bit,1.0
+phi3_4b_hf_8bit,1.0
+qwen25_3b_hf_4bit,1.0
+qwen25_3b_hf_8bit,1.0
+qwen25_7b_hf_4bit,1.0
+qwen_8b_ol_q4km,1.0
+qwen_4b_ol_q4km,0.8

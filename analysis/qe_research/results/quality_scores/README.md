@@ -1,6 +1,6 @@
 # 质量评分表格
 
-**生成时间**: 2026-03-07 15:53:37
+**生成时间**: 2026-03-10 14:54:15
 
 ---
 
@@ -13,7 +13,7 @@
 ### 表格列表
 
 1. **code_scores.csv** - CODE任务质量评分
-   - 数据源: `code_quality/quality_scores_code.csv`
+   - 数据源: `code_quality/quality_scores_code_v2.csv`
    - 指标: 自动检测所有数值型指标
 2. **creative_scores.csv** - CREATIVE任务质量评分
    - 数据源: `creative_quality/creative_quality_scores_with_perplexity.csv`

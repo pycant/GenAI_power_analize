@@ -1,0 +1,12 @@
+﻿model,confidence_score
+gemma_2b_hf_4bit,0.5599999999999999
+gemma_4b_ol_q4km,0.5599999999999999
+phi3_4b_hf_8bit,0.54
+qwen25_3b_hf_4bit,0.54
+qwen25_7b_hf_4bit,0.54
+gemma_2b_hf_8bit,0.52
+phi3_4b_hf_4bit,0.52
+qwen25_3b_hf_8bit,0.52
+qwen_8b_ol_q4km,0.38
+deepseek_8b_ol_q4km,0.3199999999999999
+qwen_4b_ol_q4km,0.3

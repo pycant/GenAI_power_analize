@@ -1,0 +1,12 @@
+﻿model,advantage_task,disadvantage_task
+deepseek_8b_ol_q4km,翻译,问答
+gemma_2b_hf_4bit,问答,摘要生成
+gemma_2b_hf_8bit,摘要生成,翻译
+gemma_4b_ol_q4km,代码生成,数学推理
+phi3_4b_hf_4bit,问答,逻辑推理
+phi3_4b_hf_8bit,数学推理,逻辑推理
+qwen25_3b_hf_4bit,逻辑推理,创意写作
+qwen25_3b_hf_8bit,问答,逻辑推理
+qwen25_7b_hf_4bit,问答,创意写作
+qwen_4b_ol_q4km,摘要生成,代码生成
+qwen_8b_ol_q4km,创意写作,数学推理

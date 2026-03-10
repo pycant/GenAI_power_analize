@@ -1,0 +1,12 @@
+﻿model,code_length
+gemma_4b_ol_q4km,20.0
+qwen25_7b_hf_4bit,17.4
+qwen25_3b_hf_8bit,11.0
+qwen_8b_ol_q4km,10.8
+qwen25_3b_hf_4bit,9.8
+phi3_4b_hf_4bit,5.8
+phi3_4b_hf_8bit,5.0
+gemma_2b_hf_8bit,3.8
+deepseek_8b_ol_q4km,3.4
+gemma_2b_hf_4bit,2.6
+qwen_4b_ol_q4km,2.2

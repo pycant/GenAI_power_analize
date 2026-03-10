@@ -1,0 +1,15 @@
+﻿指标,模型,值,索引
+answer_length,gemma_2b_hf_4bit,417.0,1
+answer_length,gemma_2b_hf_8bit,476.0,2
+avg_paragraph_length,gemma_2b_hf_4bit,104.07666666666668,1
+avg_paragraph_length,gemma_2b_hf_8bit,106.61857142857144,2
+avg_paragraph_length,qwen_8b_ol_q4km,288.9833333333333,10
+certainty_count,deepseek_8b_ol_q4km,0.6,0
+certainty_count,gemma_2b_hf_8bit,0.0,2
+certainty_count,qwen_8b_ol_q4km,0.0,10
+confidence_score,qwen_4b_ol_q4km,0.3,9
+has_conclusion,gemma_2b_hf_4bit,0.6,1
+has_examples,phi3_4b_hf_4bit,0.6,4
+has_examples,phi3_4b_hf_8bit,0.6,5
+has_reasoning,qwen25_3b_hf_8bit,0.6,7
+uncertainty_count,qwen_4b_ol_q4km,1.8,9

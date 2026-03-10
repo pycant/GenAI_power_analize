@@ -41,7 +41,7 @@ class QualityScoreTableCreator:
         self.task_configs = {
             'code': {
                 'dir': 'code_quality',
-                'score_file': 'quality_scores_code.csv'
+                'score_file': 'quality_scores_code_v2.csv'
             },
             'creative': {
                 'dir': 'creative_quality',

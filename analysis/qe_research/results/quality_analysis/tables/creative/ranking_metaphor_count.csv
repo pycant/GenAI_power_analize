@@ -1,0 +1,12 @@
+﻿model,metaphor_count
+qwen25_3b_hf_4bit,6.4
+qwen25_7b_hf_4bit,5.4
+qwen_4b_ol_q4km,3.8
+qwen25_3b_hf_8bit,3.4
+gemma_2b_hf_8bit,3.0
+phi3_4b_hf_4bit,1.4
+deepseek_8b_ol_q4km,1.2
+gemma_4b_ol_q4km,0.8
+phi3_4b_hf_8bit,0.8
+gemma_2b_hf_4bit,0.6
+qwen_8b_ol_q4km,0.2

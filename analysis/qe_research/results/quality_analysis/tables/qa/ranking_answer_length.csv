@@ -1,0 +1,12 @@
+﻿model,answer_length
+deepseek_8b_ol_q4km,1075.6
+qwen_4b_ol_q4km,1071.2
+gemma_4b_ol_q4km,1066.4
+qwen25_7b_hf_4bit,1059.6
+qwen25_3b_hf_4bit,1037.4
+qwen_8b_ol_q4km,1033.2
+qwen25_3b_hf_8bit,1010.4
+phi3_4b_hf_8bit,862.8
+phi3_4b_hf_4bit,794.4
+gemma_2b_hf_8bit,476.0
+gemma_2b_hf_4bit,417.0

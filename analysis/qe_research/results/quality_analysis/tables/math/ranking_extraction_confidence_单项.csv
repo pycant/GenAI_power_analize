@@ -1,0 +1,12 @@
+﻿model,extraction_confidence
+gemma_4b_ol_q4km,0.5800000000000001
+qwen25_3b_hf_4bit,0.5800000000000001
+deepseek_8b_ol_q4km,0.54
+qwen_8b_ol_q4km,0.5199999999999999
+qwen25_3b_hf_8bit,0.4
+phi3_4b_hf_4bit,0.3399999999999999
+qwen25_7b_hf_4bit,0.3399999999999999
+qwen_4b_ol_q4km,0.32
+phi3_4b_hf_8bit,0.2799999999999999
+gemma_2b_hf_4bit,0.2
+gemma_2b_hf_8bit,0.2

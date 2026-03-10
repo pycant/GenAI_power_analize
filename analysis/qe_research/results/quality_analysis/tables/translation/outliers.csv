@@ -1,0 +1,16 @@
+﻿指标,模型,值,索引
+bertscore_f1,deepseek_8b_ol_q4km,0.8844874143600464,0
+bertscore_precision,deepseek_8b_ol_q4km,0.8688623309135437,0
+bleu_1,deepseek_8b_ol_q4km,0.6895117166372369,0
+bleu_1,gemma_2b_hf_4bit,0.0,1
+bleu_1,gemma_2b_hf_8bit,0.0,2
+bleu_1,phi3_4b_hf_4bit,0.1330640147965106,4
+bleu_2,deepseek_8b_ol_q4km,0.6428478468635526,0
+bleu_2,gemma_2b_hf_4bit,0.0,1
+bleu_2,gemma_2b_hf_8bit,0.0,2
+bleu_2,phi3_4b_hf_4bit,0.1234490256198515,4
+bleu_4,deepseek_8b_ol_q4km,0.5407343073900355,0
+bleu_4,phi3_4b_hf_4bit,0.100808871888275,4
+chrf,deepseek_8b_ol_q4km,0.5173411173060327,0
+chrf,gemma_2b_hf_4bit,1e-16,1
+chrf,gemma_2b_hf_8bit,1e-16,2

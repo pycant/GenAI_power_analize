@@ -276,52 +276,332 @@ def find_knee_point(df, pareto_mask, quality_col='quality', energy_col='energy')
 def plot_pareto_2d(df, pareto_mask, x_col, y_col, title, output_path,
                    x_label, y_label, x_minimize=True, y_minimize=True):
     """
-    绘制2D帕累托前沿图
+    绘制增强版2D帕累托前沿图
+    
+    优化特性:
+    - 渐变色映射显示性能梯度
+    - 帕累托前沿连线
+    - 智能标注避免重叠
+    - 统计信息框
+    - 点大小差异化
+    - 参考线和区域
+    - 专业配色和布局
     
     Args:
-        df: 数据框
-        pareto_mask: 帕累托前沿掩码
+        df: 数据框（必须包含 'model' 列）
+        pareto_mask: 帕累托前沿掩码（布尔数组）
         x_col: X轴列名
         y_col: Y轴列名
         title: 图表标题
         output_path: 输出文件路径
         x_label: X轴标签
         y_label: Y轴标签
-        x_minimize: X轴是否最小化
-        y_minimize: Y轴是否最小化
+        x_minimize: X轴是否最小化（True表示越小越好）
+        y_minimize: Y轴是否最小化（True表示越小越好）
     """
-    # 设置中文字体
+    import numpy as np
+    from scipy.spatial.distance import cdist
+    
+    # 设置中文字体和样式
     plt.rcParams['font.sans-serif'] = ['Microsoft YaHei', 'SimHei', 'Arial Unicode MS']
     plt.rcParams['axes.unicode_minus'] = False
     
-    fig, ax = plt.subplots(figsize=(12, 8))
+    # 创建图表，使用浅灰色背景
+    fig, ax = plt.subplots(figsize=(14, 10))
+    ax.set_facecolor('#f8f9fa')
+    fig.patch.set_facecolor('white')
     
-    # 非帕累托点
-    non_pareto = df[~pareto_mask]
-    ax.scatter(non_pareto[x_col], non_pareto[y_col],
-              c='lightgray', s=100, alpha=0.6, label='非帕累托点')
+    # 分离帕累托点和非帕累托点
+    pareto_df = df[pareto_mask].copy()
+    non_pareto_df = df[~pareto_mask].copy()
     
-    # 帕累托点
-    pareto = df[pareto_mask]
-    ax.scatter(pareto[x_col], pareto[y_col],
-              c='red', s=200, marker='*', label='帕累托前沿', zorder=5)
+    # ============================================================
+    # 第一阶段：核心视觉增强
+    # ============================================================
     
-    # 标注所有点
-    for _, row in df.iterrows():
-        ax.annotate(row['model'],
-                   (row[x_col], row[y_col]),
-                   xytext=(5, 5), textcoords='offset points',
-                   fontsize=9, alpha=0.8)
+    # 1. 计算到帕累托前沿的距离（用于渐变色映射）
+    if len(non_pareto_df) > 0 and len(pareto_df) > 0:
+        # 归一化坐标
+        x_range = df[x_col].max() - df[x_col].min()
+        y_range = df[y_col].max() - df[y_col].min()
+        
+        if x_range > 0 and y_range > 0:
+            pareto_coords = np.column_stack([
+                (pareto_df[x_col] - df[x_col].min()) / x_range,
+                (pareto_df[y_col] - df[y_col].min()) / y_range
+            ])
+            non_pareto_coords = np.column_stack([
+                (non_pareto_df[x_col] - df[x_col].min()) / x_range,
+                (non_pareto_df[y_col] - df[y_col].min()) / y_range
+            ])
+            
+            # 计算最小距离
+            distances = cdist(non_pareto_coords, pareto_coords).min(axis=1)
+            # 归一化距离到 [0, 1]
+            if distances.max() > 0:
+                distances_norm = distances / distances.max()
+            else:
+                distances_norm = distances
+        else:
+            distances_norm = np.zeros(len(non_pareto_df))
+    else:
+        distances_norm = np.zeros(len(non_pareto_df))
     
-    ax.set_xlabel(x_label, fontsize=12)
-    ax.set_ylabel(y_label, fontsize=12)
-    ax.set_title(title, fontsize=14, fontweight='bold')
-    ax.legend(fontsize=10)
-    ax.grid(True, alpha=0.3)
+    # 2. 使用渐变色映射绘制非帕累托点
+    if len(non_pareto_df) > 0:
+        # 使用 viridis 色系，距离越远颜色越浅
+        colors = plt.cm.viridis(0.1 + 1 * (1 - distances_norm))
+        scatter_non = ax.scatter(
+            non_pareto_df[x_col], 
+            non_pareto_df[y_col],
+            c=colors, 
+            s=150, 
+            alpha=0.7, 
+            edgecolors='white',
+            linewidths=1.5,
+            label='非帕累托点',
+            zorder=3
+        )
     
+    # 3. 绘制帕累托点（醒目的金色星形）
+    if len(pareto_df) > 0:
+        scatter_pareto = ax.scatter(
+            pareto_df[x_col], 
+            pareto_df[y_col],
+            c='#FF6B35',  # 橙红色
+            s=400, 
+            marker='*', 
+            edgecolors='#8B0000',  # 深红色边框
+            linewidths=2,
+            label='帕累托前沿',
+            zorder=6,
+            alpha=0.95
+        )
+        
+        # 4. 添加帕累托前沿连线
+        if len(pareto_df) > 1:
+            # 根据优化方向排序
+            if x_minimize:
+                pareto_sorted = pareto_df.sort_values(by=x_col)
+            else:
+                pareto_sorted = pareto_df.sort_values(by=x_col, ascending=False)
+            
+            ax.plot(
+                pareto_sorted[x_col], 
+                pareto_sorted[y_col],
+                color='#FF6B35',
+                linestyle='--',
+                linewidth=2.5,
+                alpha=0.6,
+                zorder=5,
+                label='前沿连线'
+            )
+            
+            # 添加前沿区域阴影（填充到边界）
+            if x_minimize and y_minimize:
+                # 两个都最小化：填充右上角
+                x_fill = list(pareto_sorted[x_col]) + [ax.get_xlim()[1], ax.get_xlim()[1]]
+                y_fill = list(pareto_sorted[y_col]) + [pareto_sorted[y_col].iloc[-1], ax.get_ylim()[1]]
+            elif not x_minimize and not y_minimize:
+                # 两个都最大化：填充左下角
+                x_fill = list(pareto_sorted[x_col]) + [ax.get_xlim()[0], ax.get_xlim()[0]]
+                y_fill = list(pareto_sorted[y_col]) + [pareto_sorted[y_col].iloc[-1], ax.get_ylim()[0]]
+            else:
+                # 混合情况：不填充
+                x_fill, y_fill = None, None
+            
+            if x_fill and y_fill:
+                ax.fill(x_fill, y_fill, color='#FFE5D9', alpha=0.2, zorder=1)
+    
+    # 5. 智能标注（只标注帕累托点，避免重叠）
+    texts = []
+    if len(pareto_df) > 0:
+        for _, row in pareto_df.iterrows():
+            text = ax.text(
+                row[x_col]+0.05, 
+                row[y_col]+0.05, 
+                row['model'],
+                fontsize=10,
+                fontweight='bold',
+                color='#2C3E50',
+                bbox=dict(
+                    boxstyle='round,pad=0.5',
+                    facecolor='white',
+                    edgecolor='#FF6B35',
+                    alpha=0.9,
+                    linewidth=1.5
+                ),
+                zorder=7
+            )
+            texts.append(text)
+        
+        # 尝试使用 adjustText 避免重叠
+        try:
+            from adjustText import adjust_text
+            adjust_text(
+                texts,
+                arrowprops=dict(
+                    arrowstyle='->',
+                    color='#95A5A6',
+                    lw=1,
+                    alpha=0.7
+                ),
+                expand_points=(1.5, 1.5),
+                force_points=(0.5, 0.5),
+                ax=ax
+            )
+        except ImportError:
+            # 如果没有 adjustText，使用简单偏移
+            for text in texts:
+                text.set_position((text.get_position()[0], text.get_position()[1] + 0.02))
+    
+    # ============================================================
+    # 第二阶段：信息增强
+    # ============================================================
+    
+    # 6. 添加统计信息框
+    stats_text = f"""统计信息
+━━━━━━━━━━━━━━
+帕累托点: {len(pareto_df)}/{len(df)}
+覆盖率: {len(pareto_df)/len(df)*100:.1f}%
+━━━━━━━━━━━━━━
+{x_label}
+  范围: [{df[x_col].min():.3f}, {df[x_col].max():.3f}]
+  均值: {df[x_col].mean():.3f}
+━━━━━━━━━━━━━━
+{y_label}
+  范围: [{df[y_col].min():.3f}, {df[y_col].max():.3f}]
+  均值: {df[y_col].mean():.3f}"""
+    
+    # 最优模型信息
+    if len(pareto_df) > 0:
+        # 找到综合最优的帕累托点（归一化后距离原点最近）
+        x_norm = (pareto_df[x_col] - df[x_col].min()) / (df[x_col].max() - df[x_col].min() + 1e-10)
+        y_norm = (pareto_df[y_col] - df[y_col].min()) / (df[y_col].max() - df[y_col].min() + 1e-10)
+        
+        if x_minimize:
+            x_norm = x_norm
+        else:
+            x_norm = 1 - x_norm
+        
+        if y_minimize:
+            y_norm = y_norm
+        else:
+            y_norm = 1 - y_norm
+        
+        distances_to_ideal = np.sqrt(x_norm**2 + y_norm**2)
+        best_idx = distances_to_ideal.idxmin()
+        best_model = pareto_df.loc[best_idx, 'model']
+        
+        stats_text += f"\n━━━━━━━━━━━━━━\n最优模型: {best_model}"
+    
+    # 放置统计信息框（右上角）
+    ax.text(
+        0.98, 0.98,
+        stats_text,
+        transform=ax.transAxes,
+        fontsize=9,
+        verticalalignment='top',
+        horizontalalignment='right',
+        bbox=dict(
+            boxstyle='round,pad=0.8',
+            facecolor='white',
+            edgecolor='#34495E',
+            alpha=0.95,
+            linewidth=2
+        ),
+        zorder=10
+    )
+    
+    # ============================================================
+    # 第三阶段：细节优化
+    # ============================================================
+    
+    # 7. 添加参考线（平均值虚线）
+    ax.axvline(
+        df[x_col].mean(),
+        color='#7F8C8D',
+        linestyle=':',
+        linewidth=1.5,
+        alpha=0.5,
+        label=f'{x_label}均值',
+        zorder=2
+    )
+    ax.axhline(
+        df[y_col].mean(),
+        color='#7F8C8D',
+        linestyle=':',
+        linewidth=1.5,
+        alpha=0.5,
+        label=f'{y_label}均值',
+        zorder=2
+    )
+    
+    # 8. 优化网格
+    ax.grid(True, alpha=0.3, linestyle='-', linewidth=0.5, color='#BDC3C7', zorder=0)
+    ax.set_axisbelow(True)
+    
+    # 9. 设置标签和标题
+    ax.set_xlabel(x_label, fontsize=13, fontweight='bold', color='#2C3E50')
+    ax.set_ylabel(y_label, fontsize=13, fontweight='bold', color='#2C3E50')
+    ax.set_title(title, fontsize=16, fontweight='bold', color='#2C3E50', pad=20)
+    
+    # 10. 优化图例
+    legend = ax.legend(
+        loc='upper left',
+        fontsize=10,
+        frameon=True,
+        fancybox=True,
+        shadow=True,
+        framealpha=0.95,
+        edgecolor='#34495E',
+        facecolor='white',
+        borderpad=1
+    )
+    legend.get_frame().set_linewidth(2)
+    
+    # 11. 添加优化方向指示
+    direction_text = ""
+    if x_minimize and y_minimize:
+        direction_text = "← 更优\n↓ 更优"
+        arrow_x, arrow_y = 0.05, 0.95
+    elif not x_minimize and not y_minimize:
+        direction_text = "→ 更优\n↑ 更优"
+        arrow_x, arrow_y = 0.95, 0.05
+    elif x_minimize and not y_minimize:
+        direction_text = "← 更优\n↑ 更优"
+        arrow_x, arrow_y = 0.05, 0.05
+    else:
+        direction_text = "→ 更优\n↓ 更优"
+        arrow_x, arrow_y = 0.95, 0.95
+    
+    ax.text(
+        arrow_x, arrow_y,
+        direction_text,
+        transform=ax.transAxes,
+        fontsize=11,
+        fontweight='bold',
+        color='#E74C3C',
+        verticalalignment='top' if 'more优' in direction_text and '↓' in direction_text else 'bottom',
+        horizontalalignment='left' if '←' in direction_text else 'right',
+        bbox=dict(
+            boxstyle='round,pad=0.5',
+            facecolor='#FADBD8',
+            edgecolor='#E74C3C',
+            alpha=0.8,
+            linewidth=1.5
+        ),
+        zorder=10
+    )
+    
+    # 12. 调整边距，确保所有元素可见
     plt.tight_layout()
-    plt.savefig(output_path, dpi=300, bbox_inches='tight')
+    
+    # 保存图表
+    plt.savefig(output_path, dpi=300, bbox_inches='tight', facecolor='white')
     plt.close()
+    
+    print(f"✓ 增强版帕累托图已保存: {output_path}")
 
 
 def load_energy_speed_data(task_name, energy_file, speed_file):
@@ -412,8 +692,440 @@ def merge_quality_metrics(quality_df, energy_dict, speed_dict, model_mapping, qu
     return pd.DataFrame(data)
 
 
+def generate_pca_report(pca_result, task_name, output_dir, quality_data=None, verbose=True):
+    """
+    生成PCA分析详细报告
+    
+    Args:
+        pca_result (dict): PCA结果字典，包含：
+            - 'transformed': 降维后的数据（DataFrame）
+            - 'components': 主成分载荷矩阵（DataFrame）
+            - 'explained_variance_ratio': 解释方差比例（array）
+            - 'cumulative_variance_ratio': 累积方差比例（array）
+            - 'n_components': 实际主成分数量
+        task_name (str): 任务名称
+        output_dir (Path): 输出目录
+        quality_data (pd.DataFrame): 原始质量数据（可选）
+        verbose (bool): 是否输出详细信息
+    
+    Returns:
+        Path: 生成的报告文件路径
+    """
+    from pathlib import Path
+    
+    output_path = Path(output_dir)
+    output_path.mkdir(parents=True, exist_ok=True)
+    
+    report_file = output_path / 'PCA_ANALYSIS_REPORT.md'
+    
+    n_comp = pca_result['n_components']
+    explained_var = pca_result['explained_variance_ratio']
+    cumulative_var = pca_result['cumulative_variance_ratio']
+    components_df = pca_result['components']
+    transformed_df = pca_result['transformed']
+    
+    with open(report_file, 'w', encoding='utf-8') as f:
+        # 标题和元数据
+        f.write(f"# PCA降维分析报告 - {task_name.upper()}任务\n\n")
+        f.write(f"**生成时间**: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n")
+        f.write("---\n\n")
+        
+        # 1. 分析概览
+        f.write("## 1. 分析概览\n\n")
+        f.write(f"- **任务类型**: {task_name}\n")
+        f.write(f"- **样本数量**: {len(transformed_df)} 个模型\n")
+        f.write(f"- **原始特征数**: {len(components_df)} 个指标\n")
+        f.write(f"- **主成分数量**: {n_comp}\n")
+        f.write(f"- **累积解释方差**: {cumulative_var[-1]:.2%}\n\n")
+        
+        # 2. 方差解释
+        f.write("## 2. 方差解释\n\n")
+        f.write("### 2.1 各主成分解释方差\n\n")
+        f.write("| 主成分 | 解释方差比例 | 累积解释方差 | 重要性 |\n")
+        f.write("|--------|-------------|-------------|--------|\n")
+        
+        for i in range(n_comp):
+            importance = "⭐⭐⭐⭐⭐" if explained_var[i] >= 0.3 else \
+                        "⭐⭐⭐⭐" if explained_var[i] >= 0.2 else \
+                        "⭐⭐⭐" if explained_var[i] >= 0.1 else "⭐⭐"
+            f.write(f"| PC{i+1} | {explained_var[i]:.4f} ({explained_var[i]*100:.2f}%) | "
+                   f"{cumulative_var[i]:.4f} ({cumulative_var[i]*100:.2f}%) | {importance} |\n")
+        f.write("\n")
+        
+        # 自动选择的主成分数量说明
+        n_selected = int(np.argmax(cumulative_var >= 0.85) + 1)
+        n_selected = max(1, n_selected)
+        f.write(f"### 2.2 主成分选择策略\n\n")
+        f.write(f"**自动选择**: 选择累积解释方差 ≥ 85% 的主成分\n\n")
+        f.write(f"- **选择数量**: {n_selected} 个主成分\n")
+        f.write(f"- **累积方差**: {cumulative_var[n_selected-1]:.2%}\n")
+        f.write(f"- **信息保留**: 保留了原始数据 {cumulative_var[n_selected-1]*100:.1f}% 的信息\n\n")
+        
+        # 3. 主成分载荷分析
+        f.write("## 3. 主成分载荷分析\n\n")
+        f.write("主成分载荷表示原始特征对各主成分的贡献程度。载荷绝对值越大，该特征对主成分的影响越大。\n\n")
+        
+        for i in range(min(3, n_comp)):
+            pc_name = f'PC{i+1}'
+            f.write(f"### 3.{i+1} {pc_name} 载荷分析\n\n")
+            f.write(f"**解释方差**: {explained_var[i]:.2%}\n\n")
+            
+            # 获取载荷并排序
+            loadings = components_df[pc_name].abs().sort_values(ascending=False)
+            
+            f.write("**主要贡献特征** (|载荷| > 0.3):\n\n")
+            f.write("| 特征 | 载荷值 | 方向 | 贡献度 |\n")
+            f.write("|------|--------|------|--------|\n")
+            
+            has_major_features = False
+            for feat in loadings.index:
+                load_val = components_df.loc[feat, pc_name]
+                abs_load = abs(load_val)
+                if abs_load > 0.3:
+                    has_major_features = True
+                    direction = "正向 ↑" if load_val > 0 else "负向 ↓"
+                    contribution = "⭐⭐⭐" if abs_load >= 0.5 else "⭐⭐"
+                    f.write(f"| {feat} | {load_val:.4f} | {direction} | {contribution} |\n")
+            
+            if not has_major_features:
+                f.write("| - | - | - | 无显著贡献特征 |\n")
+            
+            f.write("\n")
+            
+            # 解释主成分含义
+            f.write("**主成分解释**:\n\n")
+            top_features = loadings.head(3)
+            if len(top_features) > 0:
+                feature_names = [f"{feat}({components_df.loc[feat, pc_name]:+.3f})" 
+                               for feat in top_features.index]
+                f.write(f"{pc_name} 主要反映了 {', '.join(feature_names)} 等特征的综合表现。\n\n")
+            else:
+                f.write(f"{pc_name} 的特征贡献较为分散。\n\n")
+        
+        # 4. 完整载荷矩阵
+        f.write(f"## 4. 完整载荷矩阵\n\n")
+        f.write("所有特征在各主成分上的载荷值：\n\n")
+        
+        # 构建表格
+        f.write("| 特征 |")
+        for i in range(n_comp):
+            f.write(f" PC{i+1} |")
+        f.write("\n")
+        
+        f.write("|------|")
+        for i in range(n_comp):
+            f.write("------|")
+        f.write("\n")
+        
+        for feat in components_df.index:
+            f.write(f"| {feat} |")
+            for i in range(n_comp):
+                pc_name = f'PC{i+1}'
+                load_val = components_df.loc[feat, pc_name]
+                f.write(f" {load_val:.4f} |")
+            f.write("\n")
+        f.write("\n")
+        
+        # 5. 模型得分排名
+        f.write("## 5. 模型主成分得分\n\n")
+        
+        for i in range(min(3, n_comp)):
+            pc_name = f'PC{i+1}'
+            f.write(f"### 5.{i+1} {pc_name} 得分排名\n\n")
+            f.write(f"**解释方差**: {explained_var[i]:.2%}\n\n")
+            
+            pc_scores = transformed_df[pc_name].sort_values(ascending=False)
+            
+            f.write("| 排名 | 模型 | 得分 | 相对表现 |\n")
+            f.write("|------|------|------|----------|\n")
+            
+            for rank, (model, score) in enumerate(pc_scores.items(), 1):
+                performance = "优秀 ⭐⭐⭐" if score > 1 else \
+                            "良好 ⭐⭐" if score > 0 else \
+                            "一般 ⭐" if score > -1 else "较差"
+                f.write(f"| {rank} | {model} | {score:.4f} | {performance} |\n")
+            f.write("\n")
+        
+        # 6. 综合质量得分（加权）
+        f.write("## 6. 综合质量得分\n\n")
+        f.write("基于主成分的解释方差比例进行加权求和，得到综合质量得分。\n\n")
+        
+        # 计算加权得分
+        weights = explained_var[:n_selected] / explained_var[:n_selected].sum()
+        quality_score = pd.Series(0.0, index=transformed_df.index)
+        for i in range(n_selected):
+            pc_name = f'PC{i+1}'
+            quality_score += weights[i] * transformed_df[pc_name]
+        
+        quality_score_sorted = quality_score.sort_values(ascending=False)
+        
+        f.write(f"**权重分配**:\n\n")
+        for i in range(n_selected):
+            f.write(f"- PC{i+1}: {weights[i]:.4f} ({weights[i]*100:.2f}%)\n")
+        f.write("\n")
+        
+        f.write("**综合排名**:\n\n")
+        f.write("| 排名 | 模型 | 综合得分 | 评级 |\n")
+        f.write("|------|------|----------|------|\n")
+        
+        for rank, (model, score) in enumerate(quality_score_sorted.items(), 1):
+            rating = "S级 ⭐⭐⭐⭐⭐" if rank <= 2 else \
+                    "A级 ⭐⭐⭐⭐" if rank <= 4 else \
+                    "B级 ⭐⭐⭐" if rank <= 6 else "C级 ⭐⭐"
+            f.write(f"| {rank} | {model} | {score:.4f} | {rating} |\n")
+        f.write("\n")
+        
+        # 7. 原始数据统计（如果提供）
+        if quality_data is not None:
+            f.write("## 7. 原始数据统计\n\n")
+            f.write("### 7.1 特征描述性统计\n\n")
+            
+            stats = quality_data.describe()
+            f.write("| 特征 | 均值 | 标准差 | 最小值 | 最大值 |\n")
+            f.write("|------|------|--------|--------|--------|\n")
+            
+            for col in quality_data.columns:
+                f.write(f"| {col} | {stats.loc['mean', col]:.4f} | "
+                       f"{stats.loc['std', col]:.4f} | "
+                       f"{stats.loc['min', col]:.4f} | "
+                       f"{stats.loc['max', col]:.4f} |\n")
+            f.write("\n")
+        
+        # 8. 可视化图表
+        f.write("## 8. 可视化图表\n\n")
+        f.write("本次分析生成了以下可视化图表：\n\n")
+        f.write("1. **碎石图** (`pca_scree_plot.png`): 展示各主成分的解释方差比例和累积方差\n")
+        f.write("2. **载荷热力图** (`pca_loadings_heatmap.png`): 展示特征在主成分上的载荷矩阵\n")
+        if n_comp >= 2:
+            f.write("3. **双标图** (`pca_biplot.png`): 同时展示样本和特征的二维投影\n")
+        f.write("4. **主成分得分图** (`pca_component_scores.png`): 展示各模型在主成分上的得分\n\n")
+        
+        # 9. 分析结论
+        f.write("## 9. 分析结论\n\n")
+        
+        # 维度降低效果
+        reduction_rate = (1 - n_selected / len(components_df)) * 100
+        f.write(f"### 9.1 降维效果\n\n")
+        f.write(f"- 从 {len(components_df)} 个原始特征降至 {n_selected} 个主成分\n")
+        f.write(f"- 维度降低 {reduction_rate:.1f}%\n")
+        f.write(f"- 保留信息量 {cumulative_var[n_selected-1]*100:.1f}%\n\n")
+        
+        # 最佳模型
+        best_model = quality_score_sorted.index[0]
+        best_score = quality_score_sorted.iloc[0]
+        f.write(f"### 9.2 最佳模型\n\n")
+        f.write(f"**{best_model}** 在综合质量评估中表现最佳，得分为 {best_score:.4f}。\n\n")
+        
+        # 主要发现
+        f.write(f"### 9.3 主要发现\n\n")
+        f.write(f"1. **主导因素**: PC1 解释了 {explained_var[0]*100:.1f}% 的方差，是最主要的质量维度\n")
+        
+        # 找出PC1的主要特征
+        pc1_loadings = components_df['PC1'].abs().sort_values(ascending=False)
+        top_feature = pc1_loadings.index[0]
+        f.write(f"2. **关键指标**: {top_feature} 对模型质量影响最大\n")
+        f.write(f"3. **模型差异**: 模型在主成分空间中呈现明显的性能分层\n\n")
+        
+        # 页脚
+        f.write("---\n\n")
+        f.write(f"**分析方法**: 主成分分析 (PCA)\n\n")
+        f.write(f"**生成脚本**: `analysis/qe_research/scripts/pareto_core/shared_functions.py`\n")
+    
+    if verbose:
+        print(f"✓ PCA分析报告已生成: {report_file}")
+    
+    return report_file
+
+
+def plot_pca_figures(pca_result, task_name, output_dir, verbose=True):
+    """
+    绘制PCA分析相关图表
+    
+    Args:
+        pca_result (dict): PCA结果字典，包含：
+            - 'transformed': 降维后的数据（DataFrame）
+            - 'components': 主成分载荷矩阵（DataFrame）
+            - 'explained_variance_ratio': 解释方差比例（array）
+            - 'cumulative_variance_ratio': 累积方差比例（array）
+            - 'n_components': 实际主成分数量
+        task_name (str): 任务名称
+        output_dir (Path): 输出目录
+        verbose (bool): 是否输出详细信息
+    
+    Returns:
+        dict: 生成的图表文件路径字典
+    """
+    from pathlib import Path
+    
+    output_path = Path(output_dir)
+    output_path.mkdir(parents=True, exist_ok=True)
+    
+    # 设置中文字体
+    plt.rcParams['font.sans-serif'] = ['Microsoft YaHei', 'SimHei', 'Arial Unicode MS']
+    plt.rcParams['axes.unicode_minus'] = False
+    
+    generated_files = {}
+    
+    # 1. 解释方差比例图（碎石图）
+    fig, ax = plt.subplots(figsize=(10, 6), dpi=300)
+    
+    n_comp = pca_result['n_components']
+    explained_var = pca_result['explained_variance_ratio']
+    cumulative_var = pca_result['cumulative_variance_ratio']
+    
+    x = np.arange(1, n_comp + 1)
+    
+    # 绘制柱状图和折线图
+    ax.bar(x, explained_var, alpha=0.6, color='steelblue', label='Individual Variance')
+    ax.plot(x, cumulative_var, 'ro-', linewidth=2, markersize=8, label='Cumulative Variance')
+    
+    # 添加85%阈值线
+    ax.axhline(y=0.85, color='green', linestyle='--', linewidth=1.5, label='85% Threshold')
+    
+    ax.set_xlabel('Principal Component', fontsize=12)
+    ax.set_ylabel('Explained Variance Ratio', fontsize=12)
+    ax.set_title(f'PCA Scree Plot - {task_name.upper()}', fontsize=14, fontweight='bold')
+    ax.set_xticks(x)
+    ax.set_xticklabels([f'PC{i}' for i in x])
+    ax.legend(fontsize=10)
+    ax.grid(True, alpha=0.3)
+    
+    # 添加数值标签
+    for i, (ev, cv) in enumerate(zip(explained_var, cumulative_var)):
+        ax.text(i+1, ev, f'{ev:.2%}', ha='center', va='bottom', fontsize=8)
+        ax.text(i+1, cv, f'{cv:.2%}', ha='center', va='bottom', fontsize=8, color='red')
+    
+    plt.tight_layout()
+    scree_path = output_path / 'pca_scree_plot.png'
+    plt.savefig(scree_path, dpi=300, bbox_inches='tight')
+    plt.close()
+    generated_files['scree_plot'] = scree_path
+    
+    if verbose:
+        print(f"✓ 碎石图已保存: {scree_path}")
+    
+    # 2. 主成分载荷热力图（前3个主成分）
+    components_df = pca_result['components']
+    n_show = min(3, n_comp)
+    
+    fig, ax = plt.subplots(figsize=(10, max(6, len(components_df) * 0.4)), dpi=300)
+    
+    # 选择前n_show个主成分
+    loadings = components_df.iloc[:, :n_show]
+    
+    # 绘制热力图
+    im = ax.imshow(loadings.values, cmap='viridis', aspect='auto', vmin=-1, vmax=1)
+    
+    # 设置坐标轴
+    ax.set_xticks(np.arange(n_show))
+    ax.set_yticks(np.arange(len(loadings)))
+    ax.set_xticklabels([f'PC{i+1}' for i in range(n_show)], fontsize=10)
+    ax.set_yticklabels(loadings.index, fontsize=9)
+    
+    # 添加数值标签
+    for i in range(len(loadings)):
+        for j in range(n_show):
+            text = ax.text(j, i, f'{loadings.iloc[i, j]:.2f}',
+                          ha="center", va="center", color="black", fontsize=8)
+    
+    ax.set_title(f'PCA Component Loadings - {task_name.upper()}', 
+                fontsize=14, fontweight='bold')
+    
+    # 添加颜色条
+    cbar = plt.colorbar(im, ax=ax)
+    cbar.set_label('Loading', fontsize=10)
+    
+    plt.tight_layout()
+    loadings_path = output_path / 'pca_loadings_heatmap.png'
+    plt.savefig(loadings_path, dpi=300, bbox_inches='tight')
+    plt.close()
+    generated_files['loadings_heatmap'] = loadings_path
+    
+    if verbose:
+        print(f"✓ 载荷热力图已保存: {loadings_path}")
+    
+    # 3. 双标图（Biplot）- 仅当有至少2个主成分时
+    if n_comp >= 2:
+        fig, ax = plt.subplots(figsize=(12, 10), dpi=300)
+        
+        transformed = pca_result['transformed']
+        
+        # 绘制样本点（模型）
+        ax.scatter(transformed['PC1'], transformed['PC2'], 
+                  s=100, alpha=0.6, c='steelblue', edgecolors='black', linewidth=0.5)
+        
+        # 标注模型名称
+        for idx, row in transformed.iterrows():
+            ax.annotate(idx, (row['PC1'], row['PC2']),
+                       xytext=(5, 5), textcoords='offset points',
+                       fontsize=9, alpha=0.8)
+        
+        # 绘制特征向量（载荷）
+        scale_factor = 3  # 缩放因子，使箭头更明显
+        for i, feature in enumerate(components_df.index):
+            ax.arrow(0, 0, 
+                    components_df.loc[feature, 'PC1'] * scale_factor,
+                    components_df.loc[feature, 'PC2'] * scale_factor,
+                    head_width=0.1, head_length=0.1, fc='red', ec='red', alpha=0.6)
+            ax.text(components_df.loc[feature, 'PC1'] * scale_factor * 1.15,
+                   components_df.loc[feature, 'PC2'] * scale_factor * 1.15,
+                   feature, fontsize=9, color='red', ha='center', va='center',
+                   bbox=dict(boxstyle='round,pad=0.3', facecolor='white', alpha=0.7))
+        
+        ax.set_xlabel(f'PC1 ({explained_var[0]:.1%})', fontsize=12)
+        ax.set_ylabel(f'PC2 ({explained_var[1]:.1%})', fontsize=12)
+        ax.set_title(f'PCA Biplot - {task_name.upper()}', fontsize=14, fontweight='bold')
+        ax.axhline(y=0, color='k', linestyle='--', linewidth=0.5, alpha=0.3)
+        ax.axvline(x=0, color='k', linestyle='--', linewidth=0.5, alpha=0.3)
+        ax.grid(True, alpha=0.3)
+        
+        plt.tight_layout()
+        biplot_path = output_path / 'pca_biplot.png'
+        plt.savefig(biplot_path, dpi=300, bbox_inches='tight')
+        plt.close()
+        generated_files['biplot'] = biplot_path
+        
+        if verbose:
+            print(f"✓ 双标图已保存: {biplot_path}")
+    
+    # 4. 主成分得分排名图（前3个主成分）
+    if n_comp >= 1:
+        fig, axes = plt.subplots(1, min(3, n_comp), figsize=(15, 5), dpi=300)
+        if n_comp == 1:
+            axes = [axes]
+        
+        transformed = pca_result['transformed']
+        
+        for i in range(min(3, n_comp)):
+            pc_name = f'PC{i+1}'
+            pc_scores = transformed[pc_name].sort_values(ascending=False)
+            
+            ax = axes[i] if n_comp > 1 else axes[0]
+            colors = ['green' if x > 0 else 'red' for x in pc_scores.values]
+            ax.barh(range(len(pc_scores)), pc_scores.values, color=colors, alpha=0.7)
+            ax.set_yticks(range(len(pc_scores)))
+            ax.set_yticklabels(pc_scores.index, fontsize=9)
+            ax.set_xlabel('Score', fontsize=10)
+            ax.set_title(f'{pc_name} ({explained_var[i]:.1%})', fontsize=12, fontweight='bold')
+            ax.axvline(x=0, color='black', linestyle='-', linewidth=0.8)
+            ax.grid(True, alpha=0.3, axis='x')
+        
+        plt.suptitle(f'PCA Component Scores - {task_name.upper()}', 
+                    fontsize=14, fontweight='bold', y=1.02)
+        plt.tight_layout()
+        scores_path = output_path / 'pca_component_scores.png'
+        plt.savefig(scores_path, dpi=300, bbox_inches='tight')
+        plt.close()
+        generated_files['component_scores'] = scores_path
+        
+        if verbose:
+            print(f"✓ 主成分得分图已保存: {scores_path}")
+    
+    return generated_files
+
+
 def load_process_quality_data(task_name, method='entropy', normalize_method='minmax', 
-                               use_raw=True, verbose=True,output_dir='./figures', **kwargs):
+                               use_raw=True, verbose=True,output_dir=None, **kwargs):
     """
     加载并处理质量数据（集成 process_quality_data 模块）
     
@@ -474,38 +1186,95 @@ def load_process_quality_data(task_name, method='entropy', normalize_method='min
         # 熵权法
         weights = processor.calculate_entropy_weights()
         quality_score = processor.get_weighted_quality_score(weights, normalize_first=True)
-        #绘制各指标的权重
-        plt.figure(figsize=(8, 6),dpi=300)
-        plt.bar(weights.keys(), weights.values(), color='skyblue')
-        plt.savefig(output_dir / '/entropy_weights.png',dpi=300)
-        print(f"✓ 权重可视化已保存:{output_dir}") 
         
-        result_df = pd.DataFrame({
-            'model': quality_score.index,
-            'quality': quality_score.values
-        })
+        # 绘制各指标的权重
+        if output_dir:
+            from pathlib import Path
+            output_path = Path(output_dir)
+            output_path.mkdir(parents=True, exist_ok=True)
+            
+            plt.figure(figsize=(8, 6), dpi=300)
+            plt.bar(weights.keys(), weights.values(), color='skyblue')
+            plt.xlabel('Metrics', fontsize=12)
+            plt.ylabel('Weight', fontsize=12)
+            plt.title('Entropy Weights', fontsize=14)
+            plt.xticks(rotation=45, ha='right')
+            plt.tight_layout()
+            plt.savefig(output_path / 'entropy_weights.png', dpi=300, bbox_inches='tight')
+            plt.close()
+            print(f"✓ 权重可视化已保存: {output_path / 'entropy_weights.png'}") 
+            
+            result_df = pd.DataFrame({
+                'model': quality_score.index,
+                'quality': quality_score.values
+            })
+            
+            if verbose:
+                print(f"\n✓ 熵权法处理完成")
+                print(f"  质量得分范围: [{quality_score.min():.4f}, {quality_score.max():.4f}]")
         
-        if verbose:
-            print(f"\n✓ 熵权法处理完成")
-            print(f"  质量得分范围: [{quality_score.min():.4f}, {quality_score.max():.4f}]")
-    
     elif method == 'pca':
-        # PCA降维
-        n_components = kwargs.get('n_components', 1)
-        pca_result = processor.apply_pca(n_components=n_components, normalize_first=True)
+        # PCA降维 - 自动选择累积解释方差≥85%的主成分
+        # 首先用所有主成分进行PCA，以获取完整的解释方差信息
+        pca_result_full = processor.apply_pca(n_components=None, normalize_first=True)
         
-        # 使用第一主成分作为质量得分
-        quality_score = pca_result['transformed']['PC1']
+        # 计算累积解释方差，选择≥85%的主成分数量
+        cumulative_var = pca_result_full['cumulative_variance_ratio']
+        n_components_selected = int(np.argmax(cumulative_var >= 0.85) + 1)
         
-        result_df = pd.DataFrame({
-            'model': quality_score.index,
-            'quality': quality_score.values
-        })
+        # 确保至少选择1个主成分
+        n_components_selected = max(1, n_components_selected)
         
         if verbose:
             print(f"\n✓ PCA降维完成")
-            print(f"  使用PC1作为质量得分")
-            print(f"  PC1解释方差: {pca_result['explained_variance_ratio'][0]:.2%}")
+            print(f"  自动选择主成分数: {n_components_selected}")
+            print(f"  累积解释方差: {cumulative_var[n_components_selected-1]:.2%}")
+            print(f"\n各主成分解释方差:")
+            for i in range(n_components_selected):
+                print(f"  PC{i+1}: {pca_result_full['explained_variance_ratio'][i]:.4f} ({pca_result_full['explained_variance_ratio'][i]*100:.2f}%)")
+        
+        # 绘制PCA相关图表和生成报告
+        if output_dir:
+            from pathlib import Path
+            pca_output_dir = Path(output_dir) / 'pca_analysis'
+            
+            # 生成可视化图表
+            pca_figures = plot_pca_figures(pca_result_full, task_name, pca_output_dir, verbose=verbose)
+            
+            # 生成详细报告
+            report_path = generate_pca_report(
+                pca_result=pca_result_full,
+                task_name=task_name,
+                output_dir=pca_output_dir,
+                quality_data=data,
+                verbose=verbose
+            )
+            
+            if verbose:
+                print(f"\n✓ PCA分析完成")
+                print(f"  - 生成图表: {len(pca_figures)} 个")
+                print(f"  - 分析报告: {report_path.name}")
+        
+        # 使用选定的主成分按解释方差比例加权求和
+        weights = pca_result_full['explained_variance_ratio'][:n_components_selected]
+        weights = weights / weights.sum()  # 归一化权重
+        
+        # 计算加权综合得分
+        quality_score = pd.Series(0.0, index=pca_result_full['transformed'].index)
+        for i in range(n_components_selected):
+            pc_name = f'PC{i+1}'
+            quality_score += weights[i] * pca_result_full['transformed'][pc_name]
+        
+        result_df = pd.DataFrame({
+            'model': quality_score.index,
+            'quality': quality_score.values
+        })
+        
+        if verbose:
+            print(f"\n主成分权重:")
+            for i in range(n_components_selected):
+                print(f"  PC{i+1}: {weights[i]:.4f} ({weights[i]*100:.2f}%)")
+            print(f"  质量得分范围: [{quality_score.min():.4f}, {quality_score.max():.4f}]")
     
     elif method == 'mean':
         # 简单平均
@@ -828,22 +1597,30 @@ def generate_pareto_report(df, results, output_dir, task_config):
         # 5. 推荐配置
         f.write("## 5. 推荐配置\n\n")
         
-        # 找出最佳模型
-        best_quality_model = df.loc[df['quality'].idxmax()]
-        best_speed_model = df.loc[df['speed'].idxmax()]
-        best_energy_model = df.loc[df['energy'].idxmin()]
-        knee_model = df[df['model'] == results['knee_point']].iloc[0] if results['knee_point'] else None
-        
-        if knee_model is not None:
-            f.write(f"### 最佳综合配置: {knee_model['model']} ⭐⭐⭐⭐⭐\n\n")
-            f.write(f"- **{quality_metric}**: {knee_model['quality']:.3f}\n")
-            f.write(f"- **每token能耗**: {knee_model['energy']:.3f} J/token\n")
-            f.write(f"- **生成速度**: {knee_model['speed']:.2f} tokens/s\n")
-            f.write(f"- **推荐理由**: 拐点模型，质量-能耗权衡最优\n\n")
-        
-        f.write(f"### 最高质量: {best_quality_model['model']}\n\n")
-        f.write(f"- **{quality_metric}**: {best_quality_model['quality']:.3f}\n")
-        f.write(f"- **每token能耗**: {best_quality_model['energy']:.3f} J/token\n")
+        # 检查 DataFrame 是否为空
+        if len(df) == 0:
+            f.write("⚠ **警告**: 没有可用的模型数据，无法生成推荐配置。\n\n")
+            f.write("可能原因：\n")
+            f.write("- 所有模型都缺少能耗或速度数据\n")
+            f.write("- 模型被排除列表过滤\n")
+            f.write("- 数据加载失败\n\n")
+        else:
+            # 找出最佳模型
+            best_quality_model = df.loc[df['quality'].idxmax()]
+            best_speed_model = df.loc[df['speed'].idxmax()]
+            best_energy_model = df.loc[df['energy'].idxmin()]
+            knee_model = df[df['model'] == results['knee_point']].iloc[0] if results['knee_point'] else None
+            
+            if knee_model is not None:
+                f.write(f"### 最佳综合配置: {knee_model['model']} ⭐⭐⭐⭐⭐\n\n")
+                f.write(f"- **{quality_metric}**: {knee_model['quality']:.3f}\n")
+                f.write(f"- **每token能耗**: {knee_model['energy']:.3f} J/token\n")
+                f.write(f"- **生成速度**: {knee_model['speed']:.2f} tokens/s\n")
+                f.write(f"- **推荐理由**: 拐点模型，质量-能耗权衡最优\n\n")
+            
+            f.write(f"### 最高质量: {best_quality_model['model']}\n\n")
+            f.write(f"- **{quality_metric}**: {best_quality_model['quality']:.3f}\n")
+            f.write(f"- **每token能耗**: {best_quality_model['energy']:.3f} J/token\n")
         f.write(f"- **生成速度**: {best_quality_model['speed']:.2f} tokens/s\n\n")
         
         f.write(f"### 最低能耗: {best_energy_model['model']}\n\n")

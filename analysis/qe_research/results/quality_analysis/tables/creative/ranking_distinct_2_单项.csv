@@ -1,0 +1,12 @@
+﻿model,distinct_2
+qwen_8b_ol_q4km,0.9605
+gemma_4b_ol_q4km,0.91704
+deepseek_8b_ol_q4km,0.8986000000000001
+phi3_4b_hf_8bit,0.88006
+phi3_4b_hf_4bit,0.8322799999999999
+gemma_2b_hf_8bit,0.81074
+qwen_4b_ol_q4km,0.78324
+qwen25_3b_hf_8bit,0.7104999999999999
+gemma_2b_hf_4bit,0.70274
+qwen25_3b_hf_4bit,0.68826
+qwen25_7b_hf_4bit,0.68584

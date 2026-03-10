@@ -1,0 +1,5 @@
+﻿指标,模型,值,索引
+has_answer,qwen_4b_ol_q4km,0.8,9
+has_reasoning,phi3_4b_hf_8bit,0.6,5
+reference_answer,gemma_2b_hf_4bit,59.25,1
+reference_answer,gemma_2b_hf_8bit,59.25,2
