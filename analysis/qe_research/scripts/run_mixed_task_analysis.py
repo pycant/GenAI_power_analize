@@ -793,6 +793,11 @@ def run_mixed_task_analysis(config_name: str, output_base_dir: Path):
     task_scores_df.to_csv(task_scores_file, index=False, encoding='utf-8-sig')
     print(f"✓ 任务得分矩阵已保存: {task_scores_file.name}")
     
+    # 保存聚合质量得分 (quality_df)
+    quality_file = output_dir / 'aggregated_quality_scores.csv'
+    quality_df.to_csv(quality_file, index=False, encoding='utf-8-sig')
+    print(f"✓ 聚合质量得分已保存: {quality_file.name}")
+    
     # 保存各任务的PCA原始得分数据
     pca_scores_list = []
     for task, df in quality_data.items():
