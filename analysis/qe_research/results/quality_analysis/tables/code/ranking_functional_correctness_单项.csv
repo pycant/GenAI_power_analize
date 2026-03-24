@@ -1,0 +1,12 @@
+﻿model,functional_correctness
+gemma_4b_ol_q4km,0.8
+deepseek_8b_ol_q4km,0.4
+qwen25_7b_hf_4bit,0.4
+qwen25_3b_hf_8bit,0.2
+gemma_2b_hf_4bit,0.0
+gemma_2b_hf_8bit,0.0
+phi3_4b_hf_4bit,0.0
+phi3_4b_hf_8bit,0.0
+qwen25_3b_hf_4bit,0.0
+qwen_4b_ol_q4km,0.0
+qwen_8b_ol_q4km,0.0

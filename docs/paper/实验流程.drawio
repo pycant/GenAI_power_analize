@@ -1,0 +1,160 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/29.6.1 Chrome/142.0.7444.265 Electron/39.8.0 Safari/537.36" version="29.6.1">
+  <diagram name="第 1 页" id="ign6GB8geOb2dETTx-P1">
+    <mxGraphModel dx="2066" dy="1202" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="S6omcByyp2juGlsYEeC3-44" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;fillColor=#f8cecc;strokeColor=#b85450;" value="&lt;span style=&quot;text-align: center;&quot;&gt;【选型决策阶段】&lt;/span&gt;" vertex="1">
+          <mxGeometry height="140" width="410" x="115" y="1920" as="geometry" />
+        </mxCell>
+        <mxCell id="S6omcByyp2juGlsYEeC3-43" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;fillColor=#fff2cc;strokeColor=#d6b656;" value="&lt;span style=&quot;text-align: center;&quot;&gt;【综合评分阶段】&lt;/span&gt;" vertex="1">
+          <mxGeometry height="270" width="410" x="115" y="1650" as="geometry" />
+        </mxCell>
+        <mxCell id="S6omcByyp2juGlsYEeC3-42" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;fillColor=#ffe6cc;strokeColor=#d79b00;" value="【统计分析阶段】" vertex="1">
+          <mxGeometry height="150" width="410" x="115" y="1500" as="geometry" />
+        </mxCell>
+        <mxCell id="S6omcByyp2juGlsYEeC3-41" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;fillColor=#d5e8d4;strokeColor=#82b366;" value="【数据采集阶段】" vertex="1">
+          <mxGeometry height="160" width="410" x="115" y="1340" as="geometry" />
+        </mxCell>
+        <mxCell id="S6omcByyp2juGlsYEeC3-40" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="【实验设计阶段】" vertex="1">
+          <mxGeometry height="98" width="410" x="115" y="1242" as="geometry" />
+        </mxCell>
+        <mxCell id="S6omcByyp2juGlsYEeC3-1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="开始" vertex="1">
+          <mxGeometry height="60" width="120" x="354" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="S6omcByyp2juGlsYEeC3-2" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="根据所需要模型的性能指标，设计实验问题" vertex="1">
+          <mxGeometry height="60" width="256" x="286" y="150" as="geometry" />
+        </mxCell>
+        <mxCell id="S6omcByyp2juGlsYEeC3-3" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="构建自动化脚本，下载模型，并采集模型数据" vertex="1">
+          <mxGeometry height="60" width="256" x="286" y="240" as="geometry" />
+        </mxCell>
+        <mxCell id="S6omcByyp2juGlsYEeC3-5" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="对采集到的数据进行预处理" vertex="1">
+          <mxGeometry height="60" width="160" x="334" y="330" as="geometry" />
+        </mxCell>
+        <mxCell id="S6omcByyp2juGlsYEeC3-6" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="对数据进行描述性统计分析，并进行检验分析" vertex="1">
+          <mxGeometry height="60" width="246" x="291" y="420" as="geometry" />
+        </mxCell>
+        <mxCell id="S6omcByyp2juGlsYEeC3-7" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="对模型输出进行质量评估和打分" vertex="1">
+          <mxGeometry height="60" width="182" x="323" y="520" as="geometry" />
+        </mxCell>
+        <mxCell id="S6omcByyp2juGlsYEeC3-8" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="对各项任务的质量得分数据进行数据降维得到各项任务的综合质量得分" vertex="1">
+          <mxGeometry height="60" width="384" x="222" y="620" as="geometry" />
+        </mxCell>
+        <mxCell id="S6omcByyp2juGlsYEeC3-9" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="对各项任务进行三维帕累托前沿分析并进行稳健性分析" vertex="1">
+          <mxGeometry height="60" width="306" x="260" y="720" as="geometry" />
+        </mxCell>
+        <mxCell id="S6omcByyp2juGlsYEeC3-10" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="构建构建难度和任务需求赋权，计算得出目标综合得分" vertex="1">
+          <mxGeometry height="60" width="306" x="261" y="820" as="geometry" />
+        </mxCell>
+        <mxCell id="S6omcByyp2juGlsYEeC3-11" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="对综合得分进行三维帕累托前沿分析，并进行稳健性分析" vertex="1">
+          <mxGeometry height="60" width="316" x="256" y="910" as="geometry" />
+        </mxCell>
+        <mxCell id="S6omcByyp2juGlsYEeC3-12" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="对难度赋权和任务需求赋权进行扰动分析" vertex="1">
+          <mxGeometry height="60" width="226" x="301" y="1000" as="geometry" />
+        </mxCell>
+        <mxCell id="S6omcByyp2juGlsYEeC3-13" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="对混合任务分析的结果进行成本效应分析，得出实际部署中满足需求的最佳模型" vertex="1">
+          <mxGeometry height="60" width="446" x="191" y="1090" as="geometry" />
+        </mxCell>
+        <mxCell id="S6omcByyp2juGlsYEeC3-15" parent="1" style="whiteSpace=wrap;strokeWidth=2;rounded=1;glass=0;fillColor=#e1d5e7;strokeColor=#9673a6;" value="开始" vertex="1">
+          <mxGeometry height="34" width="92" x="274" y="1200" as="geometry" />
+        </mxCell>
+        <mxCell id="S6omcByyp2juGlsYEeC3-16" parent="1" style="whiteSpace=wrap;strokeWidth=2;rounded=1;glass=0;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;" value="基于目标性能指标，设计实验方案与测试问题" vertex="1">
+          <mxGeometry height="46" width="260" x="190" y="1274" as="geometry" />
+        </mxCell>
+        <mxCell id="S6omcByyp2juGlsYEeC3-17" parent="1" style="whiteSpace=wrap;strokeWidth=2;rounded=1;glass=0;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;" value="开发自动化脚本，完成模型下载与测试数据采集" vertex="1">
+          <mxGeometry height="44" width="260" x="190" y="1370" as="geometry" />
+        </mxCell>
+        <mxCell id="S6omcByyp2juGlsYEeC3-18" parent="1" style="whiteSpace=wrap;strokeWidth=2;rounded=1;glass=0;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;" value="采集数据预处理与数据清洗" vertex="1">
+          <mxGeometry height="40" width="166" x="237" y="1440" as="geometry" />
+        </mxCell>
+        <mxCell id="S6omcByyp2juGlsYEeC3-19" parent="1" style="whiteSpace=wrap;strokeWidth=2;rounded=1;glass=0;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;" value="数据描述性统计与显著性检验分析" vertex="1">
+          <mxGeometry height="38" width="210" x="215" y="1530" as="geometry" />
+        </mxCell>
+        <mxCell id="S6omcByyp2juGlsYEeC3-20" parent="1" style="whiteSpace=wrap;strokeWidth=2;rounded=1;glass=0;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;" value="模型输出结果质量评估与量化打分" vertex="1">
+          <mxGeometry height="40" width="210" x="215" y="1590" as="geometry" />
+        </mxCell>
+        <mxCell id="S6omcByyp2juGlsYEeC3-21" parent="1" style="whiteSpace=wrap;strokeWidth=2;rounded=1;glass=0;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;" value="任务质量得分降维处理，计算单任务综合质量分" vertex="1">
+          <mxGeometry height="40" width="260" x="190" y="1680" as="geometry" />
+        </mxCell>
+        <mxCell id="S6omcByyp2juGlsYEeC3-22" parent="1" style="whiteSpace=wrap;strokeWidth=2;rounded=1;glass=0;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;" value="单任务维度三维帕累托前沿分析与稳健性检验" vertex="1">
+          <mxGeometry height="38" width="260" x="190" y="1742" as="geometry" />
+        </mxCell>
+        <mxCell id="S6omcByyp2juGlsYEeC3-23" parent="1" style="whiteSpace=wrap;strokeWidth=2;rounded=1;glass=0;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;" value="构建任务难度与业务需求权重体系，计算模型目标综合得分" vertex="1">
+          <mxGeometry height="42" width="340" x="150" y="1800" as="geometry" />
+        </mxCell>
+        <mxCell id="S6omcByyp2juGlsYEeC3-24" parent="1" style="whiteSpace=wrap;strokeWidth=2;rounded=1;glass=0;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;" value="综合得分维度三维帕累托前沿分析与稳健性检验" vertex="1">
+          <mxGeometry height="40" width="280" x="180" y="1860" as="geometry" />
+        </mxCell>
+        <mxCell id="S6omcByyp2juGlsYEeC3-25" parent="1" style="whiteSpace=wrap;strokeWidth=2;rounded=1;glass=0;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;" value="难度权重与需求权重的敏感性扰动分析" vertex="1">
+          <mxGeometry height="40" width="235" x="202.5" y="1950" as="geometry" />
+        </mxCell>
+        <mxCell id="S6omcByyp2juGlsYEeC3-26" parent="1" style="whiteSpace=wrap;strokeWidth=2;rounded=1;glass=0;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;" value="混合任务场景成本-效应分析，输出适配部署的最优模型" vertex="1">
+          <mxGeometry height="40" width="300" x="170" y="2010" as="geometry" />
+        </mxCell>
+        <mxCell id="S6omcByyp2juGlsYEeC3-27" parent="1" style="whiteSpace=wrap;strokeWidth=2;rounded=1;glass=0;fillColor=#e1d5e7;strokeColor=#9673a6;" value="结束" vertex="1">
+          <mxGeometry height="40" width="92" x="274" y="2080" as="geometry" />
+        </mxCell>
+        <mxCell id="S6omcByyp2juGlsYEeC3-28" edge="1" parent="1" source="S6omcByyp2juGlsYEeC3-15" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=0;rounded=0;" target="S6omcByyp2juGlsYEeC3-16" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="S6omcByyp2juGlsYEeC3-29" edge="1" parent="1" source="S6omcByyp2juGlsYEeC3-16" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=0;rounded=0;" target="S6omcByyp2juGlsYEeC3-17" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="S6omcByyp2juGlsYEeC3-30" edge="1" parent="1" source="S6omcByyp2juGlsYEeC3-17" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=0;rounded=0;" target="S6omcByyp2juGlsYEeC3-18" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="S6omcByyp2juGlsYEeC3-31" edge="1" parent="1" source="S6omcByyp2juGlsYEeC3-18" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=0;rounded=0;" target="S6omcByyp2juGlsYEeC3-19" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="S6omcByyp2juGlsYEeC3-32" edge="1" parent="1" source="S6omcByyp2juGlsYEeC3-19" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=0;rounded=0;" target="S6omcByyp2juGlsYEeC3-20" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="S6omcByyp2juGlsYEeC3-33" edge="1" parent="1" source="S6omcByyp2juGlsYEeC3-20" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=0;rounded=0;" target="S6omcByyp2juGlsYEeC3-21" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="S6omcByyp2juGlsYEeC3-34" edge="1" parent="1" source="S6omcByyp2juGlsYEeC3-21" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=0;rounded=0;" target="S6omcByyp2juGlsYEeC3-22" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="S6omcByyp2juGlsYEeC3-35" edge="1" parent="1" source="S6omcByyp2juGlsYEeC3-22" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=0;rounded=0;" target="S6omcByyp2juGlsYEeC3-23" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="S6omcByyp2juGlsYEeC3-36" edge="1" parent="1" source="S6omcByyp2juGlsYEeC3-23" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=0;rounded=0;" target="S6omcByyp2juGlsYEeC3-24" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="S6omcByyp2juGlsYEeC3-37" edge="1" parent="1" source="S6omcByyp2juGlsYEeC3-24" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=0;rounded=0;" target="S6omcByyp2juGlsYEeC3-25" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="S6omcByyp2juGlsYEeC3-38" edge="1" parent="1" source="S6omcByyp2juGlsYEeC3-25" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=0;rounded=0;" target="S6omcByyp2juGlsYEeC3-26" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="S6omcByyp2juGlsYEeC3-39" edge="1" parent="1" source="S6omcByyp2juGlsYEeC3-26" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=0;rounded=0;" target="S6omcByyp2juGlsYEeC3-27" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

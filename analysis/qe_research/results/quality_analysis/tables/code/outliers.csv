@@ -1,2 +1,8 @@
 ﻿指标,模型,值,索引
 cyclomatic_complexity,qwen_8b_ol_q4km,17.0,11
+functional_correctness,gemma_4b_ol_q4km,0.8,3
+functional_dimension,gemma_4b_ol_q4km,0.86,3
+has_docstring,gemma_4b_ol_q4km,1.0,3
+has_docstring,qwen25_7b_hf_4bit,0.4,8
+nesting_depth,gemma_4b_ol_q4km,2.2,3
+nesting_depth,qwen25_7b_hf_4bit,1.2,8

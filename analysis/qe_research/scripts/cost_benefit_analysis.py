@@ -26,7 +26,7 @@ from scipy.optimize import curve_fit
 
 from pareto_core import (
     MODEL_MAPPING, DATA_PATHS, PROJECT_ROOT,
-    load_energy_speed_data, load_process_quality_data
+    load_energy_speed_data, load_average_energy_speed_data, load_process_quality_data
 )
 
 plt.rcParams['font.sans-serif'] = ['Microsoft YaHei', 'SimHei', 'Arial Unicode MS']
@@ -446,18 +446,23 @@ def scenario_based_selection(df: pd.DataFrame,
 
 def marginal_benefit_analysis(df: pd.DataFrame, 
                               output_dir: Path = None) -> Dict:
-    """边际效益分析"""
+    """边际效益分析（使用排名计算，更稳定）"""
     # 按成本排序
     df_sorted = df.sort_values('total_cost').reset_index(drop=True)
     
-    # 计算边际成本和边际质量
+    # 使用排名计算边际效益（更稳定）
+    df_sorted['cost_rank'] = df_sorted['total_cost'].rank()
+    df_sorted['quality_rank'] = df_sorted['quality'].rank()
+    
+    # 计算边际成本和边际质量（使用排名差）
     marginal_data = []
     for i in range(1, len(df_sorted)):
-        delta_cost = df_sorted.loc[i, 'total_cost'] - df_sorted.loc[i-1, 'total_cost']
-        delta_quality = df_sorted.loc[i, 'quality'] - df_sorted.loc[i-1, 'quality']
+        delta_cost_rank = df_sorted.loc[i, 'cost_rank'] - df_sorted.loc[i-1, 'cost_rank']
+        delta_quality_rank = df_sorted.loc[i, 'quality_rank'] - df_sorted.loc[i-1, 'quality_rank']
         
-        if delta_cost > 0:
-            marginal_benefit = delta_quality / delta_cost
+        # 边际效益 = 质量排名变化 / 成本排名变化
+        if delta_cost_rank > 0:
+            marginal_benefit = delta_quality_rank / delta_cost_rank
         else:
             marginal_benefit = 0
         
@@ -465,14 +470,16 @@ def marginal_benefit_analysis(df: pd.DataFrame,
             'model': df_sorted.loc[i, 'model'],
             'cost': df_sorted.loc[i, 'total_cost'],
             'quality': df_sorted.loc[i, 'quality'],
-            'delta_cost': delta_cost,
-            'delta_quality': delta_quality,
+            'cost_rank': df_sorted.loc[i, 'cost_rank'],
+            'quality_rank': df_sorted.loc[i, 'quality_rank'],
+            'delta_cost_rank': delta_cost_rank,
+            'delta_quality_rank': delta_quality_rank,
             'marginal_benefit': marginal_benefit
         })
     
     marginal_df = pd.DataFrame(marginal_data)
     
-    # 拟合成本-质量曲线
+    # 拟合成本-质量曲线（使用原始值）
     try:
         # 对数函数拟合: Q = a * log(C) + b
         def log_func(x, a, b):
@@ -488,7 +495,7 @@ def marginal_benefit_analysis(df: pd.DataFrame,
     except:
         fit_params = None
     
-    # 识别拐点 (边际效益下降最快的点)
+    # 识别拐点 (边际效益最高的点)
     if len(marginal_df) > 0:
         knee_idx = marginal_df['marginal_benefit'].idxmax()
         knee_model = marginal_df.loc[knee_idx, 'model']
@@ -552,6 +559,11 @@ def plot_marginal_benefit_curve(marginal_df: pd.DataFrame,
     ax1.plot(df_sorted['total_cost'], df_sorted['quality'], 
             'o-', linewidth=2, markersize=8, label='实际数据')
     
+    # 添加模型标签
+    for i, row in df_sorted.iterrows():
+        ax1.annotate(row['model'][:10], (row['total_cost'], row['quality']),
+                    xytext=(3, 3), textcoords='offset points', fontsize=7, alpha=0.7)
+    
     if fit_params:
         x_fit = np.linspace(df_sorted['total_cost'].min(), 
                            df_sorted['total_cost'].max(), 100)
@@ -559,18 +571,24 @@ def plot_marginal_benefit_curve(marginal_df: pd.DataFrame,
         ax1.plot(x_fit, y_fit, 'r--', linewidth=2, alpha=0.7,
                 label=f'对数拟合 (R²={fit_params["r2"]:.3f})')
     
-    ax1.set_xlabel('Total Cost ($)', fontsize=12, fontweight='bold')
+    ax1.set_xlabel('Total Cost ($/千token)', fontsize=12, fontweight='bold')
     ax1.set_ylabel('Quality Score', fontsize=12, fontweight='bold')
-    ax1.set_title('Cost-Quality Curve', fontsize=13, fontweight='bold')
+    ax1.set_title('成本-质量曲线', fontsize=13, fontweight='bold')
     ax1.legend()
     ax1.grid(alpha=0.3, linestyle='--')
     
-    # 子图2: 边际效益
+    # 子图2: 边际效益（使用排名计算）
+    colors = ['green' if mb > 0 else 'red' for mb in marginal_df['marginal_benefit']]
     ax2.bar(range(len(marginal_df)), marginal_df['marginal_benefit'],
-           color='steelblue', edgecolor='black', alpha=0.7)
-    ax2.set_xlabel('Model Index (sorted by cost)', fontsize=12, fontweight='bold')
-    ax2.set_ylabel('Marginal Benefit (ΔQ/ΔC)', fontsize=12, fontweight='bold')
-    ax2.set_title('Marginal Benefit Analysis', fontsize=13, fontweight='bold')
+           color=colors, edgecolor='black', alpha=0.7)
+    
+    # 添加模型标签
+    ax2.set_xticks(range(len(marginal_df)))
+    ax2.set_xticklabels([m[:8] for m in marginal_df['model']], rotation=45, ha='right', fontsize=8)
+    
+    ax2.set_xlabel('模型 (按成本排序)', fontsize=12, fontweight='bold')
+    ax2.set_ylabel('边际效益 (Δ排名/Δ成本)', fontsize=12, fontweight='bold')
+    ax2.set_title('边际效益分析', fontsize=13, fontweight='bold')
     ax2.axhline(y=0, color='red', linestyle='--', linewidth=1, alpha=0.7)
     ax2.grid(axis='y', alpha=0.3, linestyle='--')
     
@@ -1032,9 +1050,9 @@ def run_single_type_cost_benefit_analysis(quality_type: str,
         print(f"\n加载 {type_name} 质量得分数据...")
     quality_df = load_precomputed_quality_scores(quality_type, verbose=verbose)
     
-    # 加载能耗和速度数据（使用平均数据）
-    energy_dict, speed_dict = load_energy_speed_data(
-        'code', DATA_PATHS['energy'], DATA_PATHS['speed']
+    # 加载平均能耗和速度数据（跨任务平均）
+    energy_dict, speed_dict = load_average_energy_speed_data(
+        DATA_PATHS['energy'], DATA_PATHS['speed']
     )
     
     # 合并数据
@@ -1470,13 +1488,13 @@ def generate_single_type_report(quality_type: str,
         df_marginal = marginal_results['marginal_df']
         report.append("### 6.3 边际效益排序")
         report.append("")
-        report.append("| 模型 | 成本($) | 质量 | 成本增量 | 质量增量 | 边际效益 |")
-        report.append("|------|---------|------|----------|----------|----------|")
+        report.append("| 模型 | 成本($) | 质量 | 成本增量(排名) | 质量增量(排名) | 边际效益 |")
+        report.append("|------|---------|------|---------------|---------------|----------|")
         
         df_sorted = df_marginal.sort_values('marginal_benefit', ascending=False)
         for _, row in df_sorted.head(10).iterrows():
             report.append(f"| {row['model']} | {row['cost']:.6f} | {row['quality']:.4f} | "
-                         f"{row['delta_cost']:.6f} | {row['delta_quality']:.4f} | "
+                         f"{row.get('delta_cost_rank', row.get('delta_cost', 0)):.1f} | {row.get('delta_quality_rank', row.get('delta_quality', 0)):.1f} | "
                          f"{row['marginal_benefit']:.2f} |")
         report.append("")
     

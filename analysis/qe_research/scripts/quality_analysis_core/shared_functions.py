@@ -485,7 +485,7 @@ def get_task_info(task_type: str) -> Dict:
     task_info_map = {
         'code': {
             'name_cn': '代码生成',
-            'primary_metrics': ['compilation_rate', 'functional_correctness', 'code_length'],
+            'primary_metrics': ['compilation_success', 'functional_correctness', 'code_length'],
             'description': '评估模型生成代码的语法正确性、功能完整性和代码质量'
         },
         'creative': {

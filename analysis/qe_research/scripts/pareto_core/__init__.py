@@ -25,6 +25,7 @@ from .shared_functions import (
     find_knee_point,
     plot_pareto_2d,
     load_energy_speed_data,
+    load_average_energy_speed_data,
     merge_quality_metrics,
     load_process_quality_data,
     perturbation_analysis,
@@ -49,6 +50,7 @@ __all__ = [
     'find_knee_point',
     'plot_pareto_2d',
     'load_energy_speed_data',
+    'load_average_energy_speed_data',
     'merge_quality_metrics',
     'load_process_quality_data',
     # 稳健性分析

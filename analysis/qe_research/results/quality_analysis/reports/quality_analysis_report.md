@@ -1,6 +1,6 @@
 # 模型质量得分数据描述性分析报告
 
-**分析时间**: 2026-03-08 12:22:41  
+**分析时间**: 2026-03-13 15:54:37  
 **数据来源**: `F:\all_proj\GenAI_power_analize\analysis\qe_research\results\quality_scores/*_scores_raw.csv`  
 **覆盖范围**: 11个模型 × 7个任务  
 
@@ -14,23 +14,23 @@
 |------|------|------|
 | 模型数量 | 11 | 涵盖2B-8B参数规模，多种量化方式 |
 | 任务类型 | 7 | 代码生成, 创意写作, 数学推理, 问答, 逻辑推理, 摘要生成, 翻译 |
-| 指标总数 | 93 | 各任务专用指标 |
+| 指标总数 | 105 | 各任务专用指标 |
 
 ### 1.2 模型清单
 
-| 模型名称 | 任务覆盖 |
-|---------|----------|
-| deepseek_8b_ol_q4km | 7/7 |
-| gemma_2b_hf_4bit | 7/7 |
-| gemma_2b_hf_8bit | 7/7 |
-| gemma_4b_ol_q4km | 7/7 |
-| phi3_4b_hf_4bit | 7/7 |
-| phi3_4b_hf_8bit | 7/7 |
-| qwen25_3b_hf_4bit | 7/7 |
-| qwen25_3b_hf_8bit | 7/7 |
-| qwen25_7b_hf_4bit | 7/7 |
-| qwen_4b_ol_q4km | 7/7 |
-| qwen_8b_ol_q4km | 7/7 |
+| 模型名称　　　　　　| 任务覆盖 |
+| ---------------------| ----------|
+| deepseek_8b_ol_q4km | 7/7　　　|
+| gemma_2b_hf_4bit　　| 7/7　　　|
+| gemma_2b_hf_8bit　　| 7/7　　　|
+| gemma_4b_ol_q4km　　| 7/7　　　|
+| phi3_4b_hf_4bit　　 | 7/7　　　|
+| phi3_4b_hf_8bit　　 | 7/7　　　|
+| qwen25_3b_hf_4bit　 | 7/7　　　|
+| qwen25_3b_hf_8bit　 | 7/7　　　|
+| qwen25_7b_hf_4bit　 | 7/7　　　|
+| qwen_4b_ol_q4km　　 | 7/7　　　|
+| qwen_8b_ol_q4km　　 | 7/7　　　|
 
 ---
 
@@ -40,7 +40,7 @@
 
 **数据文件**: `code_scores_raw.csv`  
 **样本数**: 11个模型  
-**指标数**: 7个  
+**指标数**: 19个  
 **任务描述**: 评估模型生成代码的语法正确性、功能完整性和代码质量  
 
 #### 描述性统计
@@ -48,49 +48,62 @@
 | 指标 | 均值 | 标准差 | 最小值 | 最大值 | 中位数 | 变异系数 |
 |------|------|--------|--------|--------|--------|----------|
 | code_length | 8.345 | 6.054 | 2.200 | 20.000 | 5.800 | 0.725 |
-| compilation_rate | 0.491 | 0.314 | 0.000 | 1.000 | 0.600 | 0.641 |
+| code_simplicity | 0.713 | 0.123 | 0.498 | 0.857 | 0.759 | 0.173 |
+| compilation_success | 0.491 | 0.314 | 0.000 | 1.000 | 0.600 | 0.641 |
 | cyclomatic_complexity | 4.818 | 4.308 | 1.600 | 17.000 | 3.200 | 0.894 |
+| efficiency_dimension | 0.737 | 0.094 | 0.580 | 0.868 | 0.748 | 0.127 |
+| functional_correctness | 0.164 | 0.266 | 0.000 | 0.800 | 0.000 | 1.623 |
+| functional_dimension | 0.262 | 0.252 | 0.000 | 0.860 | 0.240 | 0.962 |
 | has_code | 1.000 | 0.000 | 1.000 | 1.000 | 1.000 | 0.000 |
-| test_pass_rate | 0.263 | 0.347 | 0.000 | 0.800 | 0.000 | 1.319 |
-| tests_passed | 0.847 | 1.192 | 0.000 | 2.800 | 0.000 | 1.408 |
-| tests_total | 3.475 | 0.478 | 3.000 | 4.000 | 3.375 | 0.138 |
+| has_docstring | 0.145 | 0.311 | 0.000 | 1.000 | 0.000 | 2.138 |
+| has_type_hints | 0.309 | 0.259 | 0.000 | 0.800 | 0.200 | 0.837 |
+| nesting_depth | 0.382 | 0.701 | 0.000 | 2.200 | 0.000 | 1.836 |
+| quality_dimension | 0.713 | 0.123 | 0.498 | 0.857 | 0.759 | 0.173 |
+| readability_dimension | 0.225 | 0.153 | 0.080 | 0.569 | 0.180 | 0.679 |
+| readability_score | 0.225 | 0.153 | 0.080 | 0.569 | 0.180 | 0.679 |
+| space_complexity_score | 0.793 | 0.056 | 0.700 | 0.880 | 0.760 | 0.071 |
+| test_pass_rate | 0.239 | 0.339 | 0.000 | 0.800 | 0.000 | 1.416 |
+| tests_passed | 0.770 | 1.159 | 0.000 | 2.800 | 0.000 | 1.506 |
+| tests_total | 1.636 | 0.987 | 0.000 | 3.000 | 1.800 | 0.603 |
+| time_complexity_score | 0.700 | 0.127 | 0.500 | 0.900 | 0.700 | 0.182 |
 
 #### 关键发现
 
-1. **compilation_rate**: 均值0.491，标准差0.314，变异系数0.641（变异度高，模型间差异显著），分布较为对称
-2. **性能差距**: 最佳模型 gemma_4b_ol_q4km (compilation_rate=1.000) 比最差模型 qwen_4b_ol_q4km (compilation_rate=0.000) 高出 1.000 (0.0%)
-3. **模型规模效应**: 7B参数模型平均表现最佳 (compilation_rate=0.600)
-4. **指标相关性**: test_pass_rate 与 tests_passed 高度相关 (r=0.972)
-5. **异常值检测**: 共检测到1个异常值，分布在 cyclomatic_complexity(1个)
-6. **量化影响**: 4-bit量化平均表现更好，差距为0.200
+1. **compilation_success**: 均值0.491，标准差0.314，变异系数0.641（变异度高，模型间差异显著），分布较为对称
+2. **functional_correctness**: 均值0.164，标准差0.266，变异系数1.623（变异度高，模型间差异显著），正偏分布，少数模型表现突出
+3. **性能差距**: 最佳模型 gemma_4b_ol_q4km (compilation_success=1.000) 比最差模型 qwen_4b_ol_q4km (compilation_success=0.000) 高出 1.000 (0.0%)
+4. **模型规模效应**: 7B参数模型平均表现最佳 (compilation_success=0.600)
+5. **指标相关性**: code_simplicity 与 quality_dimension 高度相关 (r=1.000)
+6. **异常值检测**: 共检测到7个异常值，分布在 cyclomatic_complexity(1个), functional_correctness(1个), functional_dimension(1个)
+7. **量化影响**: 4-bit量化平均表现更好，差距为0.200
 
 #### 模型综合排名（PCA方法）
 
-**方法说明**: 使用主成分分析(PCA)综合2个主要指标，选择累积解释方差≥85%的前2个主成分，实际累积解释方差为100.00%。
+**方法说明**: 使用主成分分析(PCA)综合3个主要指标，选择累积解释方差≥85%的前2个主成分，实际累积解释方差为91.26%。
 
 **主成分权重**:
-- PC1: 71.89%
-- PC2: 28.11%
+- PC1: 78.76%
+- PC2: 21.24%
 
 | 排名 | 模型 | PCA综合得分 |
 |------|------|-------------|
-| 1 | gemma_4b_ol_q4km | 1.953 |
-| 2 | qwen25_7b_hf_4bit | 1.222 |
-| 3 | qwen25_3b_hf_4bit | 0.497 |
-| 4 | qwen25_3b_hf_8bit | 0.231 |
-| 5 | qwen_8b_ol_q4km | 0.000 |
-| 6 | gemma_2b_hf_4bit | -0.385 |
-| 7 | gemma_2b_hf_8bit | -0.444 |
-| 8 | deepseek_8b_ol_q4km | -0.493 |
-| 9 | phi3_4b_hf_4bit | -0.612 |
-| 10 | phi3_4b_hf_8bit | -0.710 |
+| 1 | gemma_4b_ol_q4km | 2.820 |
+| 2 | qwen25_7b_hf_4bit | 1.171 |
+| 3 | qwen25_3b_hf_4bit | 0.402 |
+| 4 | deepseek_8b_ol_q4km | 0.340 |
+| 5 | qwen25_3b_hf_8bit | 0.044 |
+| 6 | gemma_2b_hf_4bit | -0.025 |
+| 7 | gemma_2b_hf_8bit | -0.346 |
+| 8 | qwen_8b_ol_q4km | -0.715 |
+| 9 | phi3_4b_hf_4bit | -1.012 |
+| 10 | phi3_4b_hf_8bit | -1.060 |
 
 #### 可视化分析
 
 **图表位置**: `figures/code/`
 
-**compilation_rate分布图** (`compilation_rate_distribution.png`):  
-- 展示compilation_rate指标在所有模型上的分布特征
+**compilation_success分布图** (`compilation_success_distribution.png`):  
+- 展示compilation_success指标在所有模型上的分布特征
 - 包含直方图、核密度估计(KDE)曲线、均值和中位数标记
 - 右侧面板显示详细的描述性统计量
 
@@ -99,13 +112,13 @@
 - 包含直方图、核密度估计(KDE)曲线、均值和中位数标记
 - 右侧面板显示详细的描述性统计量
 
-**模型对比图** (`compilation_rate_comparison.png`):  
-- 按compilation_rate降序排列所有模型的得分
+**模型对比图** (`compilation_success_comparison.png`):  
+- 按compilation_success降序排列所有模型的得分
 - 散点图展示各模型的具体数值
 - 水平虚线标记均值和中位数，便于识别高于/低于平均水平的模型
 
 **指标相关性热力图** (`correlation_heatmap.png`):  
-- 展示7个指标之间的Pearson相关系数
+- 展示19个指标之间的Pearson相关系数
 - 颜色深浅表示相关性强弱（红色正相关，蓝色负相关）
 - 帮助识别冗余指标和指标间的内在联系
 
@@ -740,6 +753,12 @@
 | 任务 | 指标 | 模型 | 值 | 异常说明 |
 |------|------|------|-----|----------|
 | 代码生成 | cyclomatic_complexity | qwen_8b_ol_q4km | 17.000 | 远高于均值(4.818) |
+| 代码生成 | functional_correctness | gemma_4b_ol_q4km | 0.800 | 远高于均值(0.164) |
+| 代码生成 | functional_dimension | gemma_4b_ol_q4km | 0.860 | 远高于均值(0.262) |
+| 代码生成 | has_docstring | gemma_4b_ol_q4km | 1.000 | 远高于均值(0.145) |
+| 代码生成 | has_docstring | qwen25_7b_hf_4bit | 0.400 | 远高于均值(0.145) |
+| 代码生成 | nesting_depth | gemma_4b_ol_q4km | 2.200 | 远高于均值(0.382) |
+| 代码生成 | nesting_depth | qwen25_7b_hf_4bit | 1.200 | 远高于均值(0.382) |
 | 创意写作 | avg_sentence_length | gemma_2b_hf_4bit | 79.356 | 远高于均值(43.595) |
 | 数学推理 | has_answer | qwen_4b_ol_q4km | 0.800 | 远低于均值(0.982) |
 | 数学推理 | has_reasoning | phi3_4b_hf_8bit | 0.600 | 远低于均值(0.927) |
@@ -753,12 +772,6 @@
 | 问答 | certainty_count | deepseek_8b_ol_q4km | 0.600 | 远高于均值(0.236) |
 | 问答 | certainty_count | gemma_2b_hf_8bit | 0.000 | 远低于均值(0.236) |
 | 问答 | certainty_count | qwen_8b_ol_q4km | 0.000 | 远低于均值(0.236) |
-| 问答 | confidence_score | qwen_4b_ol_q4km | 0.300 | 远低于均值(0.482) |
-| 问答 | has_conclusion | gemma_2b_hf_4bit | 0.600 | 远高于均值(0.164) |
-| 问答 | has_examples | phi3_4b_hf_4bit | 0.600 | 远高于均值(0.218) |
-| 问答 | has_examples | phi3_4b_hf_8bit | 0.600 | 远高于均值(0.218) |
-| 问答 | has_reasoning | qwen25_3b_hf_8bit | 0.600 | 远低于均值(0.927) |
-| 问答 | uncertainty_count | qwen_4b_ol_q4km | 1.800 | 远高于均值(0.382) |
 
 ---
 
@@ -809,5 +822,5 @@
   - 各任务描述性统计、排名、相关性矩阵、异常值
   - 跨任务矩阵、综合排名、优劣势任务、高相关对
 
-**报告生成时间**: 2026-03-08 12:22:41  
+**报告生成时间**: 2026-03-13 15:54:37  
 **分析脚本**: `quality_data_analyzer.py`  

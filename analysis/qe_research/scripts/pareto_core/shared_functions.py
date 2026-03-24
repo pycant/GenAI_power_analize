@@ -628,6 +628,34 @@ def load_energy_speed_data(task_name, energy_file, speed_file):
     return energy_dict, speed_dict
 
 
+def load_average_energy_speed_data(energy_file, speed_file):
+    """
+    加载跨任务的平均能耗和速度数据
+    
+    用于成本效益分析，当质量数据是跨任务聚合时，
+    需要使用平均能耗/速度来计算成本
+    
+    Args:
+        energy_file: 能耗文件路径
+        speed_file: 速度文件路径
+    
+    Returns:
+        energy_dict: 平均能耗字典 {model: avg_energy}
+        speed_dict: 平均速度字典 {model: avg_speed}
+    """
+    # 加载能耗数据
+    energy_df = pd.read_csv(energy_file, index_col=0)
+    # 计算每行的平均值（跨所有任务）
+    energy_dict = energy_df.mean(axis=0).to_dict()
+    
+    # 加载速度数据
+    speed_df = pd.read_csv(speed_file, index_col=0)
+    # 计算每列的平均值（跨所有任务）
+    speed_dict = speed_df.mean(axis=0).to_dict()
+    
+    return energy_dict, speed_dict
+
+
 def merge_quality_metrics(quality_df, energy_dict, speed_dict, model_mapping, quality_col='quality'):
     """
     合并质量、能耗、速度数据

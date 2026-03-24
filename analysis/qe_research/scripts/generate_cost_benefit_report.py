@@ -217,13 +217,13 @@ def generate_section_5_report(results: Dict, output_path: Path):
             df_marginal = marginal_results['marginal_df']
             report.append("### 5.5.4 边际效益排序")
             report.append("")
-            report.append("| 模型 | 成本($) | 质量 | 成本增量 | 质量增量 | 边际效益 |")
-            report.append("|------|---------|------|----------|----------|----------|")
+            report.append("| 模型 | 成本($) | 质量 | 成本增量(排名) | 质量增量(排名) | 边际效益 |")
+            report.append("|------|---------|------|---------------|---------------|----------|")
             
             df_sorted = df_marginal.sort_values('marginal_benefit', ascending=False)
             for _, row in df_sorted.head(10).iterrows():
                 report.append(f"| {row['model']} | {row['cost']:.6f} | {row['quality']:.4f} | "
-                             f"{row['delta_cost']:.6f} | {row['delta_quality']:.4f} | "
+                             f"{row.get('delta_cost_rank', row.get('delta_cost', 0)):.1f} | {row.get('delta_quality_rank', row.get('delta_quality', 0)):.1f} | "
                              f"{row['marginal_benefit']:.2f} |")
             report.append("")
     
